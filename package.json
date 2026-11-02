@@ -1,0 +1,16 @@
+{
+  "name": "viral-claude-shorts",
+  "private": true,
+  "type": "module",
+  "description": "The script's audio -> an animated 9:16 short. The pipeline runs on Node with TypeScript (no build step).",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "typecheck": "tsc -p . && tsc -p styles/flat2d"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "typescript": "7.0.2"
+  }
+}

@@ -1,0 +1,162 @@
+{
+ "style": "flat2d",
+ "fps": 30,
+ "format": "9:16",
+ "notes": "Flat vector, saturated colors, night-blue and sky backgrounds. Explain it with light splitting into colors, molecules and waves: the blue one bounces, the red one goes through.",
+ "scenes": [
+  {
+   "id": "hook",
+   "from": 0,
+   "type": "question",
+   "label": "Ciencia en 30 s",
+   "title": "¿Por qué el cielo es azul?",
+   "highlight": "azul",
+   "visual": "sky, sun, clouds and sea; an arrow from the sea to the sky that gets crossed out",
+   "keys": [
+    {
+     "id": "sea",
+     "at": 10,
+     "t": 3.02
+    }
+   ],
+   "transition": "cut",
+   "t0": 0,
+   "t1": 3.93
+  },
+  {
+   "id": "white",
+   "from": 13,
+   "type": "object",
+   "label": "La luz del sol",
+   "title": "Lleva todos los colores",
+   "highlight": "colores",
+   "visual": "a white ray enters a prism and a fan of colors comes out",
+   "keys": [
+    {
+     "id": "white",
+     "at": 21,
+     "t": 6.8
+    },
+    {
+     "id": "colors",
+     "at": 28,
+     "t": 9.38
+    }
+   ],
+   "transition": "cut",
+   "t0": 3.93,
+   "t1": 10.51
+  },
+  {
+   "id": "collision",
+   "from": 30,
+   "type": "process",
+   "label": "En el aire",
+   "title": "Choca con moléculas diminutas",
+   "highlight": "moléculas",
+   "visual": "floating molecules; colored waves arrive and hit them",
+   "keys": [
+    {
+     "id": "air",
+     "at": 34,
+     "t": 11.54
+    },
+    {
+     "id": "hit",
+     "at": 35,
+     "t": 12.18
+    }
+   ],
+   "transition": "cut",
+   "t0": 10.51,
+   "t1": 13.75
+  },
+  {
+   "id": "blue",
+   "from": 39,
+   "type": "stat",
+   "label": "Onda corta",
+   "title": "La luz azul rebota más",
+   "highlight": "azul",
+   "stat": {
+    "value": "≈6×",
+    "text": "más que la luz roja"
+   },
+   "visual": "a short blue wave and a long red one; the blue one bounces in every direction, the red one keeps going",
+   "keys": [
+    {
+     "id": "wave",
+     "at": 50,
+     "t": 17.58
+    },
+    {
+     "id": "bounce",
+     "at": 52,
+     "t": 18.9
+    },
+    {
+     "id": "stat",
+     "at": 54,
+     "t": 19.46
+    }
+   ],
+   "transition": "cut",
+   "t0": 13.75,
+   "t1": 21.41
+  },
+  {
+   "id": "everywhere",
+   "from": 60,
+   "type": "map",
+   "label": "Por eso",
+   "title": "Lo azul llega de todas partes",
+   "highlight": "todas",
+   "visual": "a person on a hill; blue arrows reach them from all over the sky",
+   "keys": [
+    {
+     "id": "scatter",
+     "at": 63,
+     "t": 22.16
+    },
+    {
+     "id": "everywhere",
+     "at": 72,
+     "t": 24.7
+    }
+   ],
+   "transition": "cut",
+   "t0": 21.41,
+   "t1": 25.71
+  },
+  {
+   "id": "sunset",
+   "from": 75,
+   "type": "closing",
+   "label": "Bonus",
+   "title": "Al atardecer llegan los naranjas",
+   "highlight": "naranjas",
+   "visual": "the sun goes down, the light crosses a longer layer of air, the blue gets lost on the way and the sky turns orange",
+   "keys": [
+    {
+     "id": "cross",
+     "at": 80,
+     "t": 27.52
+    },
+    {
+     "id": "fade",
+     "at": 87,
+     "t": 29.52
+    },
+    {
+     "id": "oranges",
+     "at": 96,
+     "t": 31.94
+    }
+   ],
+   "transition": "cut",
+   "t0": 25.71,
+   "t1": 34.098
+  }
+ ],
+ "duration": 34.098
+}

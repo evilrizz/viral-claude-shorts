@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+.venv/
+__pycache__/
+# private: presentation scripts for each video
+presentacion/
+# intermediate files the scripts regenerate
+videos/*/render/
+videos/*/storyboard/
+videos/*/review/
+videos/*/voice/
+videos/*/render.log
+videos/*/report.md
+videos/*/mix.wav
+videos/*/music.wav
+styles/flat2d/project/
+# the example ships only what Claude needs (scenes.json, visuals.ts, words.json, storyboard.png): its voice stays local
+videos/blue-sky/audio.*
+videos/blue-sky/analysis.*
+videos/blue-sky/script.json
+videos/blue-sky/storyboard.md
+# the setup's test animation: everyone makes their own
+videos/hello/
+**/.hyperframes/
+**/renders/
+**/frames/
+# final videos go in GitHub releases, not in the repo
+videos/*/final.mp4
+.DS_Store

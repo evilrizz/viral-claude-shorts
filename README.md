@@ -19,16 +19,19 @@ More styles are coming.
 audio (+ assets, notes) + style
  1. Transcribe    every word with its timing                core/transcribe.py   (faster-whisper, local)
  2. Analyze       phrases, pauses, numbers                  core/analyze.ts
- 3. Visual plan   the AI writes scenes.json                 (the agent, validated with core/scenes.ts)
- 4. Storyboard    one frame per scene, to approve           core/storyboard.ts  (+ live preview: core/preview.ts)
- 5. Render        the style's framework                     core/render.ts
- 6. Review        sync, loudness, text, cuts                core/review.ts
+ 3. World         characters (and their states), sets,      plan.md + world3d.ts / world.ts
+                  camera shots, tested with no scenes yet   core/world.ts -> world.png
+ 4. Scenes        the AI cuts the audio into scenes.json    (the agent, validated with core/scenes.ts)
+ 5. Storyboard    one frame per scene, checked by the AI    core/storyboard.ts  (+ live preview: core/preview.ts)
+ 6. Render        the style's framework                     core/render.ts
+ 7. Review        sync, loudness, text, cuts                core/review.ts
  → videos/<topic>/final.mp4 + report.md
 ```
 
 The contract is `scenes.json`: a list of scenes that point at **words** in the audio (not at seconds). The style turns that file into animation:
 - its **library** ships generic scenes per type (question, object, process, comparison, stat, map, asset, closing);
-- the AI writes each video's **custom visuals** in `videos/<topic>/visuals.ts` (`visuals3d.ts` in 3D).
+- the AI builds each video's **world** first (`videos/<topic>/world.ts`, `world3d.ts` in 3D: its characters with their states, sets and camera shots) and tests it on its own with `core/world.ts`;
+- then each scene's **visuals** (`videos/<topic>/visuals.ts`, `visuals3d.ts` in 3D) only assemble that world over the audio's timing.
 
 On top sits a **titles layer**: a label, a title whose key word gets highlighted when you say it, and a card with the stat.
 
@@ -44,7 +47,7 @@ You install just one thing by hand: Claude Code. Everything else (Git, Node, ffm
 
 **3. Paste the setup prompt** of the style you want: copy the block in [prompts/setup-flat2d.md](prompts/setup-flat2d.md) or [prompts/setup-3d.md](prompts/setup-3d.md) and send it. Claude installs whatever is missing, downloads the project and makes you a basic test animation (no voice). It opens in a preview in your browser (http://localhost:3002 for Flat 2D, http://localhost:3003 for 3D, or the one it tells you if that port is busy): when it plays, you're ready. It ends with a summary of what it did and how to get familiar with the project. If at some point it needs your computer's password, it tells you what to paste and where.
 
-**4. Make your video**: open a new chat in Claude Code in the `viral-claude-shorts` folder, drag the script's audio in and say what you want, for example *"anima este audio, la idea es explicar por qué el pan se pone duro"* (add *"en 3D"* for that style). The project's `CLAUDE.md` tells Claude the whole process: it shows you an art plan (every object, set and camera move) and then a storyboard, waits for your approval at each one and delivers `videos/<topic>/final.mp4`. Want more control (assets, colors, specific scenes)? Use the template in [prompts/production.md](prompts/production.md).
+**4. Make your video**: open a new chat in Claude Code in the `viral-claude-shorts` folder, drag the script's audio in and say what you want, for example *"anima este audio, la idea es explicar por qué el pan se pone duro"* (add *"en 3D"* for that style). The project's `CLAUDE.md` tells Claude the whole process, and it does it in one go: it designs an art plan (every object, set and camera move), checks a storyboard itself and delivers `videos/<topic>/final.mp4` with the preview link and the storyboard, so you can ask for changes by panel number. Want more control (assets, colors, specific scenes)? Use the template in [prompts/production.md](prompts/production.md).
 
 <details>
 <summary>Doing it by hand, without Claude Code</summary>
@@ -70,7 +73,9 @@ One video, with your audio at `videos/my-topic/audio.wav`:
 ```bash
 .venv/bin/python core/transcribe.py videos/my-topic
 node core/analyze.ts videos/my-topic
-# (write videos/my-topic/scenes.json, plan.md and visuals.ts, or visuals3d.ts in 3D)
+# (write videos/my-topic/plan.md, world.ts and world.json, or world3d.ts in 3D)
+node core/world.ts videos/my-topic
+# (write videos/my-topic/scenes.json and visuals.ts, or visuals3d.ts in 3D)
 node core/scenes.ts videos/my-topic
 npm run typecheck
 node core/storyboard.ts videos/my-topic
@@ -92,10 +97,10 @@ No recorded audio? `node core/voice.ts videos/my-topic` generates it from `scrip
 ## Structure
 
 ```
-core/            transcribe, analyze, scenes (contract), storyboard, preview, render, mix, music, review, voice, typecheck, types
+core/            transcribe, analyze, world (world test), scenes (contract), storyboard, preview, render, mix, music, review, voice, typecheck, types
 styles/          flat2d/ — adapter, engine, theme, library, INSTALL.md, USAGE.md
                  3d/ — adapter, engine, theme, library (simple pieces), detail (textures, fur, shared set), INSTALL.md, USAGE.md
-videos/<topic>/  audio.wav, scenes.json, plan.md, visuals.ts or visuals3d.ts, storyboard.png, final.mp4, report.md
+videos/<topic>/  audio.wav, plan.md, world.ts or world3d.ts, world.json, world.png, scenes.json, visuals.ts or visuals3d.ts, storyboard.png, final.mp4, report.md
                  blue-sky/, aviones/ and detail-demo/ (simple + textured 3D, no voice) are the examples; hello/ and hello-3d/ are the setups' test animations (made on your computer)
 prompts/         setup-flat2d.md, setup-3d.md, production.md
 CLAUDE.md        what Claude reads in every chat here: a short request with an audio runs the whole production process

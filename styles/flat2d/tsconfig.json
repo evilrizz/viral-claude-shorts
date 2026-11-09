@@ -1,5 +1,5 @@
 {
-  // The browser side: engine, library and each video's visuals.ts are plain scripts that share globals
+  // The browser side: engine, library and each video's world.ts and visuals.ts are plain scripts that share globals
   // (the adapter strips their types with esbuild before the page loads them).
   "compilerOptions": {
     "target": "es2022",
@@ -12,5 +12,5 @@
     "skipLibCheck": true,
     "types": ["gsap"]
   },
-  "include": ["globals.d.ts", "library.ts", "engine.ts", "../../videos/*/visuals.ts"]
+  "include": ["globals.d.ts", "library.ts", "engine.ts", "../../videos/*/world.ts", "../../videos/*/visuals.ts"]
 }

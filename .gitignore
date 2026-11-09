@@ -7,6 +7,8 @@ presentacion/
 # intermediate files the scripts regenerate
 videos/*/render/
 videos/*/storyboard/
+videos/*/world/
+videos/*/world.md
 videos/*/review/
 videos/*/voice/
 videos/*/render.log

@@ -31,9 +31,9 @@ I want to set up the project https://github.com/hans1801/viral-claude-shorts on 
      `node core/preview.ts videos/hello --stop` and `node core/preview.ts videos/hello`.
    - **Get familiar (5 minutes):**
      - watch the example in the preview, one command each (the preview switches to that video): `node core/preview.ts videos/blue-sky` (why the sky is blue);
-     - open `videos/blue-sky/storyboard.png`: that's the storyboard, one picture per scene, that I will approve before each video is made;
+     - open `videos/blue-sky/storyboard.png`: that's the storyboard, one picture per scene, that I get with each video so I can ask for changes by panel number;
      - the folder that matters is `videos/`: each video lives in its own folder (`videos/<topic>/`), my audio goes in and `final.mp4` comes out. I don't need to touch anything else;
-     - for each video Claude stops twice to ask for my OK: the art plan (what gets drawn) and the storyboard.
+     - Claude makes each video in one go, without stopping to ask: it designs what gets drawn, checks it and gives me `final.mp4`, the preview link and the storyboard. Then I ask for changes if I want them.
    - **Next step:** have the script's audio ready (recorded or generated), open a NEW chat in Claude Code in the project folder, drag the audio in and say what I want (for example "anima este audio, la idea es…"); the project already tells Claude the whole process. That chat will find the preview already open (or open it again if it's closed).
    - **If something breaks later:** open a chat in the project folder and say what I see, or paste this same setup prompt again: it only installs what's missing.
 ```

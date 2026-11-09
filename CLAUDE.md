@@ -11,7 +11,7 @@ A short message is enough: "anima este audio", "make a video from this", a dragg
 - **Idea:** what they said they want to get across. If they didn't say it, infer it from the transcription and tell them in one line.
 - **Assets and notes:** only if they gave them.
 
-Don't skip the two approvals: the art plan (`plan.md`: every object, set and camera move) before drawing, and the storyboard before rendering. Show each one and wait for their OK. Then open (or reuse) the live preview with `node core/preview.ts videos/<topic>` and give them the link.
+Make it in one go: design and test the video's world first (`plan.md`, the world file and `core/world.ts`: characters with their states, sets, camera shots), then cut the audio into scenes that use it. The world test and the storyboard are your own working tools, so check them yourself, fix what's wrong and don't stop to ask for approval. Characters from existing series, movies, games, comics or brands are never drawn, not even "similar" versions: design original ones of the same genre (step 3 of `prompts/production.md`). At the end, open (or reuse) the live preview with `node core/preview.ts videos/<topic>` and deliver `final.mp4`, the preview link and the storyboard; the user asks for changes by panel number.
 
 ## If something is missing
 

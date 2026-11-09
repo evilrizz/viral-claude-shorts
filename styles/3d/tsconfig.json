@@ -1,5 +1,5 @@
 {
-  // The browser side: engine, library and each video's visuals3d.ts are plain scripts that share globals
+  // The browser side: engine, library and each video's world3d.ts and visuals3d.ts are plain scripts that share globals
   // (the adapter strips their types with esbuild before the page loads them).
   "compilerOptions": {
     "target": "es2022",
@@ -12,5 +12,5 @@
     "skipLibCheck": true,
     "types": ["gsap"]
   },
-  "include": ["globals.d.ts", "three-global.d.ts", "library.ts", "detail.ts", "engine.ts", "../../videos/*/visuals3d.ts"]
+  "include": ["globals.d.ts", "three-global.d.ts", "library.ts", "detail.ts", "engine.ts", "../../videos/*/world3d.ts", "../../videos/*/visuals3d.ts"]
 }

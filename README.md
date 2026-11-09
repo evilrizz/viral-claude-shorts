@@ -49,7 +49,7 @@ You install just one thing by hand: Claude Code. Everything else (Git, Node, ffm
 <details>
 <summary>Doing it by hand, without Claude Code</summary>
 
-With Git, Node 22.18+, ffmpeg and Python 3.10+ installed, from the repo folder:
+With Git, Node 22.18+, ffmpeg and Python 3.10 to 3.14 installed (3.15 can't install the transcription yet: use `python3.12` in its place), from the repo folder:
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install faster-whisper

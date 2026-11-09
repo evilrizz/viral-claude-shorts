@@ -15,4 +15,4 @@ Don't skip the two approvals: the art plan (`plan.md`: every object, set and cam
 
 ## If something is missing
 
-If `node_modules`, `.venv` or a tool (Node 22.18+, ffmpeg, Python) is missing, the project isn't set up yet: tell the user and offer to run the steps in `prompts/setup-<style>.md` first. The same goes for a style they ask for whose `styles/<style>/node_modules` is missing.
+If `node_modules`, `.venv` or a tool (Node 22.18+, ffmpeg, Python 3.10 to 3.14) is missing, the project isn't set up yet: tell the user and offer to run the steps in `prompts/setup-<style>.md` first. The same goes for a style they ask for whose `styles/<style>/node_modules` is missing.

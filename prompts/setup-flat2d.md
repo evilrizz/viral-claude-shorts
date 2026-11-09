@@ -8,14 +8,14 @@ The only thing you install yourself is Claude Code. Open Claude Code in any fold
 I want to set up the project https://github.com/hans1801/viral-claude-shorts on my computer (it turns the audio of a script into an animated short, Flat 2D style). I'm a beginner: do everything yourself and explain each step in one plain line, no jargon.
 
 1. Check which system I'm on (macOS, Windows or Linux).
-2. Check for Git, Node.js 22.18 or later, ffmpeg and Python 3.10 or later. Install whatever is missing (or update Node if it's older):
-   - macOS: with Homebrew (`brew install git node ffmpeg python`). If Homebrew isn't there, its installer asks for the Mac's password and you can't type it: give me the exact command to paste into the Terminal app, warn me that the password doesn't show while I type it, and wait until I say "done". Then install the rest yourself.
+2. Check for Git, Node.js 22.18 or later, ffmpeg and Python 3.10 to 3.14 (3.12 is the safest; newer ones, like 3.15, can't install the transcription yet). Install whatever is missing (or update Node if it's older):
+   - macOS: with Homebrew (`brew install git node ffmpeg python@3.12`). If Homebrew isn't there, its installer asks for the Mac's password and you can't type it: give me the exact command to paste into the Terminal app, warn me that the password doesn't show while I type it, and wait until I say "done". Then install the rest yourself.
    - Windows: with `winget install` (Git.Git, OpenJS.NodeJS.LTS, Gyan.FFmpeg, Python.Python.3.12).
    - Linux: with the package manager; if it asks for a password (sudo), give me the command and wait.
    Then check the versions again. If something you just installed doesn't show up, look for it in its install path before asking me to restart anything.
 3. If this folder isn't the project already, download it here with `git clone https://github.com/hans1801/viral-claude-shorts.git` and work inside `viral-claude-shorts`.
 4. Install the dependencies without bumping versions (they're pinned on purpose):
-   - transcription: a `.venv` environment at the root with `faster-whisper` (`python3 -m venv .venv` and its `pip install faster-whisper`);
+   - transcription: a `.venv` environment at the root with `faster-whisper`, made with a Python from 3.10 to 3.14: `python3 -m venv .venv` if `python3 --version` is in that range, otherwise `python3.12 -m venv .venv` (on Windows `py -3.12 -m venv .venv`); then its `pip install faster-whisper`;
    - TypeScript checks: `npm install` at the root;
    - style: `npm install` inside `styles/flat2d`, and check that `npx hyperframes --version` says 0.8.166.
 5. Make me a basic 2D animation with no voice (about 6 seconds) to test that everything works. First read `styles/flat2d/USAGE.md` and look at the example in `videos/blue-sky/` (`scenes.json` and `visuals.ts`). Then, in `videos/hello/`:

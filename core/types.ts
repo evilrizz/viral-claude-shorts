@@ -30,12 +30,13 @@ export interface ScriptLine { id?: string; text: string; pause?: number; seed?: 
 export interface Script { language?: string; lead?: number; tail?: number; seed?: number; lines: ScriptLine[] }
 
 // styles/<style>/adapter.ts
+export interface Preview { url: string; started: boolean; note?: string }   // note: something the user should know (the usual port was busy)
 export interface Adapter {
   engine: string;
   build(video: string): string;                                            // writes the style's project for this video
   frames(video: string, times: number[], dir: string): Promise<string[]>;  // one PNG per time (storyboard)
   video(video: string): string | Promise<string>;                          // the silent MP4
   texts?(video: string): boolean | null | Promise<boolean | null>;         // text check: true, false or null (not measured)
-  preview?(video: string): { url: string; started: boolean } | Promise<{ url: string; started: boolean }>;   // live preview: reuse or start
+  preview?(video: string): Preview | Promise<Preview>;                     // live preview: reuse or start
   stopPreview?(): void;
 }

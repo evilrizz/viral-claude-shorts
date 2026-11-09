@@ -106,11 +106,20 @@ ${voice ? `      <audio id="voice" src="voice.wav" data-start="0" data-duration=
   },
   preview(v) {
     adapter.build(v);
-    const running = previewStatus();
+    // hyperframes asks the server itself, which can miss it while it reloads after the build: ask twice
+    const running = previewStatus() ?? previewStatus();
     if (running) return { url: `http://localhost:${running.port}`, started: false };
-    const r = hf(['preview', 'project', '--background', '--port', PORT]);
+    // the usual port first; if another program has it (another copy of the project, say), the next free one, and say so
+    const start = (port: number) => hf(['preview', 'project', '--background', '--port', String(port)]);
+    let r = start(+PORT);
+    for (let p = +PORT + 1; r.status !== 0 && /already in use/i.test(r.stdout + r.stderr) && p <= +PORT + 20; p++) r = start(p);
+    // still missed: hyperframes refuses to start a second one and names the port of the one that's open, so reuse it
+    const open = (r.stdout + r.stderr).match(/Matching server port: (\d+)/);
+    if (r.status !== 0 && open) return { url: `http://localhost:${open[1]}`, started: false };
     if (r.status !== 0) throw new Error('the preview did not start:\n' + r.stdout + r.stderr);
-    return { url: `http://localhost:${previewStatus()?.port ?? PORT}`, started: true };
+    const port = previewStatus()?.port ?? +PORT;
+    return { url: `http://localhost:${port}`, started: true,
+      note: port === +PORT ? undefined : `port ${PORT} was busy (another program is using it), so the preview opened on ${port} instead` };
   },
   stopPreview() { hf(['preview', 'project', '--stop']); },
 };

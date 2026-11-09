@@ -41,4 +41,4 @@ It opens http://localhost:3003. The full render (`node core/render.ts videos/<to
 ## Common problems
 - **The render is very slow:** without a usable GPU, Chrome draws the 3D in software. It still works. The line at the end of the render says `hardware gpu` when it used one.
 - **`node core/....ts` gives a syntax error**: Node is older than 22.18 and can't read TypeScript. Update it.
-- **The preview's port is taken:** Flat 2D uses 3002 and this style 3003, so both can stay open. If something else is on 3003, close it and run the preview again.
+- **The preview's port is taken:** Flat 2D uses 3002 and this style 3003, so both can stay open. If something else is on 3003, the preview opens on the next free port and says so: use the link it prints.

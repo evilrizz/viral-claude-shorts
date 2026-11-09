@@ -1,6 +1,6 @@
 # Setup prompt: 3D
 
-The only thing you install yourself is Claude Code. Open Claude Code in any folder (your Desktop, for example), paste this prompt once and Claude does the rest: it installs the programs, downloads the project, makes you a basic 3D animation (no voice) as a test and opens it in a preview in your browser. When the preview plays, everything is ready.
+The only thing you install yourself is Claude Code. Open Claude Code in any folder (your Desktop, for example), paste this prompt once and Claude does the rest: it installs the programs, downloads the project, makes you a basic 3D animation (no voice) as a test and opens it in a preview in your browser. When the preview plays, everything is ready, and Claude ends with a summary: what it installed, how to open your animation again and how to get familiar with the project.
 
 ---
 
@@ -23,10 +23,17 @@ I want to set up the 3D style of the project https://github.com/hans1801/viral-c
    - write `visuals3d.ts` with `defineVisuals({ ... })`: cheerful and simple, inside the safe zone (x 80–1000, y 160–1600), with the library's low-poly pieces (for example a cube that drops onto the grass with a little bounce, trees, the plane among clouds);
    - validate it with `node core/scenes.ts videos/hello-3d` and `npm run typecheck`, fixing it until there are no errors;
    - make the storyboard with `node core/storyboard.ts videos/hello-3d`, look at `videos/hello-3d/storyboard.png` yourself, fix whatever looks wrong and show it to me.
-6. Open the preview with `node core/preview.ts videos/hello-3d` (it opens my browser at http://localhost:3003).
+6. Open the preview with `node core/preview.ts videos/hello-3d`. It tries http://localhost:3003 first; if another program is using that port, it opens on the next free one and prints a note. Use the link it prints, and if it isn't 3003, tell me in one line why.
 7. If something fails, fix it without changing the style's technique and tell me what you changed.
-8. Finish with this, in plain words:
-   - what got installed and which folder the project is in;
-   - **the preview:** my test animation is at http://localhost:3003, where I can play it and drag the timeline. It stays open in the background even if I close this chat, and it always shows the last video built (with my videos I'll hear their audio there too). To close it: `node core/preview.ts videos/hello-3d --stop`;
-   - **next step:** have the script's audio ready (recorded or generated), open a NEW chat in Claude Code in the project folder, drag the audio in and say what I want, mentioning the style (for example "anima este audio en 3D, la idea es…"); the project already tells Claude the whole process. That chat will find the preview already open (or open it again if it's closed).
+8. **Always** finish with this summary, even if something failed or you had to stop halfway (then start it with what's missing and the exact step to finish it). Write it in my language, for someone who has never programmed: short lines, no jargon, and every command in its own block so I can copy it.
+   - **What got done:** each program (installed now or already there, one line each, with what it's for in a few words) and the full path of the project folder.
+   - **Your test animation:** the link the preview printed (normally http://localhost:3003). There I press play and drag the timeline to move through it. It stays open in the background even if I close this chat, and it always shows the last video built (with my videos I'll hear their audio there too). To close it, and to open it again another day, give me these two commands, and tell me they're run from inside the project folder (the `cd` to get there first, with the full path):
+     `node core/preview.ts videos/hello-3d --stop` and `node core/preview.ts videos/hello-3d`.
+   - **Get familiar (5 minutes):**
+     - watch the examples in the preview, one command each (the preview switches to that video): `node core/preview.ts videos/aviones` (simple low-poly: a plane and how it flies), `node core/preview.ts videos/detail-demo` (textured: fur, wood and grass);
+     - open `videos/aviones/storyboard.png`: that's the storyboard, one picture per scene, that I will approve before each video is made;
+     - the folder that matters is `videos/`: each video lives in its own folder (`videos/<topic>/`), my audio goes in and `final.mp4` comes out. I don't need to touch anything else;
+     - for each video Claude stops twice to ask for my OK: the art plan (what gets drawn: objects, places and camera moves) and the storyboard.
+   - **Next step:** have the script's audio ready (recorded or generated), open a NEW chat in Claude Code in the project folder, drag the audio in and say what I want, mentioning the style (for example "anima este audio en 3D, la idea es…"); the project already tells Claude the whole process. That chat will find the preview already open (or open it again if it's closed).
+   - **If something breaks later:** open a chat in the project folder and say what I see, or paste this same setup prompt again: it only installs what's missing.
 ```

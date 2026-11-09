@@ -13,4 +13,5 @@ if (!A.preview || !A.stopPreview) { console.error(`the style "${E.style}" has no
 if (argv.includes('--stop')) { A.stopPreview(); console.log('preview closed'); process.exit(0); }
 const p = await A.preview(v);
 console.log(`preview ${p.started ? 'opened' : 'already open, reloaded with this video'}: ${p.url}`);
+if (p.note) console.log('note: ' + p.note);
 console.log('it stays open in the background (even if you close the chat); close it with: node core/preview.ts ' + argv[0] + ' --stop');

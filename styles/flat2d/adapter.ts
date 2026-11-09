@@ -100,7 +100,8 @@ ${voice ? `      <audio id="voice" src="voice.wav" data-start="0" data-duration=
     if (running) return { url: `http://localhost:${running.port}`, started: false };
     const r = hf(['preview', 'project', '--background']);
     if (r.status !== 0) throw new Error('the preview did not start:\n' + r.stdout + r.stderr);
-    return { url: `http://localhost:${previewStatus()?.port ?? 3002}`, started: true };
+    const port = previewStatus()?.port ?? 3002;   // hyperframes takes the next free port when 3002 is busy
+    return { url: `http://localhost:${port}`, started: true, note: port === 3002 ? undefined : `port 3002 was busy (another program is using it), so the preview opened on ${port} instead` };
   },
   stopPreview() { hf(['preview', 'project', '--stop']); },
 };

@@ -26,6 +26,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Plan, Words } from './types.ts';
+import { AMBIENCE, MOODS, SFX } from './score.ts';
 
 const dir = process.argv[2];
 if (!dir) { console.error('usage: node core/scenes.ts videos/<topic>'); process.exit(2); }
@@ -55,6 +56,9 @@ S.forEach((s, k) => {
   if (s.highlight && s.title && !s.title.toLowerCase().includes(s.highlight.toLowerCase())) err.push(`${s.id}: "highlight" (${s.highlight}) is not in the title`);
   if (s.title && s.title.length > 48) warn.push(`${s.id}: long title (${s.title.length} characters): ≤ 40 works better in 9:16`);
   if (s.asset && !fs.existsSync(path.join(ROOT, 'assets', s.asset))) err.push(`${s.id}: assets/${s.asset} does not exist`);
+  if (s.mood && !MOODS[s.mood]) err.push(`${s.id}: unknown mood "${s.mood}" (${Object.keys(MOODS).join(', ')})`);
+  for (const a of s.ambience || []) if (!AMBIENCE[a]) err.push(`${s.id}: unknown ambience "${a}" (${Object.keys(AMBIENCE).join(', ')})`);
+  for (const c of s.keys || []) if (c.sfx && !SFX[c.sfx]) err.push(`${s.id}.${c.id}: unknown sfx "${c.sfx}" (${Object.keys(SFX).join(', ')})`);
 });
 S.forEach((s, k) => {
   s.t1 = k < S.length - 1 ? S[k + 1].t0 : E.duration;
@@ -71,4 +75,4 @@ for (const w of warn) console.log('  warning', w);
 if (err.length) { for (const e of err) console.log('  ERROR  ', e); process.exit(1); }
 fs.writeFileSync(file, JSON.stringify(E, null, 1));
 console.log(`scenes.json ok: ${S.length} scenes in ${E.duration.toFixed(2)} s, style ${E.style}`);
-for (const s of S) console.log(`  ${s.t0.toFixed(2).padStart(6)}–${s.t1.toFixed(2).padEnd(6)} ${s.type.padEnd(11)} ${s.id.padEnd(12)} ${s.title || ''}${s.stat ? `  [${s.stat.value}]` : ''}`);
+for (const s of S) console.log(`  ${s.t0.toFixed(2).padStart(6)}–${s.t1.toFixed(2).padEnd(6)} ${s.type.padEnd(11)} ${s.id.padEnd(12)} ${(s.mood || '').padEnd(11)} ${s.title || ''}${s.stat ? `  [${s.stat.value}]` : ''}`);

@@ -7,7 +7,7 @@ export interface Words { duration: number; language?: string; text?: string; wor
 
 // scenes.json (written by the agent, stamped with t0/t1/t by scenes.ts)
 export type SceneType = 'question' | 'object' | 'process' | 'comparison' | 'stat' | 'map' | 'asset' | 'closing';
-export interface Key { id: string; at?: number; t: number }   // at: word index (t in seconds when there's no voice)
+export interface Key { id: string; at?: number; t: number; sfx?: string }   // at: word index (t in seconds when there's no voice); sfx: a sound effect at that moment (core/score.ts)
 export interface Scene {
   id: string;
   from?: number;   // word index where the scene starts (no voice: t0 in seconds instead)
@@ -20,10 +20,13 @@ export interface Scene {
   asset?: string;
   keys?: Key[];
   transition?: 'cut';
+  mood?: string;          // the music's mood in this scene (core/score.ts); default: its type's
+  ambience?: string[];    // background sounds of the place (core/score.ts)
   t0: number;
   t1: number;
 }
-export interface Plan { style: string; fps: number; format: string; notes?: string; duration: number; scenes: Scene[] }
+export interface Plan { style: string; fps: number; format: string; notes?: string; duration: number; scenes: Scene[];
+  music?: { bpm?: number; key?: string } }   // the soundtrack's tempo and key (default 96 BPM in D)
 
 // script.json (only when the voice is generated with voice.ts)
 export interface ScriptLine { id?: string; text: string; pause?: number; seed?: number }

@@ -97,7 +97,7 @@ No recorded audio? `node core/voice.ts videos/my-topic` generates it from `scrip
 ## Structure
 
 ```
-core/            transcribe, analyze, world (world test), scenes (contract), storyboard, preview, render, mix, music, review, voice, typecheck, types
+core/            transcribe, analyze, world (world test), scenes (contract), score (sound vocabulary), storyboard, preview, render, mix, music, review, voice, typecheck, types
 styles/          flat2d/ — adapter, engine, theme, library, INSTALL.md, USAGE.md
                  3d/ — adapter, engine, theme, library (simple pieces), detail (textures, fur, shared set), INSTALL.md, USAGE.md
 videos/<topic>/  audio.wav, plan.md, world.ts or world3d.ts, world.json, world.png, scenes.json, visuals.ts or visuals3d.ts, storyboard.png, final.mp4, report.md

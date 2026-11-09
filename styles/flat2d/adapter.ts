@@ -1,5 +1,5 @@
 // Flat 2D: HyperFrames (HTML + SVG + GSAP). Same interface as every other style:
-//   build(video): writes project/index.html (one <section class="clip"> per scene) + engine, library and the video's visuals.ts
+//   build(video): writes project/index.html (one <section class="clip"> per scene) + engine, library and the video's world.ts + visuals.ts
 //     (the browser can't read TypeScript: esbuild strips the types and writes plain .js into project/)
 //   frames(video, times, dir): `hyperframes snapshot`    video(video): `hyperframes render` -> MP4 (mix.ts adds the audio)
 //   texts(video): `hyperframes check` (text out of frame, overlaps, contrast)
@@ -31,8 +31,8 @@ const adapter: Adapter = {
     fs.copyFileSync(path.join(HERE, 'node_modules', 'gsap', 'dist', 'gsap.min.js'), path.join(PROJ, 'gsap.min.js'));
     fs.copyFileSync(path.join(HERE, 'theme.css'), path.join(PROJ, 'theme.css'));
     for (const f of ['engine', 'library']) fs.writeFileSync(path.join(PROJ, `${f}.js`), toJs(path.join(HERE, `${f}.ts`)));
-    const vis = path.join(v, 'visuals.ts');
-    fs.writeFileSync(path.join(PROJ, 'visuals.js'), fs.existsSync(vis) ? toJs(vis) : '');
+    // the video's world (reusable pieces, their states, sets) and its scenes
+    for (const [src, out] of [['world.ts', 'world.js'], ['visuals.ts', 'visuals.js']]) { const f = path.join(v, src); fs.writeFileSync(path.join(PROJ, out), fs.existsSync(f) ? toJs(f) : ''); }
     if (fs.existsSync(path.join(v, 'assets'))) fs.cpSync(path.join(v, 'assets'), path.join(PROJ, 'assets'), { recursive: true });
     const voice = ['mix.wav', 'audio.wav'].find((f) => fs.existsSync(path.join(v, f)));
     if (voice) fs.copyFileSync(path.join(v, voice), path.join(PROJ, 'voice.wav'));   // to hear it in the preview; the final render remixes it
@@ -59,6 +59,7 @@ ${voice ? `      <audio id="voice" src="voice.wav" data-start="0" data-duration=
       const WORDS = ${JSON.stringify(P.words)};
     </script>
     <script src="library.js"></script>
+    <script src="world.js"></script>
     <script src="visuals.js"></script>
     <script src="engine.js"></script>
     <script>
@@ -100,7 +101,8 @@ ${voice ? `      <audio id="voice" src="voice.wav" data-start="0" data-duration=
     if (running) return { url: `http://localhost:${running.port}`, started: false };
     const r = hf(['preview', 'project', '--background']);
     if (r.status !== 0) throw new Error('the preview did not start:\n' + r.stdout + r.stderr);
-    return { url: `http://localhost:${previewStatus()?.port ?? 3002}`, started: true };
+    const port = previewStatus()?.port ?? 3002;   // hyperframes takes the next free port when 3002 is busy
+    return { url: `http://localhost:${port}`, started: true, note: port === 3002 ? undefined : `port 3002 was busy (another program is using it), so the preview opened on ${port} instead` };
   },
   stopPreview() { hf(['preview', 'project', '--stop']); },
 };

@@ -1,0 +1,48 @@
+{
+ "style": "3d",
+ "fps": 30,
+ "duration": 9,
+ "format": "9:16",
+ "notes": "Example without voice: one shared set, the hero textured (fur, wooden crate, grass around it) and everything else simple low-poly.",
+ "scenes": [
+  {
+   "id": "hero",
+   "type": "object",
+   "label": "Detalle 3D",
+   "title": "Textura para el héroe",
+   "highlight": "héroe",
+   "visual": "a furry orange critter breathing on a patch of grass; the camera circles it slowly",
+   "transition": "cut",
+   "t0": 0,
+   "t1": 3
+  },
+  {
+   "id": "crate",
+   "t0": 3,
+   "type": "comparison",
+   "label": "Detalle 3D",
+   "title": "Lo demás, simple",
+   "highlight": "simple",
+   "visual": "a wooden crate with grain drops next to two plain low-poly boxes",
+   "keys": [
+    {
+     "id": "drop",
+     "t": 3.3
+    }
+   ],
+   "transition": "cut",
+   "t1": 6
+  },
+  {
+   "id": "set",
+   "t0": 6,
+   "type": "closing",
+   "label": "Detalle 3D",
+   "title": "Un solo escenario",
+   "highlight": "escenario",
+   "visual": "the camera rises and pulls back over the whole set: textured grass around the hero, simple ground, trees and clouds",
+   "transition": "cut",
+   "t1": 9
+  }
+ ]
+}

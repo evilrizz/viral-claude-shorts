@@ -16,31 +16,36 @@ Flat, saturated vector: clean shapes with no outlines, flat shadows in a darker 
    ```bash
    node core/analyze.ts videos/<topic>
    ```
-4. **Plan.** The AI writes `videos/<topic>/scenes.json` (with `"style": "flat2d"` and `"fps": 30`) and `videos/<topic>/visuals.ts`, shaped as `defineVisuals({ id: { bg, ink, html(s), anim(tl, s, K, $) } })`. Validate the plan and the types:
+4. **World.** The AI designs the video's world in `videos/<topic>/plan.md` (its characters and objects with every state they go through, its sets, compositions and effects), builds it in `videos/<topic>/world.ts` and tests it before there are scenes, with test shots listed in `world.json`:
+   ```bash
+   node core/world.ts videos/<topic>
+   ```
+   It writes `world.png`, one panel per state, set and shot, and the AI fixes the world until every panel is right.
+5. **Scenes.** The AI cuts the audio into `videos/<topic>/scenes.json` (with `"style": "flat2d"` and `"fps": 30`), and `videos/<topic>/visuals.ts`, shaped as `defineVisuals({ id: { bg, ink, html(s), anim(tl, s, K, $) } })`, only assembles the world for each scene. Validate the scenes and the types:
    ```bash
    node core/scenes.ts videos/<topic>
    ```
    ```bash
    npm run typecheck
    ```
-5. **Storyboard.**
+6. **Storyboard.**
    ```bash
    node core/storyboard.ts videos/<topic>
    ```
    Check `storyboard.png` and ask for changes by panel number.
-6. **Live-reload preview** (optional, with the audio):
+7. **Live-reload preview** (optional, with the audio):
    ```bash
    node core/preview.ts videos/<topic>
    ```
    Opens http://localhost:3002, or reuses it if it's already open (the page reloads by itself with this video). It stays open in the background and shows the last video built; close it with `node core/preview.ts videos/<topic> --stop`.
-7. **Render.**
+8. **Render.**
    ```bash
    node core/render.ts videos/<topic>
    ```
    Writes `final.mp4` and `report.md`.
 
 ## Safe zone (TikTok, Reels, Shorts)
-The apps cover part of the video with their interface: the top tabs, the caption and music at the bottom (~440 px) and the like/comment/share buttons on the right (~140 px). Keep text, characters and key objects inside **x 60–940, y 220–1480** (`SAFE` in `library.ts`); only backgrounds (sky, ground, walls) fill the whole frame. The storyboard tints the covered zones red: nothing important should be there.
+The apps cover part of the video with their interface: the top tabs, the caption and music at the bottom (~320 px) and the buttons at the edges. The zone is symmetric, 80 px on each side. Keep text, characters and key objects inside **x 80–1000, y 160–1600** (`SAFE` in `library.ts`); only backgrounds (sky, ground, walls) fill the whole frame. The storyboard tints the covered zones red: nothing important should be there.
 
 ## Without voice (a quick test)
 With no audio there's no `words.json`: `scenes.json` gives `"duration"` in seconds, every scene after the first its `"t0"` and every key its `"t"`, also in seconds. `scenes.ts`, `storyboard.ts` and `preview.ts` work the same; `render.ts` needs a voice. The setup prompt makes `videos/hello/` this way.

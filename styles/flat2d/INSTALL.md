@@ -7,13 +7,14 @@
 |---|---|---|
 | Node.js | **22.18 or later** (runs the TypeScript directly; tested with 24) | `node -v` |
 | ffmpeg | any recent one | `ffmpeg -version` |
-| Python | 3.10 or later (for transcription) | `python3 --version` |
+| Python | 3.10 to 3.14 (for transcription; 3.12 is the safest) | `python3 --version` |
 
 ## Steps
 From the project root (the core: transcription, and TypeScript for the type checks):
 ```bash
 python3 -m venv .venv && .venv/bin/pip install faster-whisper
 ```
+If `python3 --version` says 3.15 or later, the transcription can't be installed yet (some of its pieces aren't published for it): use `python3.12` instead of `python3` (`brew install python@3.12` on macOS, `py -3.12` on Windows).
 ```bash
 npm install
 ```

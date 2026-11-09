@@ -1,0 +1,5 @@
+{
+  // The Node side of this style (same rules as the root tsconfig.json).
+  "extends": "../../tsconfig.json",
+  "include": ["adapter.ts"]
+}

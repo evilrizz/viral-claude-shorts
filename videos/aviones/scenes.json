@@ -1,0 +1,166 @@
+{
+ "style": "3d",
+ "fps": 30,
+ "format": "9:16",
+ "notes": "Matte low-poly 3D, clear sky. The plane is the star. Explain lift with a cross-section of the wing and little balls of air deflected downward.",
+ "scenes": [
+  {
+   "id": "hook",
+   "from": 0,
+   "type": "question",
+   "label": "Física del vuelo",
+   "title": "¿Cómo puede volar algo tan pesado?",
+   "highlight": "volar",
+   "stat": {
+    "value": "+500 t",
+    "text": "pesa un avión gigante al despegar"
+   },
+   "visual": "a huge plane on the runway with trees around it; the camera slowly circles it",
+   "keys": [
+    {
+     "id": "stat",
+     "at": 8,
+     "t": 2.82
+    }
+   ],
+   "transition": "cut",
+   "t0": 0,
+   "t1": 4.17
+  },
+  {
+   "id": "wing",
+   "from": 10,
+   "type": "object",
+   "label": "El secreto",
+   "title": "Está en el ala",
+   "highlight": "ala",
+   "visual": "the camera closes in on the wing, which lights up",
+   "keys": [
+    {
+     "id": "wing",
+     "at": 16,
+     "t": 6.2
+    }
+   ],
+   "transition": "cut",
+   "t0": 4.17,
+   "t1": 7.33
+  },
+  {
+   "id": "shape",
+   "from": 18,
+   "type": "process",
+   "label": "La forma",
+   "title": "Inclinada y curvada",
+   "highlight": "curvada",
+   "visual": "the wing cross-section tilts; the air passes and is deflected downward",
+   "keys": [
+    {
+     "id": "tilted",
+     "at": 21,
+     "t": 8.16
+    },
+    {
+     "id": "curved",
+     "at": 23,
+     "t": 9.34
+    },
+    {
+     "id": "pushes",
+     "at": 26,
+     "t": 10.44
+    },
+    {
+     "id": "down",
+     "at": 30,
+     "t": 11.58
+    }
+   ],
+   "transition": "cut",
+   "t0": 7.33,
+   "t1": 12.35
+  },
+  {
+   "id": "newton",
+   "from": 31,
+   "type": "comparison",
+   "label": "Sustentación",
+   "title": "Aire abajo, ala arriba",
+   "highlight": "arriba",
+   "visual": "blue arrows pointing down (the air) and a big yellow arrow pointing up (the wing)",
+   "keys": [
+    {
+     "id": "down",
+     "at": 37,
+     "t": 13.66
+    },
+    {
+     "id": "up",
+     "at": 42,
+     "t": 15.34
+    },
+    {
+     "id": "lift",
+     "at": 46,
+     "t": 16.72
+    }
+   ],
+   "transition": "cut",
+   "t0": 12.35,
+   "t1": 17.43
+  },
+  {
+   "id": "speed",
+   "from": 47,
+   "type": "stat",
+   "label": "Velocidad",
+   "title": "Más rápido, más aire",
+   "highlight": "rápido",
+   "stat": {
+    "value": "~300 km/h",
+    "text": "para despegar"
+   },
+   "visual": "the plane speeds down the runway and on the stat it lifts its nose and takes off",
+   "keys": [
+    {
+     "id": "fast",
+     "at": 50,
+     "t": 18.84
+    },
+    {
+     "id": "stat",
+     "at": 60,
+     "t": 22.7
+    }
+   ],
+   "transition": "cut",
+   "t0": 17.43,
+   "t1": 24.25
+  },
+  {
+   "id": "closing",
+   "from": 64,
+   "type": "closing",
+   "label": "En resumen",
+   "title": "No flota: empuja el aire",
+   "highlight": "empuja",
+   "visual": "the plane flies among clouds; behind the wings the air goes down",
+   "keys": [
+    {
+     "id": "floats",
+     "at": 69,
+     "t": 25.76
+    },
+    {
+     "id": "pushing",
+     "at": 71,
+     "t": 26.4
+    }
+   ],
+   "transition": "cut",
+   "t0": 24.25,
+   "t1": 29.454
+  }
+ ],
+ "duration": 29.454
+}

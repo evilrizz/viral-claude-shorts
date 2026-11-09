@@ -7,6 +7,8 @@ presentacion/
 # intermediate files the scripts regenerate
 videos/*/render/
 videos/*/storyboard/
+videos/*/world/
+videos/*/world.md
 videos/*/review/
 videos/*/voice/
 videos/*/render.log
@@ -14,13 +16,21 @@ videos/*/report.md
 videos/*/mix.wav
 videos/*/music.wav
 styles/flat2d/project/
+styles/3d/project/
 # the example ships only what Claude needs (scenes.json, visuals.ts, words.json, storyboard.png): its voice stays local
 videos/blue-sky/audio.*
 videos/blue-sky/analysis.*
 videos/blue-sky/script.json
 videos/blue-sky/storyboard.md
+videos/aviones/audio.*
+videos/aviones/analysis.*
+videos/aviones/script.json
+videos/aviones/storyboard.md
+videos/aviones/_old-format/
+videos/detail-demo/storyboard.md
 # the setup's test animation: everyone makes their own
 videos/hello/
+videos/hello-3d/
 **/.hyperframes/
 **/renders/
 **/frames/

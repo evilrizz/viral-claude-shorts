@@ -13,15 +13,15 @@ html, body { margin: 0; background: #000; }
 .scene { overflow: hidden; }
 .art, .art > svg { position: absolute; inset: 0; width: 1080px; height: 1920px; }
 .titles { position: absolute; inset: 0; pointer-events: none; }
-.label { position: absolute; top: 262px; left: 505px; transform: translateX(-50%); background: var(--label); color: #fff;
+.label { position: absolute; top: 202px; left: 540px; transform: translateX(-50%); background: var(--label); color: #fff;
   font: 800 26px/1 var(--font); letter-spacing: 3px; padding: 14px 26px; border-radius: 999px; white-space: nowrap; box-shadow: 0 8px 0 rgba(0,0,0,0.18); }
-.title { position: absolute; top: 352px; left: 75px; width: 860px; display: flex; flex-wrap: wrap; justify-content: center;
+.title { position: absolute; top: 292px; left: 110px; width: 860px; display: flex; flex-wrap: wrap; justify-content: center;
   column-gap: 22px; row-gap: 4px; font-weight: 800; font-size: 84px; line-height: 1.08; color: var(--ink); text-align: center; }
 .title.long { font-size: 74px; }
 .word { position: relative; display: inline-block; isolation: isolate; }
 .word .box { position: absolute; left: -14px; right: -14px; top: 6px; bottom: -6px; background: var(--accent); border-radius: 16px; z-index: -1; transform-origin: left center; }
 .word.hl { color: var(--ink); }
-.card { position: absolute; left: 75px; width: 860px; height: 170px; top: 1290px; background: var(--card); border-radius: 30px; display: flex; align-items: center;
+.card { position: absolute; left: 110px; width: 860px; height: 170px; top: 1400px; background: var(--card); border-radius: 30px; display: flex; align-items: center;
   gap: 30px; padding: 0 44px; box-sizing: border-box; box-shadow: 0 12px 0 rgba(0,0,0,0.18); }
 .card .value { font-size: 96px; font-weight: 900; color: var(--stat); white-space: nowrap; }
 .card .text { font-size: 36px; font-weight: 700; color: var(--card-text); line-height: 1.15; }

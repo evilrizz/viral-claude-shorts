@@ -1,8 +1,8 @@
 // =====================================================================
 //  Flat 2D — library: reusable flat SVG pieces and one generic scene per type.
 //  Runs in the browser (the adapter strips the types). Every piece returns SVG markup (a string). Frame coordinates: 1080 x 1920.
-//  Safe zone (TikTok/Reels/Shorts cover the rest with their interface): x 60–940, y 220–1480 (SAFE). Titles sit on top,
-//  so the art's usable area is y 660–1270 with a stat card, down to 1480 without one. Only backgrounds go past it.
+//  Safe zone (TikTok/Reels/Shorts cover the rest with their interface): x 80–1000, y 160–1600 (SAFE), centered on x 540.
+//  Titles sit on top, so the art's usable area is y 600–1380 with a stat card, down to 1600 without one. Only backgrounds go past it.
 //  Style rules: flat colors, no outlines, one flat shadow (same color, darker) offset.
 //  GSAP NOTE: every piece puts its id on a <g> WITHOUT a transform and the position on an inner <g>; that way GSAP's
 //  x/y/scale add to the position instead of replacing it.
@@ -12,7 +12,7 @@ const F2 = {
   green: '#3ccf91', greenD: '#24a872', purple: '#8b6cff', pink: '#ff7eb6', white: '#ffffff', cream: '#fff4dc', gray: '#c9d3ea',
 };
 // same numbers as SAFE in core/style.ts (the browser can't import it)
-const SAFE = { left: 60, right: 940, top: 220, bottom: 1480 };
+const SAFE = { left: 80, right: 1000, top: 160, bottom: 1600 };
 const RAINBOW = ['#ff5a5f', '#ff8a3d', '#ffc83d', '#3ccf91', '#4c7dff', '#8b6cff'];
 const svg = (body: string, defs = '') => `<svg viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg"><defs>${defs}</defs>${body}</svg>`;
 function f2Sun(id: string, cx: number, cy: number, r: number, c = F2.yellow) {
@@ -54,13 +54,13 @@ const f2Pop = (tl: gsap.core.Timeline, sel: string, t: number, d = 0.45) => tl.f
 // generic scenes by type: { bg?, ink?, html(s), anim(tl, s, K, $) }. On a light background set ink: F2.night.
 const LIBRARY: Record<string, Visual> = {
   question: { html: () => svg(`${f2Sun('sun', 540, 1000, 120)}`), anim: (tl, s, K, $) => tl.fromTo($('#sun'), { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.6, ease: 'back.out(2)' }, s.t0 + 0.2) },
-  object: { html: () => svg(`<circle id="obj" cx="505" cy="1000" r="180" fill="${F2.blue}"/>`), anim: (tl, s, K, $) => tl.fromTo($('#obj'), { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.6, ease: 'back.out(2)' }, s.t0 + 0.2) },
-  process: { html: () => svg([0, 1, 2].map((i) => `<circle class="step" cx="${215 + i * 290}" cy="1000" r="110" fill="${RAINBOW[i * 2]}"/>`).join('')), anim: (tl, s, K, $) => tl.fromTo($('.step'), { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.5, ease: 'back.out(2)', stagger: 0.4 }, s.t0 + 0.2) },
-  comparison: { html: () => svg(`<rect id="a" x="140" y="760" width="300" height="500" rx="30" fill="${F2.red}"/><rect id="b" x="600" y="760" width="300" height="500" rx="30" fill="${F2.blue}"/>`), anim: () => {} },
-  stat: { html: () => svg(`<circle id="st" cx="505" cy="1000" r="200" fill="${F2.yellow}"/>`), anim: (tl, s, K, $) => tl.fromTo($('#st'), { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.6, ease: 'back.out(2)' }, K('stat')) },
-  map: { html: () => svg(`<circle cx="505" cy="1000" r="300" fill="${F2.sky}"/><path d="M380 900 Q460 820 560 880 T640 1040 Q520 1100 420 1030Z" fill="${F2.green}"/>`), anim: () => {} },
-  asset: { html: (s) => svg(`<image href="assets/${s.asset}" x="140" y="700" width="730" height="560" preserveAspectRatio="xMidYMid meet"/>`), anim: () => {} },
-  closing: { html: () => svg(`${f2Sun('sunC', 505, 1050, 150)}`), anim: (tl, s, K, $) => tl.fromTo($('#sunC'), { rotation: 0, transformOrigin: '50% 50%' }, { rotation: 90, duration: s.t1 - s.t0, ease: 'none' }, s.t0) },
+  object: { html: () => svg(`<circle id="obj" cx="540" cy="1000" r="180" fill="${F2.blue}"/>`), anim: (tl, s, K, $) => tl.fromTo($('#obj'), { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.6, ease: 'back.out(2)' }, s.t0 + 0.2) },
+  process: { html: () => svg([0, 1, 2].map((i) => `<circle class="step" cx="${250 + i * 290}" cy="1000" r="110" fill="${RAINBOW[i * 2]}"/>`).join('')), anim: (tl, s, K, $) => tl.fromTo($('.step'), { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.5, ease: 'back.out(2)', stagger: 0.4 }, s.t0 + 0.2) },
+  comparison: { html: () => svg(`<rect id="a" x="160" y="760" width="300" height="500" rx="30" fill="${F2.red}"/><rect id="b" x="620" y="760" width="300" height="500" rx="30" fill="${F2.blue}"/>`), anim: () => {} },
+  stat: { html: () => svg(`<circle id="st" cx="540" cy="1000" r="200" fill="${F2.yellow}"/>`), anim: (tl, s, K, $) => tl.fromTo($('#st'), { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.6, ease: 'back.out(2)' }, K('stat')) },
+  map: { html: () => svg(`<circle cx="540" cy="1000" r="300" fill="${F2.sky}"/><path transform="translate(35 0)" d="M380 900 Q460 820 560 880 T640 1040 Q520 1100 420 1030Z" fill="${F2.green}"/>`), anim: () => {} },
+  asset: { html: (s) => svg(`<image href="assets/${s.asset}" x="175" y="700" width="730" height="560" preserveAspectRatio="xMidYMid meet"/>`), anim: () => {} },
+  closing: { html: () => svg(`${f2Sun('sunC', 540, 1050, 150)}`), anim: (tl, s, K, $) => tl.fromTo($('#sunC'), { rotation: 0, transformOrigin: '50% 50%' }, { rotation: 90, duration: s.t1 - s.t0, ease: 'none' }, s.t0) },
 };
 
 // each video's visuals.ts fills this with defineVisuals({ sceneId: { bg, ink, html, anim }, ... })

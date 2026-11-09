@@ -1,5 +1,5 @@
 {
-  // The Node side: core/ and every style's adapter. Node runs these .ts files directly (type stripping),
+  // The Node side: core/ (each installed style adds its adapter with styles/<style>/tsconfig.adapter.json). Node runs these .ts files directly (type stripping),
   // so only syntax that can be erased is allowed (no enums, no namespaces). `npm run typecheck` checks the types.
   "compilerOptions": {
     "target": "es2023",
@@ -13,5 +13,5 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["core/**/*.ts", "styles/*/adapter.ts"]
+  "include": ["core/**/*.ts"]
 }

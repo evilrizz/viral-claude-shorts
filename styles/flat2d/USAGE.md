@@ -16,7 +16,7 @@ Flat, saturated vector: clean shapes with no outlines, flat shadows in a darker 
    ```bash
    node core/analyze.ts videos/<topic>
    ```
-4. **Plan.** The AI writes `videos/<topic>/scenes.json` (with `"style": "flat2d"` and `"fps": 30`) and `videos/<topic>/visuals.ts`, shaped as `defineVisuals({ id: { bg, ink, html(s), anim(tl, s, K, $) } })`. Validate the plan and the types:
+4. **Plan.** The AI writes `videos/<topic>/scenes.json` (with `"style": "flat2d"` and `"fps": 30`), the art plan `videos/<topic>/plan.md` (each object, set and composition; you approve it), then `videos/<topic>/visuals.ts`, shaped as `defineVisuals({ id: { bg, ink, html(s), anim(tl, s, K, $) } })`. Validate the plan and the types:
    ```bash
    node core/scenes.ts videos/<topic>
    ```
@@ -40,7 +40,7 @@ Flat, saturated vector: clean shapes with no outlines, flat shadows in a darker 
    Writes `final.mp4` and `report.md`.
 
 ## Safe zone (TikTok, Reels, Shorts)
-The apps cover part of the video with their interface: the top tabs, the caption and music at the bottom (~440 px) and the like/comment/share buttons on the right (~140 px). Keep text, characters and key objects inside **x 60–940, y 220–1480** (`SAFE` in `library.ts`); only backgrounds (sky, ground, walls) fill the whole frame. The storyboard tints the covered zones red: nothing important should be there.
+The apps cover part of the video with their interface: the top tabs, the caption and music at the bottom (~320 px) and the buttons at the edges. The zone is symmetric, 80 px on each side. Keep text, characters and key objects inside **x 80–1000, y 160–1600** (`SAFE` in `library.ts`); only backgrounds (sky, ground, walls) fill the whole frame. The storyboard tints the covered zones red: nothing important should be there.
 
 ## Without voice (a quick test)
 With no audio there's no `words.json`: `scenes.json` gives `"duration"` in seconds, every scene after the first its `"t0"` and every key its `"t"`, also in seconds. `scenes.ts`, `storyboard.ts` and `preview.ts` work the same; `render.ts` needs a voice. The setup prompt makes `videos/hello/` this way.

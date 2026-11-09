@@ -20,7 +20,7 @@ I want to set up the project https://github.com/hans1801/viral-claude-shorts on 
    - style: `npm install` inside `styles/flat2d`, and check that `npx hyperframes --version` says 0.8.166.
 5. Make me a basic 2D animation with no voice (about 6 seconds) to test that everything works. First read `styles/flat2d/USAGE.md` and look at the example in `videos/blue-sky/` (`scenes.json` and `visuals.ts`). Then, in `videos/hello/`:
    - write `scenes.json` with style `flat2d`, fps 30 and `"duration": 6`, and 2 or 3 scenes with short Spanish titles (for example "¡Todo listo!"). There is no voice, so instead of word indices every scene after the first gives its start in seconds with `"t0"`, and every key its moment with `"t"`;
-   - write `visuals.ts` with `defineVisuals({ ... })`: cheerful and simple, inside the safe zone (x 60–940, y 220–1480), with the library's flat pieces (for example a check mark that pops in, the sun, confetti made of flat shapes);
+   - write `visuals.ts` with `defineVisuals({ ... })`: cheerful and simple, inside the safe zone (x 80–1000, y 160–1600), with the library's flat pieces (for example a check mark that pops in, the sun, confetti made of flat shapes);
    - validate it with `node core/scenes.ts videos/hello` and `npm run typecheck`, fixing it until there are no errors;
    - make the storyboard with `node core/storyboard.ts videos/hello`, look at `videos/hello/storyboard.png` yourself, fix whatever looks wrong and show it to me.
 6. Open the preview with `node core/preview.ts videos/hello` (it opens my browser at http://localhost:3002).

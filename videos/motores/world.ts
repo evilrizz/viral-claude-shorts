@@ -413,7 +413,7 @@ function moCar(id: string, x: number, y: number, s = 1) {
     <g id="${id}-w2"><g transform="translate(170 40)"><circle r="56" fill="#3b3f4a" stroke="${MO.o}" stroke-width="${MO_SW}"/><circle r="24" fill="${MO.steel}" stroke="${MO.o}" stroke-width="5"/><rect x="-4" y="-50" width="8" height="26" fill="${MO.steel}"/></g></g></g></g>`;
 }
 // the Idio-two convertible: Tico (tid) driving, Dota (did) co-pilot on the far seat, plate on the back. Faces right.
-function moCarIdio(id: string, tid: string, did: string, x: number, y: number, s = 1, plate = 'IDIOT-TWO') {
+function moCarIdio(id: string, tid: string, did: string, x: number, y: number, s = 1, plate = 'IDIO-TWO') {
   const O = MO.o, wheel = (wid: string, wx: number) => `<g id="${id}-${wid}"><g transform="translate(${wx} 40)">${moVol((a) => `<circle r="56" ${a}/>`, '#3b3f4a', { sx: 10, sy: 10 })}<circle r="24" fill="${MO.steel}" stroke="${O}" stroke-width="5"/><rect x="-4" y="-50" width="8" height="26" fill="${MO.steel}"/></g></g>`;
   return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})">
     <ellipse cx="0" cy="98" rx="290" ry="18" fill="#000" opacity="0.18"/>

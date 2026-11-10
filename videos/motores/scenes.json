@@ -1,0 +1,923 @@
+{
+ "style": "flat2d",
+ "fps": 30,
+ "format": "9:16",
+ "music": {
+  "bpm": 100,
+  "key": "D"
+ },
+ "notes": "Idio-two: Tico (tall dark-brown monkey with glasses, blue t-shirt) and Dota (small light-brown monkey, yellow t-shirt, bandage) from assets/tico-dota.png. Build an engine piece by piece to reach the timing belt. Flat 2D with thick dark-brown outlines like the reference.",
+ "scenes": [
+  {
+   "id": "hook",
+   "from": 0,
+   "type": "question",
+   "label": "Idio-two",
+   "title": "La pieza que casi nadie revisa",
+   "highlight": "revisa",
+   "visual": "burst; engine front view with the belt hidden under the '?'; Tico crossed arms talking",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "q",
+     "at": 4,
+     "sfx": "pop",
+     "t": 1.354
+    }
+   ],
+   "transition": "cut",
+   "t0": 0,
+   "t1": 3.173
+  },
+  {
+   "id": "ruin",
+   "from": 9,
+   "type": "question",
+   "label": "Ojo",
+   "title": "Te puede arruinar el motor",
+   "highlight": "arruinar",
+   "visual": "engine front view shakes and smokes; Tico talking",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "rompe",
+     "at": 12,
+     "sfx": "hit",
+     "t": 3.89
+    },
+    {
+     "id": "entero",
+     "at": 17,
+     "t": 5.372
+    }
+   ],
+   "transition": "cut",
+   "t0": 3.173,
+   "t1": 6.346
+  },
+  {
+   "id": "ask",
+   "from": 19,
+   "type": "question",
+   "label": "Pregunta",
+   "title": "¿Sabes cuál es?",
+   "highlight": "cuál",
+   "visual": "burst; Dota pops hugging a steering wheel; Tico crossed arms; engine '?' behind",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 22,
+     "sfx": "pop",
+     "t": 7.947
+    }
+   ],
+   "transition": "cut",
+   "t0": 6.346,
+   "t1": 9.449
+  },
+  {
+   "id": "idiot",
+   "from": 24,
+   "type": "object",
+   "label": "Idio-two",
+   "title": "Ay, Dota, qué idiota",
+   "highlight": "idiota",
+   "visual": "burst; Tico facepalm; Dota hugging the wheel, confused",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "palm",
+     "at": 24,
+     "t": 9.699
+    },
+    {
+     "id": "idiota",
+     "at": 27,
+     "sfx": "fail",
+     "t": 11.331
+    }
+   ],
+   "transition": "cut",
+   "t0": 9.449,
+   "t1": 13.408
+  },
+  {
+   "id": "armo",
+   "from": 29,
+   "type": "process",
+   "label": "El plan",
+   "title": "Te lo armo pieza por pieza",
+   "highlight": "armo",
+   "visual": "burst; workshop table; Tico puts a metal tube on it",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "tube",
+     "at": 31,
+     "sfx": "thump",
+     "t": 14.071
+    }
+   ],
+   "transition": "cut",
+   "ambience": [
+    "room"
+   ],
+   "t0": 13.408,
+   "t1": 17.507
+  },
+  {
+   "id": "tube",
+   "from": 42,
+   "type": "process",
+   "label": "Paso 1",
+   "title": "Gasolina + chispa = ¡explota!",
+   "highlight": "explota",
+   "visual": "tube on table; a gas drop falls in, a spark, a boom",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "gas",
+     "at": 48,
+     "sfx": "pop",
+     "t": 19.125
+    },
+    {
+     "id": "spark",
+     "at": 53,
+     "sfx": "zip",
+     "t": 20.574
+    },
+    {
+     "id": "boom",
+     "at": 54,
+     "sfx": "impact",
+     "t": 21.144
+    }
+   ],
+   "transition": "cut",
+   "ambience": [
+    "room"
+   ],
+   "t0": 17.507,
+   "t1": 22.36
+  },
+  {
+   "id": "piston",
+   "from": 56,
+   "type": "object",
+   "label": "Paso 1",
+   "title": "Ese es el pistón",
+   "highlight": "pistón",
+   "visual": "tube on table; a lid (piston) drops in; boom pushes it down; tag PISTÓN",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "lid",
+     "at": 60,
+     "sfx": "thump",
+     "t": 23.87
+    },
+    {
+     "id": "push",
+     "at": 66,
+     "sfx": "hit",
+     "t": 25.861
+    },
+    {
+     "id": "tag",
+     "at": 72,
+     "sfx": "pop",
+     "t": 28.138
+    }
+   ],
+   "transition": "cut",
+   "ambience": [
+    "room"
+   ],
+   "t0": 22.36,
+   "t1": 29.339
+  },
+  {
+   "id": "stuck",
+   "from": 75,
+   "type": "object",
+   "label": "Problema",
+   "title": "Se queda atorado abajo",
+   "highlight": "atorado",
+   "visual": "Dota cheering; piston goes down once and gets stuck",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "cheer",
+     "at": 75,
+     "t": 29.589
+    },
+    {
+     "id": "down",
+     "at": 80,
+     "sfx": "thump",
+     "t": 32.172
+    },
+    {
+     "id": "stuck",
+     "at": 86,
+     "sfx": "fail",
+     "t": 33.728
+    }
+   ],
+   "transition": "cut",
+   "ambience": [
+    "room"
+   ],
+   "t0": 29.339,
+   "t1": 34.953
+  },
+  {
+   "id": "rod",
+   "from": 88,
+   "type": "process",
+   "label": "Paso 2",
+   "title": "Una varilla y un eje doblado",
+   "highlight": "varilla",
+   "visual": "blueprint; cutaway: piston, then rod, then crank appear",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "rod",
+     "at": 93,
+     "sfx": "pop",
+     "t": 36.713
+    },
+    {
+     "id": "crank",
+     "at": 99,
+     "sfx": "pop",
+     "t": 38.535
+    }
+   ],
+   "transition": "cut",
+   "t0": 34.953,
+   "t1": 40.736
+  },
+  {
+   "id": "cycle",
+   "from": 105,
+   "type": "process",
+   "label": "Paso 2",
+   "title": "Baja, da vuelta y sube",
+   "highlight": "vuelta",
+   "visual": "blueprint; cutaway turning; spin arrow on the crank, up-down arrow on the piston",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "down",
+     "at": 110,
+     "t": 42.212
+    },
+    {
+     "id": "up",
+     "at": 117,
+     "t": 43.866
+    }
+   ],
+   "transition": "cut",
+   "t0": 40.736,
+   "t1": 44.899
+  },
+  {
+   "id": "names",
+   "from": 120,
+   "type": "object",
+   "label": "Paso 2",
+   "title": "Biela y cigüeñal",
+   "highlight": "cigüeñal",
+   "visual": "cutaway turning slowly; tags BIELA and CIGÜEÑAL",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "biela",
+     "at": 124,
+     "sfx": "pop",
+     "t": 46.233
+    },
+    {
+     "id": "cig",
+     "at": 130,
+     "sfx": "pop",
+     "t": 47.602
+    }
+   ],
+   "transition": "cut",
+   "t0": 44.899,
+   "t1": 48.499
+  },
+  {
+   "id": "closed",
+   "from": 131,
+   "type": "question",
+   "label": "Problema",
+   "title": "El tubo está cerrado",
+   "highlight": "cerrado",
+   "visual": "cutaway with closed head; grey smoke trapped, piston stuck",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "smoke",
+     "at": 142,
+     "sfx": "thump",
+     "t": 51.909
+    }
+   ],
+   "transition": "cut",
+   "t0": 48.499,
+   "t1": 52.802
+  },
+  {
+   "id": "valves",
+   "from": 145,
+   "type": "process",
+   "label": "Paso 3",
+   "title": "Una deja entrar, otra salir",
+   "highlight": "entrar",
+   "visual": "cutaway; two valves pop; blue arrow in, grey smoke out",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "holes",
+     "at": 148,
+     "sfx": "pop",
+     "t": 53.792
+    },
+    {
+     "id": "in",
+     "at": 153,
+     "sfx": "whoosh",
+     "t": 55.925
+    },
+    {
+     "id": "out",
+     "at": 161,
+     "sfx": "whoosh",
+     "t": 58.289
+    }
+   ],
+   "transition": "cut",
+   "t0": 52.802,
+   "t1": 59.305
+  },
+  {
+   "id": "vname",
+   "from": 164,
+   "type": "object",
+   "label": "Paso 3",
+   "title": "Esas son las válvulas",
+   "highlight": "válvulas",
+   "visual": "cutaway; tag VÁLVULAS; Dota pops asking; Tico says no",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "tag",
+     "at": 167,
+     "sfx": "pop",
+     "t": 60.387
+    },
+    {
+     "id": "dota",
+     "at": 168,
+     "t": 61.586
+    },
+    {
+     "id": "no",
+     "at": 169,
+     "sfx": "tick",
+     "t": 61.857
+    }
+   ],
+   "transition": "cut",
+   "t0": 59.305,
+   "t1": 63.36
+  },
+  {
+   "id": "strokes",
+   "from": 171,
+   "type": "process",
+   "label": "4 tiempos",
+   "title": "Cuatro movimientos",
+   "highlight": "Cuatro",
+   "visual": "blueprint; four cards ENTRA, APRIETA, EXPLOTA, SALE",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "s1",
+     "at": 174,
+     "sfx": "pop",
+     "t": 65.402
+    },
+    {
+     "id": "s2",
+     "at": 178,
+     "sfx": "pop",
+     "t": 66.834
+    },
+    {
+     "id": "s3",
+     "at": 180,
+     "sfx": "hit",
+     "t": 67.913
+    },
+    {
+     "id": "s4",
+     "at": 182,
+     "sfx": "whoosh",
+     "t": 68.57
+    }
+   ],
+   "transition": "cut",
+   "t0": 63.36,
+   "t1": 69.944
+  },
+  {
+   "id": "timing",
+   "from": 185,
+   "type": "question",
+   "label": "Paso 4",
+   "title": "Abrir cada tapita a tiempo",
+   "highlight": "tapita",
+   "visual": "cutaway; valves blink with a '?' above",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "q",
+     "at": 190,
+     "sfx": "pop",
+     "t": 71.762
+    }
+   ],
+   "transition": "cut",
+   "t0": 69.944,
+   "t1": 73.422
+  },
+  {
+   "id": "cams",
+   "from": 195,
+   "type": "object",
+   "label": "Paso 4",
+   "title": "El árbol de levas",
+   "highlight": "levas",
+   "visual": "cutaway turning with cams pushing the valves; tag ÁRBOL DE LEVAS",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "cams",
+     "at": 198,
+     "sfx": "pop",
+     "t": 74.64
+    },
+    {
+     "id": "tag",
+     "at": 207,
+     "sfx": "pop",
+     "t": 77.436
+    }
+   ],
+   "transition": "cut",
+   "t0": 73.422,
+   "t1": 78.385
+  },
+  {
+   "id": "ratio",
+   "from": 210,
+   "type": "comparison",
+   "label": "Paso 4",
+   "title": "Una vuelta por cada dos",
+   "highlight": "dos",
+   "visual": "cutaway turning 720°; tags LEVAS ×1 and CIGÜEÑAL ×2",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "one",
+     "at": 212,
+     "sfx": "pop",
+     "t": 78.92
+    },
+    {
+     "id": "two",
+     "at": 216,
+     "sfx": "pop",
+     "t": 79.967
+    }
+   ],
+   "transition": "cut",
+   "t0": 78.385,
+   "t1": 81.112
+  },
+  {
+   "id": "plug",
+   "from": 219,
+   "type": "object",
+   "label": "Paso 5",
+   "title": "Un tapón con dos puntitas",
+   "highlight": "puntitas",
+   "visual": "cutaway; the spark plug drops into the head",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "plug",
+     "at": 224,
+     "sfx": "thump",
+     "t": 82.587
+    }
+   ],
+   "transition": "cut",
+   "t0": 81.112,
+   "t1": 84.015
+  },
+  {
+   "id": "bujia",
+   "from": 229,
+   "type": "process",
+   "label": "Paso 5",
+   "title": "Esa es la bujía",
+   "highlight": "bujía",
+   "visual": "cutaway; piston rises, spark at the top; tag BUJÍA",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "squeeze",
+     "at": 233,
+     "sfx": "zip",
+     "t": 85.341
+    },
+    {
+     "id": "tag",
+     "at": 237,
+     "sfx": "pop",
+     "t": 86.972
+    }
+   ],
+   "transition": "cut",
+   "t0": 84.015,
+   "t1": 88.249
+  },
+  {
+   "id": "onlyone",
+   "from": 240,
+   "type": "comparison",
+   "label": "4 tiempos",
+   "title": "Solo uno empuja",
+   "highlight": "empuja",
+   "visual": "four cards; EXPLOTA glows, the other three go grey: DE GORRA",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "one",
+     "at": 246,
+     "sfx": "shimmer",
+     "t": 91.144
+    },
+    {
+     "id": "gorra",
+     "at": 251,
+     "sfx": "fail",
+     "t": 92.862
+    }
+   ],
+   "transition": "cut",
+   "t0": 88.249,
+   "t1": 93.807
+  },
+  {
+   "id": "disc",
+   "from": 254,
+   "type": "object",
+   "label": "Paso 6",
+   "title": "Un disco pesado que gira",
+   "highlight": "disco",
+   "visual": "cutaway; the flywheel appears behind the crank and keeps it turning",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "fly",
+     "at": 260,
+     "sfx": "whoosh",
+     "t": 95.878
+    }
+   ],
+   "transition": "cut",
+   "t0": 93.807,
+   "t1": 98.579
+  },
+  {
+   "id": "inercia",
+   "from": 268,
+   "type": "object",
+   "label": "Paso 6",
+   "title": "El volante de inercia",
+   "highlight": "inercia",
+   "visual": "cutaway with flywheel; tag VOLANTE DE INERCIA",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "tag",
+     "at": 271,
+     "sfx": "pop",
+     "t": 99.497
+    }
+   ],
+   "transition": "cut",
+   "t0": 98.579,
+   "t1": 100.956
+  },
+  {
+   "id": "touch",
+   "from": 274,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Ese sí es el volante!",
+   "highlight": "volante",
+   "visual": "burst; spinning flywheel; Dota reaches, touches it and flies off spinning",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "reach",
+     "at": 279,
+     "t": 103.476
+    },
+    {
+     "id": "fly",
+     "at": 281,
+     "sfx": "whoosh",
+     "t": 104.207
+    }
+   ],
+   "transition": "cut",
+   "t0": 100.956,
+   "t1": 105.2
+  },
+  {
+   "id": "heat",
+   "from": 282,
+   "type": "question",
+   "label": "Problema",
+   "title": "Se calienta y se traba",
+   "highlight": "calienta",
+   "visual": "cutaway turning, heat waves, parts glow red and it jams; Dota back dizzy with bump and black eye",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "heat",
+     "at": 288,
+     "sfx": "riser",
+     "t": 107.424
+    },
+    {
+     "id": "jam",
+     "at": 292,
+     "sfx": "scratch",
+     "t": 108.959
+    }
+   ],
+   "transition": "cut",
+   "t0": 105.2,
+   "t1": 109.882
+  },
+  {
+   "id": "oil",
+   "from": 295,
+   "type": "process",
+   "label": "Paso 7",
+   "title": "Aceite para que resbalen",
+   "highlight": "aceite",
+   "visual": "cutaway turning again; golden oil drips over the parts",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "oil",
+     "at": 298,
+     "sfx": "pop",
+     "t": 111.218
+    }
+   ],
+   "transition": "cut",
+   "t0": 109.882,
+   "t1": 113.114
+  },
+  {
+   "id": "rad",
+   "from": 304,
+   "type": "object",
+   "label": "Paso 7",
+   "title": "Ese es el radiador",
+   "highlight": "radiador",
+   "visual": "small cutaway on the right; hose with blue coolant going to a radiator on the left; tag RADIADOR",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "liquid",
+     "at": 306,
+     "sfx": "whoosh",
+     "t": 113.563
+    },
+    {
+     "id": "rad",
+     "at": 314,
+     "sfx": "pop",
+     "t": 115.669
+    },
+    {
+     "id": "tag",
+     "at": 320,
+     "sfx": "pop",
+     "t": 117.724
+    }
+   ],
+   "transition": "cut",
+   "t0": 113.114,
+   "t1": 118.638
+  },
+  {
+   "id": "promised",
+   "from": 321,
+   "type": "object",
+   "label": "La pieza",
+   "title": "La banda de distribución",
+   "highlight": "distribución",
+   "visual": "front view; the '?' drops, the belt glows; Tico points",
+   "mood": "epic",
+   "keys": [
+    {
+     "id": "reveal",
+     "at": 330,
+     "sfx": "shimmer",
+     "t": 121.688
+    }
+   ],
+   "transition": "cut",
+   "t0": 118.638,
+   "t1": 123.556
+  },
+  {
+   "id": "links",
+   "from": 333,
+   "type": "process",
+   "label": "La pieza",
+   "title": "Une cigüeñal y levas",
+   "highlight": "cigüeñal",
+   "visual": "front view; belt running; tags LEVAS and CIGÜEÑAL",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "crk",
+     "at": 335,
+     "sfx": "pop",
+     "t": 124.181
+    },
+    {
+     "id": "cam",
+     "at": 340,
+     "sfx": "pop",
+     "t": 125.469
+    }
+   ],
+   "transition": "cut",
+   "t0": 123.556,
+   "t1": 128.184
+  },
+  {
+   "id": "snap",
+   "from": 349,
+   "type": "question",
+   "label": "Si se rompe",
+   "title": "Si se rompe, les pegan",
+   "highlight": "rompe",
+   "visual": "front view: belt snaps; then cutaway: valve stuck open, piston rises and hits it",
+   "mood": "dark",
+   "keys": [
+    {
+     "id": "snap",
+     "at": 351,
+     "sfx": "scratch",
+     "t": 128.675
+    },
+    {
+     "id": "open",
+     "at": 359,
+     "t": 131.357
+    },
+    {
+     "id": "hit",
+     "at": 362,
+     "sfx": "impact",
+     "t": 132.268
+    }
+   ],
+   "transition": "cut",
+   "t0": 128.184,
+   "t1": 133.541
+  },
+  {
+   "id": "dist",
+   "from": 365,
+   "type": "object",
+   "label": "La pieza",
+   "title": "Esa es la distribución",
+   "highlight": "distribución",
+   "visual": "front view, belt glowing; tag DISTRIBUCIÓN; Tico pointing",
+   "mood": "epic",
+   "keys": [
+    {
+     "id": "tag",
+     "at": 368,
+     "sfx": "pop",
+     "t": 134.49
+    }
+   ],
+   "transition": "cut",
+   "t0": 133.541,
+   "t1": 135.691
+  },
+  {
+   "id": "manual",
+   "from": 369,
+   "type": "closing",
+   "label": "Consejo",
+   "title": "Revisa el manual de tu coche",
+   "highlight": "manual",
+   "visual": "burst; Tico holding an open manual; one line highlighted",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "man",
+     "at": 374,
+     "sfx": "pop",
+     "t": 136.971
+    },
+    {
+     "id": "line",
+     "at": 381,
+     "sfx": "shimmer",
+     "t": 138.689
+    }
+   ],
+   "transition": "cut",
+   "ambience": [
+    "room"
+   ],
+   "t0": 135.691,
+   "t1": 141.283
+  },
+  {
+   "id": "outro",
+   "from": 388,
+   "type": "closing",
+   "label": "Idio-two",
+   "title": "Una explosión mueve tu coche",
+   "highlight": "explosión",
+   "visual": "burst; a car with a little boom in its tube drives",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "boom",
+     "at": 391,
+     "sfx": "hit",
+     "t": 142.209
+    },
+    {
+     "id": "drive",
+     "at": 396,
+     "sfx": "whoosh",
+     "t": 144.002
+    }
+   ],
+   "transition": "cut",
+   "t0": 141.283,
+   "t1": 145.413
+  },
+  {
+   "id": "sub",
+   "from": 399,
+   "type": "closing",
+   "label": "Idio-two",
+   "title": "¡Suscríbanse!",
+   "highlight": "Suscríbanse",
+   "visual": "burst; Dota next to a smoking engine with 3 leftover screws; Tico facepalm",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "screws",
+     "at": 403,
+     "sfx": "fail",
+     "t": 148.263
+    }
+   ],
+   "transition": "cut",
+   "ambience": [
+    "room"
+   ],
+   "t0": 145.413,
+   "t1": 150.361
+  }
+ ],
+ "duration": 150.361
+}

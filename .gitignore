@@ -37,3 +37,9 @@ videos/hello-3d/
 # final videos go in GitHub releases, not in the repo
 videos/*/final.mp4
 .DS_Store
+# motores (Idio-two): the voice, the character reference and the script stay private
+videos/motores/audio.*
+videos/motores/assets/
+videos/motores/words.json
+videos/motores/analysis.*
+videos/motores/storyboard.md

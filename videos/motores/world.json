@@ -1,0 +1,12 @@
+{
+ "style": "flat2d",
+ "fps": 30,
+ "shots": [
+  { "id": "test-tico", "title": "Tico: poses", "duration": 4, "snap": [0.3, 1.2, 2.4, 3.5], "keys": [ { "id": "point", "t": 1.0 }, { "id": "palm", "t": 2.0 }, { "id": "hold", "t": 3.0 } ] },
+  { "id": "test-dota", "title": "Dota: poses", "duration": 5, "snap": [0.4, 1.4, 2.4, 3.4, 4.4], "keys": [ { "id": "hug", "t": 1.0 }, { "id": "reach", "t": 2.0 }, { "id": "hurt", "t": 3.0 }, { "id": "screws", "t": 4.0 } ] },
+  { "id": "test-engine", "title": "Motor: 4 tiempos", "duration": 4.2, "snap": [0.05, 1.0, 1.98, 2.06, 3.0, 3.9] },
+  { "id": "test-timing", "title": "Distribución", "duration": 4, "snap": [0.3, 1.5, 2.6, 3.6], "keys": [ { "id": "reveal", "t": 0.8 }, { "id": "snap", "t": 3.0 } ] },
+  { "id": "test-props", "title": "Utilería", "duration": 2.5, "snap": [1.25], "keys": [ { "id": "boom", "t": 1.1 } ] },
+  { "id": "test-strokes", "title": "4 tiempos", "duration": 2.5, "snap": [2.0] }
+ ]
+}

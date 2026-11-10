@@ -20,7 +20,15 @@ const mvDotaC = (pose: MoDotaPose = 'down') => moDota('dc', 900, 1590, 0.55, pos
 const mvBurst = (body: string, over = '') => svg(`${moBurst('bg')}<g id="cam"><g id="camP"><g id="camZ">${body}</g>${over}</g></g>`);
 const mvPrint = (body: string, over = '') => svg(`${moPrint()}<g id="cam"><g id="camP"><g id="camZ">${body}</g>${over}</g></g>`);
 // every scene: the set moves (sunburst turns / dust drifts), the camera snaps in and punches on the keys, and the characters are alive
+interface MvMark { k: string; dt?: number; x: number; y: number; r: number; z?: number; hold?: number; label?: string }
 function mvBase(tl: MvTl, s: Scene, $: Mv$, burst = true) {
+  const marks = (s as unknown as { marks?: MvMark[] }).marks || [], camZ = document.querySelector($('#camZ'));
+  marks.forEach((m, i) => {
+    const key = (s.keys || []).find((k) => k.id === m.k), t = (key ? key.t : s.t0 + 0.5) + (m.dt || 0), d = m.hold || 1.4;
+    camZ?.insertAdjacentHTML('beforeend', moMark(`mk${i}`, m.x, m.y, m.r, m.label || ''));
+    if (m.z) moZoom(tl, $, m.x, m.y, m.z, t - 0.05, d);
+    moMarkIn(tl, $, `mk${i}`, m.x, m.y, t, d, !!m.label);
+  });
   if (burst) tl.fromTo($('#bg'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 24, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
   else moDust(tl, $, s);
   const i = SCENES.scenes.findIndex((x) => x.id === s.id);
@@ -206,12 +214,12 @@ defineVisuals({
   },
   strokes: {
     bg: MO.navy,
-    html: () => mvPrint(`${moStroke('s1', 300, 780, 'ENTRA', MO.gas, false)}${moStroke('s2', 780, 780, 'APRIETA', MO.gas, true)}${moStroke('s3', 300, 1190, 'EXPLOTA', MO.fire, false)}${moStroke('s4', 780, 1190, 'SALE', '#9aa3b2', true)}
-      ${moArrow('a1', 440, 780, 630, 780, MO.dShirt, 16)}${moArrow('a2', 780, 960, 780, 1010, MO.dShirt, 16)}${moArrow('a3', 630, 1190, 440, 1190, MO.dShirt, 16)}`),
+    html: () => mvPrint(`${moStroke('s1', 300, 780, 'ENTRA', MO.gas, false)}${moStroke('s2', 780, 780, 'APRIETA', MO.gas, true)}${moStroke('s3', 780, 1190, 'EXPLOTA', MO.fire, false)}${moStroke('s4', 300, 1190, 'SALE', '#9aa3b2', true)}
+      ${moArrow('a1', 430, 780, 640, 780, MO.dShirt, 16)}${moArrow('a2', 780, 950, 780, 1030, MO.dShirt, 16)}${moArrow('a3', 640, 1190, 430, 1190, MO.dShirt, 16)}${moArrow('a4', 300, 1030, 300, 950, MO.dShirt, 16)}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false);
       moPopIn(tl, $('#s1'), K('s1') - 0.1); moPopIn(tl, $('#s2'), K('s2') - 0.1); moPopIn(tl, $('#s3'), K('s3') - 0.1); moPopIn(tl, $('#s4'), K('s4') - 0.1);
-      moPopIn(tl, $('#a1'), K('s2') - 0.25); moPopIn(tl, $('#a2'), K('s3') - 0.25); moPopIn(tl, $('#a3'), K('s4') - 0.25);
+      moPopIn(tl, $('#a1'), K('s2') - 0.25); moPopIn(tl, $('#a2'), K('s3') - 0.25); moPopIn(tl, $('#a3'), K('s4') - 0.25); moPopIn(tl, $('#a4'), K('s4') + 0.35);
     },
   },
   timing: {
@@ -268,8 +276,8 @@ defineVisuals({
   },
   onlyone: {
     bg: MO.navy,
-    html: () => mvPrint(`<g id="g1">${moStroke('s1', 300, 780, 'ENTRA', MO.gas, false)}</g><g id="g2">${moStroke('s2', 780, 780, 'APRIETA', MO.gas, true)}</g>${moStroke('s3', 300, 1190, 'EXPLOTA', MO.fire, false)}<g id="g4">${moStroke('s4', 780, 1190, 'SALE', '#9aa3b2', true)}</g>
-      ${moTag('t3', 300, 1420, 'EMPUJA', MO.red)}${moTag('tg', 780, 1420, 'DE GORRA', '#6f7685')}${mvDotaC()}`),
+    html: () => mvPrint(`<g id="g1">${moStroke('s1', 300, 780, 'ENTRA', MO.gas, false)}</g><g id="g2">${moStroke('s2', 780, 780, 'APRIETA', MO.gas, true)}</g>${moStroke('s3', 780, 1190, 'EXPLOTA', MO.fire, false)}<g id="g4">${moStroke('s4', 300, 1190, 'SALE', '#9aa3b2', true)}</g>
+      ${moTag('t3', 780, 1410, 'EMPUJA', MO.red)}${moTag('tg', 300, 1410, 'DE GORRA', '#6f7685')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false);
       tl.fromTo($('#s3'), { scale: 1, transformOrigin: '50% 50%' }, { scale: 1.15, duration: 0.3, ease: 'back.out(2)' }, K('one') - 0.1);
@@ -418,12 +426,15 @@ defineVisuals({
   },
   outro: {
     bg: MO.bg1, ink: MO.navy,
-    html: () => mvBurst(`<g id="car">${moCar('cr', 560, 1250, 1.1)}${moBoom('bm', 470, 1120, 0.6)}</g>${f2Hill('hl', 1340, '#e8c27a', '#d7a85a', 30)}${moTico('tk', 200, 1590, 0.5, 'point')}`),
+    html: () => mvBurst(`${f2Hill('hl', 1340, '#e8c27a', '#d7a85a', 30)}${moSmoke('ex1', 230, 1290, 0.7)}${moSmoke('ex2', 180, 1270, 0.9)}<g id="car">${moCarIdio('cr', 'tk', 'd', 540, 1250, 1.1)}${moBoom('bm', 795, 1180, 0.5)}</g>`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
       moFlash(tl, $('#bm'), K('boom'), 0.4);
-      tl.to($('#car'), { x: 900, duration: 1.2, ease: 'power2.in' }, K('drive'));
-      tl.to($('#cr-w1, #cr-w2'), { rotation: 720, transformOrigin: '50% 50%', duration: 1.2, ease: 'power2.in' }, K('drive'));
+      tl.fromTo($('#car'), { y: 0 }, { y: -6, duration: 0.09, yoyo: true, repeat: Math.floor((K('drive') - s.t0) / 0.09), ease: 'none' }, s.t0);
+      tl.to($('#car'), { x: 1100, duration: 1.3, ease: 'power2.in' }, K('drive'));
+      tl.to($('#cr-w1, #cr-w2'), { rotation: 900, transformOrigin: '50% 50%', duration: 1.3, ease: 'power2.in' }, K('drive'));
+      moPuff(tl, $('#ex1'), K('drive') + 0.05, -80); moPuff(tl, $('#ex2'), K('drive') + 0.3, -100);
+      moHop(tl, $('#d'), K('drive') - 0.4, 4, 18);
       mvTalk(tl, $, 'tk', s, 'tico');
     },
   },

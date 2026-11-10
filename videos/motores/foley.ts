@@ -12,7 +12,7 @@ const V = path.dirname(new URL(import.meta.url).pathname), ROOT = path.resolve(V
 const r = spawnSync(process.execPath, [path.join(ROOT, 'core', 'music.ts'), V], { stdio: 'inherit' });
 if (r.status !== 0) process.exit(r.status || 1);
 
-type Sc = { id: string; t0: number; t1: number; keys?: { id: string; t: number }[] };
+type Sc = { id: string; t0: number; t1: number; keys?: { id: string; t: number }[]; marks?: { k: string; dt?: number; z?: number }[] };
 const P: { duration: number; scenes: Sc[] } = JSON.parse(fs.readFileSync(path.join(V, 'scenes.json'), 'utf8'));
 const sc = (id: string) => { const s = P.scenes.find((x) => x.id === id); if (!s) throw new Error('no scene ' + id); return s; };
 const K = (id: string, k: string) => { const c = sc(id).keys?.find((x) => x.id === k); if (!c) throw new Error(`no key ${id}.${k}`); return c.t; };
@@ -102,6 +102,10 @@ flip(K('manual', 'man') - 0.2); flip(K('manual', 'man') - 0.05, 0.08);
 boom(K('outro', 'boom'), 0.25); vroom(K('outro', 'drive'), 1.25); honk(K('outro', 'drive') + 0.7);
 for (let i = 0; i < 5; i++) { puff(T0('sub') + 0.2 + i * 0.95, 0.12); puff(T0('sub') + 0.65 + i * 0.95, 0.1); }
 [0.2, 0.5].forEach((dt) => boing(T0('sub') + dt, 0.18, 320, 0.4)); jingle(K('sub', 'screws') + 0.05);
+
+// every piece marker (scenes.json "marks"): a bright "ding" as the ring lands, and a whoosh when the camera zooms to it
+const ding = (t: number, v = 0.13) => [[1568, 0], [2349, 0.05]].forEach(([f, dt]) => add(t + dt, 0.6, (u) => (Math.sin(TAU * f * u) + 0.3 * Math.sin(TAU * f * 2.76 * u) * Math.exp(-u * 8)) * env(u, 0.002, 6), v));
+for (const s of P.scenes) for (const m of s.marks || []) { const t = K(s.id, m.k) + (m.dt || 0); ding(t + 0.12); if (m.z) whoosh(t + 0.15, 0.35, 0.18); }
 
 // ---- foley.wav (float), then own-music.wav = music + foley
 const FOLEY_DB = 12;

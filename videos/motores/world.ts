@@ -171,6 +171,31 @@ function moFocus(tl: gsap.core.Timeline, $: (q: string) => string, x: number, y:
 }
 // the spotlight that dims everything around the focus (place it with the same centre as the zoom)
 const moSpot = (x: number, y: number, r = 430) => `<circle id="spot" cx="${x}" cy="${y}" r="${r + 900}" fill="none" stroke="#1a1006" stroke-width="1800" opacity="0"/>`;
+// marks a new piece: a turning dashed yellow ring, a pulse and an arrow pointing at it (optional label under it)
+function moMark(id: string, x: number, y: number, r: number, label = '') {
+  const side = x + r * 0.7 + 170 > 1000 ? -1 : 1, ex = x + side * r * 0.78, ey = y - r * 0.78, sx = ex + side * 120, sy = ey - 120;
+  return `<g id="${id}" opacity="0">
+    <g id="${id}-pulse"><circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="#ffd23d" stroke-width="8"/></g>
+    <g id="${id}-ring"><circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${MO.o}" stroke-width="24"/><circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="#ffd23d" stroke-width="13" stroke-dasharray="36 22" stroke-linecap="round"/></g>
+    <g id="${id}-arrow">${moArrow(`${id}-a`, sx, sy, ex, ey, '#ffd23d', 20)}</g>
+    ${label ? moTag(`${id}-tag`, x, y + r + 64, label) : ''}</g>`;
+}
+function moMarkIn(tl: gsap.core.Timeline, $: (q: string) => string, id: string, x: number, y: number, t: number, d = 1.4, label = false) {
+  const o = `${x} ${y}`;
+  tl.set($(`#${id}`), { opacity: 1 }, t);
+  tl.fromTo($(`#${id}-ring`), { scale: 0, rotation: -120, svgOrigin: o }, { scale: 1, rotation: 0, duration: 0.4, ease: 'back.out(2.2)', immediateRender: false }, t);
+  tl.to($(`#${id}-ring`), { rotation: 70, svgOrigin: o, duration: d - 0.4, ease: 'none' }, t + 0.4);
+  tl.fromTo($(`#${id}-pulse`), { scale: 1, opacity: 0.9, svgOrigin: o }, { scale: 1.4, opacity: 0, duration: 0.6, ease: 'power1.out', repeat: Math.max(0, Math.floor((d - 0.2) / 0.6) - 1), immediateRender: false }, t + 0.15);
+  tl.fromTo($(`#${id}-arrow`), { opacity: 0, x: 60, y: -60 }, { opacity: 1, x: 0, y: 0, duration: 0.3, ease: 'back.out(2)', immediateRender: false }, t + 0.1);
+  tl.to($(`#${id}-arrow`), { x: 14, y: -14, duration: 0.22, ease: 'sine.inOut', yoyo: true, repeat: Math.max(1, Math.floor((d - 0.5) / 0.22)) }, t + 0.4);
+  if (label) moPopIn(tl, $(`#${id}-tag`), t + 0.2);
+  tl.to($(`#${id}`), { opacity: 0, duration: 0.25 }, t + d);
+}
+// a short zoom on (x, y): in fast, hold, back out
+function moZoom(tl: gsap.core.Timeline, $: (q: string) => string, x: number, y: number, z: number, t: number, hold: number) {
+  tl.to($('#camZ'), { scale: z, svgOrigin: `${x} ${y}`, duration: 0.45, ease: 'power3.out' }, t);
+  tl.to($('#camZ'), { scale: 1, duration: 0.45, ease: 'power2.inOut' }, t + hold);
+}
 function moHop(tl: gsap.core.Timeline, sel: string, t: number, n = 2, h = 40) {
   tl.fromTo(sel, { y: 0 }, { y: -h, duration: 0.15, ease: 'power2.out', yoyo: true, repeat: n * 2 - 1 }, t);
 }
@@ -387,6 +412,23 @@ function moCar(id: string, x: number, y: number, s = 1) {
     <g id="${id}-w1"><g transform="translate(-160 40)"><circle r="56" fill="#3b3f4a" stroke="${MO.o}" stroke-width="${MO_SW}"/><circle r="24" fill="${MO.steel}" stroke="${MO.o}" stroke-width="5"/><rect x="-4" y="-50" width="8" height="26" fill="${MO.steel}"/></g></g>
     <g id="${id}-w2"><g transform="translate(170 40)"><circle r="56" fill="#3b3f4a" stroke="${MO.o}" stroke-width="${MO_SW}"/><circle r="24" fill="${MO.steel}" stroke="${MO.o}" stroke-width="5"/><rect x="-4" y="-50" width="8" height="26" fill="${MO.steel}"/></g></g></g></g>`;
 }
+// the Idio-two convertible: Tico (tid) driving, Dota (did) co-pilot on the far seat, plate on the back. Faces right.
+function moCarIdio(id: string, tid: string, did: string, x: number, y: number, s = 1, plate = 'IDIOT-TWO') {
+  const O = MO.o, wheel = (wid: string, wx: number) => `<g id="${id}-${wid}"><g transform="translate(${wx} 40)">${moVol((a) => `<circle r="56" ${a}/>`, '#3b3f4a', { sx: 10, sy: 10 })}<circle r="24" fill="${MO.steel}" stroke="${O}" stroke-width="5"/><rect x="-4" y="-50" width="8" height="26" fill="${MO.steel}"/></g></g>`;
+  return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})">
+    <ellipse cx="0" cy="98" rx="290" ry="18" fill="#000" opacity="0.18"/>
+    ${moDota(did, -150, 5, 0.42, 'up')}
+    ${moTico(tid, 40, 30, 0.45, 'hold')}
+    <g transform="translate(150 -92) rotate(-18)"><ellipse rx="14" ry="44" fill="none" stroke="${O}" stroke-width="16"/><ellipse rx="14" ry="44" fill="none" stroke="#3b3f4a" stroke-width="8"/></g>
+    <path d="M150 -80 L188 -168 L204 -168 L172 -80Z" fill="#bfe3ff" opacity="0.7" stroke="${O}" stroke-width="6" stroke-linejoin="round"/>
+    ${moVol((a) => `<path d="M-260 40 L-260 -40 Q-252 -80 -205 -82 L250 -82 Q272 -70 272 -20 L272 40Z" ${a}/>`, MO.red, { sx: 0, sy: 26, k: 0.22, hi: `<rect x="-232" y="-72" width="440" height="10" rx="5" fill="#fff" opacity="0.4"/>` })}
+    <path d="M-20 -78 L-20 30" stroke="${O}" stroke-width="5" opacity="0.6"/><rect x="0" y="-50" width="44" height="12" rx="6" fill="#7a1f1f" stroke="${O}" stroke-width="4"/>
+    <circle cx="258" cy="-38" r="14" fill="#fff6c8" stroke="${O}" stroke-width="5"/>
+    <g id="${id}-plate"><rect x="-258" y="-74" width="168" height="50" rx="8" fill="#fffaf0" stroke="${O}" stroke-width="6"/>
+      <text x="-174" y="-40" text-anchor="middle" font-size="27" font-weight="900" fill="${O}" style="font-family: var(--font), system-ui, sans-serif; letter-spacing: 1px">${plate}</text></g>
+    ${wheel('w1', -160)}${wheel('w2', 170)}
+  </g></g>`;
+}
 // one of the 4 strokes: a small card with a mini cylinder and its word
 function moStroke(id: string, x: number, y: number, word: string, c: string, pistonUp: boolean) {
   const py = pistonUp ? -40 : 30;
@@ -454,7 +496,7 @@ defineVisuals({
   },
   'test-strokes': {
     bg: MO.navy,
-    html: () => svg(`${moPrint()}${moStroke('ts1', 300, 800, 'ENTRA', MO.gas, false)}${moStroke('ts2', 780, 800, 'APRIETA', MO.gas, true)}${moStroke('ts3', 300, 1220, 'EXPLOTA', MO.fire, false)}${moStroke('ts4', 780, 1220, 'SALE', '#9aa3b2', true)}`),
+    html: () => svg(`${moPrint()}${moStroke('ts1', 300, 800, 'ENTRA', MO.gas, false)}${moStroke('ts2', 780, 800, 'APRIETA', MO.gas, true)}${moStroke('ts3', 780, 1220, 'EXPLOTA', MO.fire, false)}${moStroke('ts4', 300, 1220, 'SALE', '#9aa3b2', true)}`),
     anim(tl, s, K, $) { for (let i = 1; i <= 4; i++) moPopIn(tl, $(`#ts${i}`), s.t0 + 0.1 + i * 0.3); },
   },
 });

@@ -20,8 +20,33 @@ const mvDotaC = (pose: MoDotaPose = 'down') => moDota('dc', 900, 1590, 0.55, pos
 const mvBurst = (body: string, over = '') => svg(`${moPrint()}<g id="cam"><g id="camP"><g id="camZ">${body}</g>${over}</g></g>`);   // every scene uses the workshop backdrop (only the ending keeps the banner)
 const mvPrint = (body: string, over = '') => svg(`${moPrint()}<g id="cam"><g id="camP"><g id="camZ">${body}</g>${over}</g></g>`);
 // every scene: the set moves (sunburst turns / dust drifts), the camera snaps in and punches on the keys, and the characters are alive
+// each scene's backdrop colour, picked to contrast with what is on screen: [base, light?] (light backgrounds get dark titles)
+const MV_BG: Record<string, [string, boolean]> = {
+  hook: ['#3d2466', false], ruin: ['#5c1a2e', false], ask: ['#bfe8dc', true], idiot: ['#ffd9a8', true],
+  armo: ['#0f5c4a', false], tube: ['#1d2a4d', false], piston: ['#0f4a5c', false], stuck: ['#3d2466', false],
+  rod: ['#0f4a5c', false], cycle: ['#1d2a4d', false], names: ['#5c1a2e', false], closed: ['#4a1626', false],
+  valves: ['#0f5c4a', false], vname: ['#3d2466', false], strokes: ['#1d2a4d', false], timing: ['#7a3b1e', false],
+  cams: ['#0f4a5c', false], ratio: ['#3d2466', false], plug: ['#0f5c4a', false], bujia: ['#1d2a4d', false],
+  onlyone: ['#5c1a2e', false], disc: ['#0f4a5c', false], inercia: ['#3d2466', false], touch: ['#bfe8dc', true],
+  heat: ['#1d2a4d', false], oil: ['#3d2466', false], rad: ['#7a3b1e', false], promised: ['#3d2466', false],
+  links: ['#0f5c4a', false], snap: ['#4a1626', false], dist: ['#1d2a4d', false], manual: ['#e8833a', true], outro: ['#8fd3ff', true],
+};
+// lighten (t > 0) or darken (t < 0) a #rrggbb colour
+function mvShade(hex: string, t: number) {
+  const n = parseInt(hex.slice(1), 16);
+  return '#' + [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((c) => Math.round(t > 0 ? c + (255 - c) * t : c * (1 + t)).toString(16).padStart(2, '0')).join('');
+}
+function mvBackdrop(s: Scene, $: Mv$) {
+  const bg = MV_BG[s.id]; if (!bg) return;
+  const [b, light] = bg, at = (id: string, k: string, val: string) => document.querySelector($('#' + id))?.setAttribute(k, val);
+  at('bd0', 'fill', b); at('bd1', 'fill', mvShade(b, light ? 0.25 : 0.14)); at('bd2', 'fill', mvShade(b, light ? 0.45 : 0.24));
+  at('bd3', 'stroke', mvShade(b, light ? -0.35 : -0.6)); at('bd3', 'opacity', light ? '0.35' : '0.55');
+  at('bd4', 'fill', mvShade(b, light ? -0.18 : -0.35)); at('bd5', 'fill', mvShade(b, light ? -0.3 : 0.18));
+  const sec = document.getElementById('sc-' + s.id); if (sec) { sec.style.background = b; if (light) sec.style.setProperty('--ink', MO.navy); }
+}
 interface MvMark { k: string; dt?: number; x: number; y: number; r: number; z?: number; hold?: number; label?: string }
 function mvBase(tl: MvTl, s: Scene, $: Mv$, burst = true) {
+  mvBackdrop(s, $);
   const marks = (s as unknown as { marks?: MvMark[] }).marks || [], camZ = document.querySelector($('#camZ'));
   marks.forEach((m, i) => {
     const key = (s.keys || []).find((k) => k.id === m.k), t = (key ? key.t : s.t0 + 0.5) + (m.dt || 0), d = m.hold || 1.4;
@@ -425,7 +450,7 @@ defineVisuals({
   },
   outro: {
     bg: '#0f4a5c',
-    html: () => mvBurst(`${f2Hill('hl', 1340, '#17667b', '#0d4252', 30)}${moSmoke('ex1', 230, 1290, 0.7)}${moSmoke('ex2', 180, 1270, 0.9)}<g id="car">${moCarIdio('cr', 'tk', 'd', 540, 1250, 1.1)}${moBoom('bm', 795, 1180, 0.5)}</g>`),
+    html: () => mvBurst(`${f2Hill('hl', 1340, F2.green, F2.greenD, 30)}${moSmoke('ex1', 230, 1290, 0.7)}${moSmoke('ex2', 180, 1270, 0.9)}<g id="car">${moCarIdio('cr', 'tk', 'd', 540, 1250, 1.1)}${moBoom('bm', 795, 1180, 0.5)}</g>`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
       moFlash(tl, $('#bm'), K('boom'), 0.4);

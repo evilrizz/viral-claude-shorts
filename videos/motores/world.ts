@@ -212,11 +212,11 @@ function moBurst(id: string, c1 = MO.bg1, c2 = MO.bg2, cx = 540, cy = 1050, floo
     <circle cx="540" cy="1000" r="1250" fill="none" stroke="#e7a95a" stroke-width="900" opacity="0.28"/><circle cx="540" cy="1000" r="980" fill="none" stroke="#e7a95a" stroke-width="300" opacity="0.14"/>
     ${floor ? '<rect x="0" y="1520" width="1080" height="400" fill="#f1c98a"/><rect x="0" y="1520" width="1080" height="16" fill="#e2ad6a"/><rect x="0" y="1600" width="1080" height="320" fill="#000" opacity="0.05"/>' : ''}`;
 }
-function moPrint() {   // the workshop backdrop: deep petrol blue, plain (no lines), a soft spotlight behind the pieces, dark corners and a floor
+function moPrint() {   // the plain backdrop (its colours are set per scene in visuals.ts, MV_BG): plain (no lines), a soft spotlight behind the pieces, dark corners and a floor
   const dust = [...Array(18)].map((_, i) => `<circle cx="${(i * 211) % 1080}" cy="${520 + ((i * 337) % 1100)}" r="${3 + (i % 3) * 2}" fill="#bff0f7" opacity="${0.2 + (i % 3) * 0.1}"/>`).join('');
-  return `<rect width="1080" height="1920" fill="#0f4a5c"/><circle cx="540" cy="1050" r="600" fill="#17667b" opacity="0.8"/><circle cx="540" cy="1050" r="400" fill="#1f7a8f" opacity="0.6"/>
-    <circle cx="540" cy="1000" r="1250" fill="none" stroke="#06232d" stroke-width="900" opacity="0.55"/>
-    <rect x="0" y="1540" width="1080" height="380" fill="#0a3340"/><rect x="0" y="1540" width="1080" height="12" fill="#1d6a7d"/><g class="dust">${dust}</g>`;
+  return `<rect id="bd0" width="1080" height="1920" fill="#0f4a5c"/><circle id="bd1" cx="540" cy="1050" r="600" fill="#17667b" opacity="0.8"/><circle id="bd2" cx="540" cy="1050" r="400" fill="#1f7a8f" opacity="0.6"/>
+    <circle id="bd3" cx="540" cy="1000" r="1250" fill="none" stroke="#06232d" stroke-width="900" opacity="0.55"/>
+    <rect id="bd4" x="0" y="1540" width="1080" height="380" fill="#0a3340"/><rect id="bd5" x="0" y="1540" width="1080" height="12" fill="#1d6a7d"/><g class="dust">${dust}</g>`;
 }
 // dust drifts up slowly in the blueprint set
 const moDust = (tl: gsap.core.Timeline, $: (q: string) => string, s: Scene) =>

@@ -17,11 +17,15 @@ function mvTalk(tl: MvTl, $: Mv$, id: string, s: Scene, who: 'tico' | 'dota') {
 const mvTicoC = (pose: MoTicoPose = 'cross') => moTico('tc', 190, 1590, 0.48, pose);
 const mvDotaC = (pose: MoDotaPose = 'down') => moDota('dc', 900, 1590, 0.55, pose, true);
 // background + camera wrapper
-const mvBurst = (body: string) => svg(`${moBurst('bg')}<g id="cam">${body}</g>`);
-const mvPrint = (body: string) => svg(`${moPrint()}<g id="cam">${body}</g>`);
+const mvBurst = (body: string) => svg(`${moBurst('bg')}<g id="cam"><g id="camP">${body}</g></g>`);
+const mvPrint = (body: string) => svg(`${moPrint()}<g id="cam"><g id="camP">${body}</g></g>`);
+// every scene: the set moves (sunburst turns / dust drifts), the camera snaps in and punches on the keys, and the characters are alive
 function mvBase(tl: MvTl, s: Scene, $: Mv$, burst = true) {
-  if (burst) moBurstSpin(tl, $, 'bg', s);
-  moCam(tl, $('#cam'), s);
+  if (burst) tl.fromTo($('#bg'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 24, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
+  else moDust(tl, $, s);
+  const i = SCENES.scenes.findIndex((x) => x.id === s.id);
+  moCamera(tl, $, s, i % 2 ? 1 : -1);
+  for (const [id, kind] of [['tk', 'tico'], ['tc', 'tico'], ['d', 'dota'], ['dc', 'dota']] as const) if (document.querySelector($(`#${id}-rig`))) moAlive(tl, $, id, s, kind);
 }
 // the engine set to angle a at the start of the scene
 const mvHold = (tl: MvTl, $: Mv$, a: number, s: Scene, o: { valves?: boolean; mix?: boolean; stuckEx?: number } = {}) => moTurn(tl, $, 'e', a, a, s.t0, 0.04, 'none', o);
@@ -36,7 +40,7 @@ defineVisuals({
     html: () => mvBurst(`${mvFront(true, 0.8, 620, 1000)}${moTico('tk', 220, 1590, 0.55)}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
-      f2Pop(tl, $('#t'), s.t0 + 0.1, 0.5);
+      moPop(tl, $('#t'), s.t0 + 0.1, 0.5);
       tl.fromTo($('#t-q'), { scale: 1, transformOrigin: '50% 50%' }, { scale: 1.15, duration: 0.25, yoyo: true, repeat: 3, ease: 'sine.inOut' }, K('q'));
       mvTalk(tl, $, 'tk', s, 'tico');
     },
@@ -57,7 +61,7 @@ defineVisuals({
     html: () => mvBurst(`${mvFront(true, 0.42, 540, 880)}${moTico('tk', 270, 1590, 0.62)}<g id="dg">${moDota('d', 760, 1580, 0.85, 'hug')}${moWheel('wh', 760, 1460, 0.55)}</g>`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
-      f2Pop(tl, $('#dg'), K('dota') - 0.25, 0.4);
+      moPop(tl, $('#dg'), K('dota') - 0.25, 0.4);
       tl.fromTo($('#wh'), { rotation: -8, transformOrigin: '50% 50%' }, { rotation: 8, duration: 0.3, yoyo: true, repeat: 3, ease: 'sine.inOut' }, K('dota'));
       mvTalk(tl, $, 'tk', s, 'tico'); mvTalk(tl, $, 'd', s, 'dota');
     },
@@ -126,8 +130,8 @@ defineVisuals({
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 180, s);
       tl.set($('#e-rodG'), { opacity: 0 }, s.t0).set($('#e-crank'), { opacity: 0 }, s.t0);
-      tl.set($('#e-rodG'), { opacity: 1 }, K('rod')); f2Pop(tl, $('#e-rodG'), K('rod'), 0.35);
-      tl.set($('#e-crank'), { opacity: 1 }, K('crank')); f2Pop(tl, $('#e-crank'), K('crank'), 0.4);
+      tl.set($('#e-rodG'), { opacity: 1 }, K('rod')); moPop(tl, $('#e-rodG'), K('rod'), 0.35);
+      tl.set($('#e-crank'), { opacity: 1 }, K('crank')); moPop(tl, $('#e-crank'), K('crank'), 0.4);
       moTurn(tl, $, 'e', 180, 540, K('crank') + 0.6, s.t1 - K('crank') - 0.8, 'sine.inOut');
       mvTalk(tl, $, 'tc', s, 'tico');
     },
@@ -162,7 +166,7 @@ defineVisuals({
       tl.set($('#e-mix'), { opacity: 0.85 }, s.t0 + 0.05);
       tl.set($('#x'), { opacity: 0 }, s.t0);
       tl.fromTo($('#sm'), { opacity: 0.9, scale: 0.6, transformOrigin: '50% 50%' }, { scale: 0.9, duration: 0.3, yoyo: true, repeat: Math.ceil((s.t1 - s.t0) / 0.3), ease: 'sine.inOut' }, s.t0 + 0.2);
-      tl.set($('#x'), { opacity: 1 }, K('smoke')); f2Pop(tl, $('#x'), K('smoke'), 0.35);
+      tl.set($('#x'), { opacity: 1 }, K('smoke')); moPop(tl, $('#x'), K('smoke'), 0.35);
       mvTalk(tl, $, 'tc', s, 'tico');
     },
   },
@@ -172,7 +176,7 @@ defineVisuals({
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 700, s, { mix: true });
       tl.set($('#e-valves'), { opacity: 0 }, s.t0).set($('#ain'), { opacity: 0 }, s.t0).set($('#aout'), { opacity: 0 }, s.t0);
-      tl.set($('#e-valves'), { opacity: 1 }, K('holes')); f2Pop(tl, $('#e-valves'), K('holes'), 0.35);
+      tl.set($('#e-valves'), { opacity: 1 }, K('holes')); moPop(tl, $('#e-valves'), K('holes'), 0.35);
       moTurn(tl, $, 'e', 720, 900, K('in') - 0.3, 1.6, 'sine.inOut', { mix: true });
       tl.set($('#ain'), { opacity: 1 }, K('in') - 0.3); tl.fromTo($('#ain'), { x: -60 }, { x: 0, duration: 0.4, ease: 'power2.out' }, K('in') - 0.3);
       moTurn(tl, $, 'e', 900, 1440, K('in') + 1.4, K('out') - K('in') - 0.6, 'sine.inOut', { mix: true });
@@ -188,7 +192,7 @@ defineVisuals({
       mvBase(tl, s, $, false); mvHold(tl, $, 90, s);
       moPopIn(tl, $('#tg'), K('tag'));
       tl.fromTo($('#e-vInM, #e-vExM'), { opacity: 1 }, { opacity: 0.4, duration: 0.2, yoyo: true, repeat: 3 }, K('tag'));
-      tl.set($('#dc'), { opacity: 0 }, s.t0).set($('#dc'), { opacity: 1 }, K('dota') - 0.15); f2Pop(tl, $('#dc'), K('dota') - 0.15, 0.3);
+      tl.set($('#dc'), { opacity: 0 }, s.t0).set($('#dc'), { opacity: 1 }, K('dota') - 0.15); moPop(tl, $('#dc'), K('dota') - 0.15, 0.3);
       tl.fromTo($('#tc-head'), { rotation: -8, svgOrigin: '0 -470' }, { rotation: 8, duration: 0.12, yoyo: true, repeat: 3, ease: 'sine.inOut' }, K('no'));
       mvTalk(tl, $, 'tc', s, 'tico'); mvTalk(tl, $, 'dc', s, 'dota');
     },
@@ -208,7 +212,7 @@ defineVisuals({
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true })}${moQuestion('q', 540, 620, 0.55)}${mvTicoC()}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 0, s);
-      tl.set($('#q'), { opacity: 0 }, s.t0).set($('#q'), { opacity: 1 }, K('q') - 0.1); f2Pop(tl, $('#q'), K('q') - 0.1, 0.35);
+      tl.set($('#q'), { opacity: 0 }, s.t0).set($('#q'), { opacity: 1 }, K('q') - 0.1); moPop(tl, $('#q'), K('q') - 0.1, 0.35);
       tl.fromTo($('#e-vInM, #e-vExM'), { y: 0 }, { y: 18, duration: 0.25, yoyo: true, repeat: 5, ease: 'sine.inOut', stagger: 0.25 }, s.t0 + 0.4);
       mvTalk(tl, $, 'tc', s, 'tico');
     },
@@ -218,7 +222,7 @@ defineVisuals({
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true, cams: true })}${moTag('tg', 820, 600, 'ÁRBOL DE LEVAS', undefined, 38)}${mvTicoC('point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 0, s);
-      tl.set($('#e-cams'), { opacity: 0 }, s.t0).set($('#e-cams'), { opacity: 1 }, K('cams')); f2Pop(tl, $('#e-cams'), K('cams'), 0.35);
+      tl.set($('#e-cams'), { opacity: 0 }, s.t0).set($('#e-cams'), { opacity: 1 }, K('cams')); moPop(tl, $('#e-cams'), K('cams'), 0.35);
       moTurn(tl, $, 'e', 0, 1080, K('cams') + 0.4, s.t1 - K('cams') - 0.4, 'none');
       moPopIn(tl, $('#tg'), K('tag'));
       mvTalk(tl, $, 'tc', s, 'tico');
@@ -337,7 +341,7 @@ defineVisuals({
       moTurn(tl, $, 'e', 0, 1440, s.t0, s.t1 - s.t0, 'none');
       tl.set($('#hose, #hoseC'), { opacity: 0 }, s.t0).set($('#hose, #hoseC'), { opacity: 1 }, K('liquid') - 0.1);
       tl.fromTo($('#hoseC'), { strokeDashoffset: 0 }, { strokeDashoffset: -520, duration: s.t1 - K('liquid'), ease: 'none' }, K('liquid'));
-      tl.set($('#rd'), { opacity: 0 }, s.t0).set($('#rd'), { opacity: 1 }, K('rad') - 0.1); f2Pop(tl, $('#rd'), K('rad') - 0.1, 0.4);
+      tl.set($('#rd'), { opacity: 0 }, s.t0).set($('#rd'), { opacity: 1 }, K('rad') - 0.1); moPop(tl, $('#rd'), K('rad') - 0.1, 0.4);
       tl.set($('#hh'), { opacity: 1 }, K('rad') + 0.3); tl.fromTo($('#hh'), { y: 0 }, { y: -40, duration: 0.5, yoyo: true, repeat: 3, ease: 'sine.inOut' }, K('rad') + 0.3);
       moPopIn(tl, $('#tg'), K('tag'));
     },
@@ -378,9 +382,9 @@ defineVisuals({
       tl.fromTo($('#e-vExM'), { opacity: 1 }, { opacity: 0.4, duration: 0.2, yoyo: true, repeat: 3 }, K('open'));
       moTurn(tl, $, 'e', 180, 352, K('hit') - 1.2, 1.2, 'power2.in', { stuckEx: 36 });
       moFlash(tl, $('#hb'), K('hit'), 0.35);
-      tl.set($('#hitStars'), { opacity: 1 }, K('hit') + 0.05); f2Pop(tl, $('#hitStars'), K('hit') + 0.05, 0.3);
+      tl.set($('#hitStars'), { opacity: 1 }, K('hit') + 0.05); moPop(tl, $('#hitStars'), K('hit') + 0.05, 0.3);
       tl.to($('#e-vEx'), { rotation: 14, svgOrigin: '610 760', duration: 0.12, ease: 'power3.out' }, K('hit'));
-      tl.fromTo($('#cam'), { x: -12 }, { x: 12, duration: 0.05, yoyo: true, repeat: 5, ease: 'none' }, K('hit'));
+      
     },
   },
   dist: {
@@ -399,7 +403,7 @@ defineVisuals({
     html: () => mvBurst(`${moManual('mn', 590, 1000, 0.8)}${moTico('tk', 230, 1590, 0.62, 'point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
-      f2Pop(tl, $('#mn'), K('man') - 0.2, 0.4);
+      moPop(tl, $('#mn'), K('man') - 0.2, 0.4);
       tl.fromTo($('#mn-hl'), { opacity: 0 }, { opacity: 1, duration: 0.2, yoyo: true, repeat: 3 }, K('line'));
       tl.set($('#mn-hl'), { opacity: 1 }, K('line') + 0.85);
       mvTalk(tl, $, 'tk', s, 'tico');
@@ -423,7 +427,7 @@ defineVisuals({
     anim(tl, s, K, $) {
       mvBase(tl, s, $); mvHold(tl, $, 30, s);
       for (let i = 0; i < 5; i++) { moPuff(tl, $('#s1'), s.t0 + 0.2 + i * 0.95); moPuff(tl, $('#s2'), s.t0 + 0.65 + i * 0.95); }
-      tl.set($('#d-screws'), { opacity: 1 }, K('screws')); f2Pop(tl, $('#d-screws'), K('screws'), 0.3);
+      tl.set($('#d-screws'), { opacity: 1 }, K('screws')); moPop(tl, $('#d-screws'), K('screws'), 0.3);
       moHop(tl, $('#d'), s.t0 + 0.2, 2, 30);
       mvTalk(tl, $, 'd', s, 'dota');
     },

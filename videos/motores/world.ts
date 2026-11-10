@@ -152,7 +152,7 @@ function moAlive(tl: gsap.core.Timeline, $: (q: string) => string, id: string, s
 }
 // squash-and-stretch pop: the default entrance
 const moPop = (tl: gsap.core.Timeline, sel: string, t: number, d = 0.45) =>
-  tl.fromTo(sel, { scaleX: 0.2, scaleY: 0.2, transformOrigin: '50% 100%' }, { keyframes: [{ scaleX: 1.25, scaleY: 0.8, duration: d * 0.45, ease: 'power2.out' }, { scaleX: 0.92, scaleY: 1.1, duration: d * 0.3, ease: 'sine.inOut' }, { scaleX: 1, scaleY: 1, duration: d * 0.25, ease: 'sine.out' }] }, t);
+  tl.fromTo(sel, { scaleX: 0, scaleY: 0, transformOrigin: '50% 100%' }, { keyframes: [{ scaleX: 1.25, scaleY: 0.8, duration: d * 0.45, ease: 'power2.out' }, { scaleX: 0.92, scaleY: 1.1, duration: d * 0.3, ease: 'sine.inOut' }, { scaleX: 1, scaleY: 1, duration: d * 0.25, ease: 'sine.out' }] }, t);
 // camera on two nested groups: #cam = the snap-in at the cut + a slow drift; #camP = punches and shakes on the keys
 function moCamera(tl: gsap.core.Timeline, $: (q: string) => string, s: Scene, dir: number) {
   const d = s.t1 - s.t0;
@@ -165,6 +165,12 @@ function moCamera(tl: gsap.core.Timeline, $: (q: string) => string, s: Scene, di
     if (big) tl.fromTo($('#camP'), { x: 0, y: 0 }, { keyframes: [{ x: -16, y: 8, duration: 0.04 }, { x: 14, y: -10, duration: 0.04 }, { x: -9, y: 6, duration: 0.04 }, { x: 5, y: -3, duration: 0.04 }, { x: 0, y: 0, duration: 0.05 }], immediateRender: false }, k.t);
   }
 }
+function moFocus(tl: gsap.core.Timeline, $: (q: string) => string, x: number, y: number, z: number, t: number, d = 1.2, ease = 'power3.inOut') {
+  tl.to($('#camZ'), { scale: z, svgOrigin: `${x} ${y}`, duration: d, ease }, t);
+  tl.fromTo($('#spot'), { opacity: 0 }, { opacity: 0.5, duration: d, ease: 'sine.inOut', immediateRender: false }, t);
+}
+// the spotlight that dims everything around the focus (place it with the same centre as the zoom)
+const moSpot = (x: number, y: number, r = 430) => `<circle id="spot" cx="${x}" cy="${y}" r="${r + 900}" fill="none" stroke="#1a1006" stroke-width="1800" opacity="0"/>`;
 function moHop(tl: gsap.core.Timeline, sel: string, t: number, n = 2, h = 40) {
   tl.fromTo(sel, { y: 0 }, { y: -h, duration: 0.15, ease: 'power2.out', yoyo: true, repeat: n * 2 - 1 }, t);
 }
@@ -205,7 +211,7 @@ function moTag(id: string, x: number, y: number, text: string, c = '#e8622a', fs
     <text x="0" y="${fs * 0.36}" text-anchor="middle" font-size="${fs}" font-weight="900" fill="#fff" style="font-family: var(--font), system-ui, sans-serif; letter-spacing: 1px">${text}</text></g></g>`;
 }
 const moPopIn = (tl: gsap.core.Timeline, sel: string, t: number) => {
-  tl.fromTo(sel, { scaleX: 0.1, scaleY: 0.1, opacity: 1, rotation: -8, transformOrigin: '50% 50%' }, { keyframes: [{ scaleX: 1.2, scaleY: 0.85, rotation: 4, duration: 0.16, ease: 'power2.out' }, { scaleX: 0.95, scaleY: 1.06, rotation: -2, duration: 0.12 }, { scaleX: 1, scaleY: 1, rotation: 0, duration: 0.1 }] }, t);
+  tl.fromTo(sel, { scaleX: 0, scaleY: 0, opacity: 0, rotation: -8, transformOrigin: '50% 50%' }, { keyframes: [{ scaleX: 1.2, scaleY: 0.85, opacity: 1, rotation: 4, duration: 0.16, ease: 'power2.out' }, { scaleX: 0.95, scaleY: 1.06, rotation: -2, duration: 0.12 }, { scaleX: 1, scaleY: 1, rotation: 0, duration: 0.1 }] }, t);
   tl.to(sel, { rotation: 2.5, duration: 0.6, ease: 'sine.inOut', yoyo: true, repeat: 5 }, t + 0.4);
 };
 function moQuestion(id: string, x: number, y: number, s = 1) {
@@ -222,13 +228,13 @@ function moBoom(id: string, x: number, y: number, s = 1) {
 }
 // flash a spark (0.25 s) or a boom (0.4 s) at t
 const moFlash = (tl: gsap.core.Timeline, sel: string, t: number, d = 0.25) =>
-  tl.fromTo(sel, { opacity: 1, scale: 0.2, transformOrigin: '50% 50%' }, { scale: 1.15, duration: d * 0.5, ease: 'power2.out' }, t).to(sel, { opacity: 0, scale: 1.3, duration: d * 0.5, ease: 'power1.in' }, t + d * 0.5);
+  tl.fromTo(sel, { opacity: 0, scale: 0.2, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1.15, duration: d * 0.5, ease: 'power2.out' }, t).to(sel, { opacity: 0, scale: 1.3, duration: d * 0.5, ease: 'power1.in' }, t + d * 0.5);
 function moSmoke(id: string, x: number, y: number, s = 1, c = '#9aa3b2') {
   return `<g id="${id}" opacity="0"><g transform="translate(${x} ${y}) scale(${s})">${moVol((a) => `<circle cx="-34" cy="0" r="34" ${a}/>`, c, { sx: 8, sy: 8, sw: 6 })}${moVol((a) => `<circle cx="20" cy="-22" r="42" ${a}/>`, c, { sx: 10, sy: 10, sw: 6 })}${moVol((a) => `<circle cx="52" cy="10" r="28" ${a}/>`, c, { sx: 7, sy: 7, sw: 6 })}<circle cx="-2" cy="14" r="30" fill="${c}"/></g></g>`;
 }
 // a puff that rises and fades (0.9 s)
 const moPuff = (tl: gsap.core.Timeline, sel: string, t: number, dy = -160) =>
-  tl.fromTo(sel, { opacity: 0.95, y: 0, scale: 0.5, transformOrigin: '50% 50%' }, { opacity: 0, y: dy, scale: 1.3, duration: 0.9, ease: 'power1.out' }, t);
+  tl.fromTo(sel, { opacity: 0, y: 0, scale: 0.5, transformOrigin: '50% 50%' }, { keyframes: [{ opacity: 0.95, scale: 0.7, y: dy * 0.1, duration: 0.1 }, { opacity: 0, y: dy, scale: 1.3, duration: 0.8, ease: 'power1.out' }] }, t);
 function moArrow(id: string, x1: number, y1: number, x2: number, y2: number, c: string, w = 22) {
   const a = Math.atan2(y2 - y1, x2 - x1), h = w * 2.2, bx = x2 - Math.cos(a) * h * 0.7, by = y2 - Math.sin(a) * h * 0.7;
   return `<g id="${id}"><line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" stroke="${MO.o}" stroke-width="${w + 12}" stroke-linecap="round"/>

@@ -60,6 +60,7 @@ const whirr = (t0: number, d: number, v = 0.06) => { let ph = 0; add(t0, d, (u) 
 
 // ---- the cues, scene by scene (times match the animation in visuals.ts)
 boing(K('hook', 'q'), 0.18, 420);
+whoosh(T0('hook') + 0.9, 1.8, 0.14); whoosh(K('armo', 'tube') + 0.45, 1.0, 0.16); twinkle(K('armo', 'tube') + 1.0, 0.05);
 clank(K('ruin', 'rompe'), 0.3, 480); clank(K('ruin', 'rompe') + 0.12, 0.2, 610, 0.3); clank(K('ruin', 'rompe') + 0.24, 0.15, 540, -0.3);
 puff(K('ruin', 'rompe') + 0.1); puff(K('ruin', 'rompe') + 0.4); puff(K('ruin', 'entero'), 0.25);
 boing(K('ask', 'dota') - 0.25, 0.32, 300);

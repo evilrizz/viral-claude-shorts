@@ -17,8 +17,8 @@ function mvTalk(tl: MvTl, $: Mv$, id: string, s: Scene, who: 'tico' | 'dota') {
 const mvTicoC = (pose: MoTicoPose = 'cross') => moTico('tc', 190, 1590, 0.48, pose);
 const mvDotaC = (pose: MoDotaPose = 'down') => moDota('dc', 900, 1590, 0.55, pose, true);
 // background + camera wrapper
-const mvBurst = (body: string) => svg(`${moBurst('bg')}<g id="cam"><g id="camP">${body}</g></g>`);
-const mvPrint = (body: string) => svg(`${moPrint()}<g id="cam"><g id="camP">${body}</g></g>`);
+const mvBurst = (body: string, over = '') => svg(`${moBurst('bg')}<g id="cam"><g id="camP"><g id="camZ">${body}</g>${over}</g></g>`);
+const mvPrint = (body: string, over = '') => svg(`${moPrint()}<g id="cam"><g id="camP"><g id="camZ">${body}</g>${over}</g></g>`);
 // every scene: the set moves (sunburst turns / dust drifts), the camera snaps in and punches on the keys, and the characters are alive
 function mvBase(tl: MvTl, s: Scene, $: Mv$, burst = true) {
   if (burst) tl.fromTo($('#bg'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 24, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
@@ -37,22 +37,27 @@ const mvFront = (hidden: boolean, sc = 0.8, cx = 540, cy = 1000) => `<g transfor
 defineVisuals({
   hook: {
     bg: MO.bg1, ink: MO.navy,
-    html: () => mvBurst(`${mvFront(true, 0.8, 620, 1000)}${moTico('tk', 220, 1590, 0.55)}`),
+    html: () => mvBurst(`${mvFront(true, 0.8, 620, 1000)}${moTico('tk', 220, 1590, 0.55)}`, moSpot(620, 1170, 520)),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
       moPop(tl, $('#t'), s.t0 + 0.1, 0.5);
-      tl.fromTo($('#t-q'), { scale: 1, transformOrigin: '50% 50%' }, { scale: 1.15, duration: 0.25, yoyo: true, repeat: 3, ease: 'sine.inOut' }, K('q'));
+      moFocus(tl, $, 620, 600, 1.4, s.t0 + 0.7, s.t1 - s.t0 - 0.75, 'power2.inOut');
+      tl.fromTo($('#t-q'), { scale: 1, rotation: 0, transformOrigin: '50% 50%' }, { keyframes: [{ scale: 1.3, rotation: -8, duration: 0.18, ease: 'power2.out' }, { scale: 0.95, rotation: 6, duration: 0.16 }, { scale: 1.1, rotation: -3, duration: 0.14 }, { scale: 1, rotation: 0, duration: 0.14 }] }, K('q'));
+      tl.to($('#t-q'), { rotation: 4, duration: 0.35, yoyo: true, repeat: Math.ceil((s.t1 - K('q') - 0.7) / 0.35), ease: 'sine.inOut' }, K('q') + 0.62);
       mvTalk(tl, $, 'tk', s, 'tico');
     },
   },
   ruin: {
     bg: MO.bg1, ink: MO.navy,
-    html: () => mvBurst(`${mvFront(true, 0.8, 620, 1000)}${moSmoke('sm1', 520, 640, 1)}${moSmoke('sm2', 700, 620, 0.8)}${moSmoke('sm3', 610, 600, 1.1, '#6f7685')}${moTico('tk', 220, 1590, 0.55, 'point')}`),
+    html: () => mvBurst(`${mvFront(true, 0.8, 620, 1000)}${moSmoke('sm1', 520, 640, 1)}${moSmoke('sm2', 700, 620, 0.8)}${moSmoke('sm3', 610, 600, 1.1, '#6f7685')}${moTico('tk', 220, 1590, 0.55, 'point')}`, moSpot(620, 1170, 520)),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
+      tl.set($('#camZ'), { scale: 1.4, svgOrigin: '620 600' }, s.t0).set($('#spot'), { opacity: 0.5 }, s.t0);
+      tl.to($('#camZ'), { scale: 1, duration: 0.7, ease: 'power3.inOut' }, K('entero') - 0.2);
+      tl.to($('#spot'), { opacity: 0, duration: 0.7, ease: 'sine.inOut' }, K('entero') - 0.2);
       tl.fromTo($('#t'), { x: -10 }, { x: 10, duration: 0.06, yoyo: true, repeat: 9, ease: 'none' }, K('rompe'));
       moPuff(tl, $('#sm1'), K('rompe') + 0.1); moPuff(tl, $('#sm2'), K('rompe') + 0.4); moPuff(tl, $('#sm3'), K('entero'));
-      tl.fromTo($('#t-qm rect'), { fill: MO.navy }, { fill: '#7a2a2a', duration: 0.4 }, K('entero'));
+      tl.fromTo($('#t-qm > rect'), { fill: MO.navy }, { fill: '#7a2a2a', duration: 0.4 }, K('entero'));
       mvTalk(tl, $, 'tk', s, 'tico');
     },
   },
@@ -79,10 +84,12 @@ defineVisuals({
   },
   armo: {
     bg: MO.bg1, ink: MO.navy,
-    html: () => mvBurst(`${moTable('tb', 1300, 380, 960)}<g id="tubeG">${moTube('tu', 680, 1300, 300, 180)}</g>${moTico('tk', 230, 1590, 0.62, 'hold')}`),
+    html: () => mvBurst(`${moTable('tb', 1300, 380, 960)}<g id="tubeG">${moTube('tu', 680, 1300, 300, 180)}</g>${moTag('tg', 680, 880, 'UN TUBO')}${moTico('tk', 230, 1590, 0.62, 'hold')}`, moSpot(680, 1120, 450)),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
-      tl.fromTo($('#tubeG'), { y: -900 }, { y: 0, duration: 0.45, ease: 'bounce.out' }, K('tube') - 0.2);
+      tl.fromTo($('#tubeG'), { y: -1400 }, { y: 0, duration: 0.45, ease: 'bounce.out' }, K('tube') - 0.2);
+      moFocus(tl, $, 680, 1120, 1.6, K('tube') + 0.4, 1.1);
+      moPopIn(tl, $('#tg'), K('tube') + 1.0);
       moTicoPose(tl, $, 'tk', 'point', K('tube') + 0.4);
       mvTalk(tl, $, 'tk', s, 'tico');
     },
@@ -92,7 +99,7 @@ defineVisuals({
     html: () => mvBurst(`${moTable('tb', 1380, 160, 920)}<g id="tubeG">${moTube('tu', 540, 1380, 380, 240)}</g>${moDrop('drop', 540, 640, 0.9)}${moSpark('sp', 540, 1260, 1.1)}${moBoom('bm', 540, 1190, 1.15)}${moSmoke('sm', 540, 900, 1.2)}${moTico('tk', 170, 1590, 0.45)}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
-      tl.fromTo($('#drop'), { y: 0, opacity: 1 }, { y: 560, duration: 0.5, ease: 'power2.in' }, K('gas') - 0.1).set($('#drop'), { opacity: 0 }, K('gas') + 0.42);
+      tl.set($('#drop'), { opacity: 0 }, s.t0).fromTo($('#drop'), { y: -500, opacity: 1 }, { y: 560, duration: 0.6, ease: 'power2.in', immediateRender: false }, K('gas') - 0.2).set($('#drop'), { opacity: 0 }, K('gas') + 0.42);
       moFlash(tl, $('#sp'), K('spark'), 0.3);
       moFlash(tl, $('#bm'), K('boom'), 0.45); moPuff(tl, $('#sm'), K('boom') + 0.15, -220);
       tl.fromTo($('#tubeG'), { x: -12 }, { x: 12, duration: 0.05, yoyo: true, repeat: 7, ease: 'none' }, K('boom'));
@@ -104,7 +111,7 @@ defineVisuals({
     html: () => mvBurst(`${moTable('tb', 1380, 160, 920)}${moTube('tu', 540, 1380, 380, 240)}${mvLid('lid', 1060)}${moBoom('bm', 540, 1050, 0.9)}${moTag('tg', 540, 850, 'PISTÓN')}${moTico('tk', 170, 1590, 0.45, 'point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
-      tl.fromTo($('#lid'), { y: -700 }, { y: 0, duration: 0.45, ease: 'power2.in' }, K('lid') - 0.35);
+      tl.fromTo($('#lid'), { y: -1500 }, { y: 0, duration: 0.45, ease: 'power2.in' }, K('lid') - 0.35);
       moFlash(tl, $('#bm'), K('push') - 0.05, 0.4);
       tl.to($('#lid'), { y: 270, duration: 0.18, ease: 'power3.in' }, K('push'));
       moPopIn(tl, $('#tg'), K('tag'));
@@ -242,7 +249,7 @@ defineVisuals({
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true, cams: true, plug: true })}${moTag('tg', 820, 600, 'DOS PUNTITAS', undefined, 38)}${mvTicoC()}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 180, s);
-      tl.fromTo($('#e-plug'), { y: -500, opacity: 1 }, { y: 0, duration: 0.45, ease: 'bounce.out' }, K('plug') - 0.3);
+      tl.set($('#e-plug'), { opacity: 0 }, s.t0).fromTo($('#e-plug'), { y: -500, opacity: 1 }, { y: 0, duration: 0.45, ease: 'bounce.out', immediateRender: false }, K('plug') - 0.3);
       moPopIn(tl, $('#tg'), K('plug') + 0.5);
       mvTalk(tl, $, 'tc', s, 'tico');
     },

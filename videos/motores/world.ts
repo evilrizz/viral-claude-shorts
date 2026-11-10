@@ -214,9 +214,9 @@ function moBurst(id: string, c1 = MO.bg1, c2 = MO.bg2, cx = 540, cy = 1050, floo
 }
 function moPrint() {   // the plain backdrop (its colours are set per scene in visuals.ts, MV_BG): plain (no lines), a soft spotlight behind the pieces, dark corners and a floor
   const dust = [...Array(18)].map((_, i) => `<circle cx="${(i * 211) % 1080}" cy="${520 + ((i * 337) % 1100)}" r="${3 + (i % 3) * 2}" fill="#bff0f7" opacity="${0.2 + (i % 3) * 0.1}"/>`).join('');
-  return `<rect id="bd0" width="1080" height="1920" fill="#0f4a5c"/><circle id="bd1" cx="540" cy="1050" r="600" fill="#17667b" opacity="0.8"/><circle id="bd2" cx="540" cy="1050" r="400" fill="#1f7a8f" opacity="0.6"/>
-    <circle id="bd3" cx="540" cy="1000" r="1250" fill="none" stroke="#06232d" stroke-width="900" opacity="0.55"/>
-    <rect id="bd4" x="0" y="1540" width="1080" height="380" fill="#0a3340"/><rect id="bd5" x="0" y="1540" width="1080" height="12" fill="#1d6a7d"/><g class="dust">${dust}</g>`;
+  return `<rect id="bd0" width="1080" height="1920" fill="#2b8394"/><circle id="bd1" cx="540" cy="1050" r="600" fill="#3a97a8" opacity="0.8"/><circle id="bd2" cx="540" cy="1050" r="400" fill="#4aa7b6" opacity="0.6"/>
+    <circle id="bd3" cx="540" cy="1000" r="1250" fill="none" stroke="#124e5c" stroke-width="900" opacity="0.45"/>
+    <rect id="bd4" x="0" y="1540" width="1080" height="380" fill="#1f6878"/><rect id="bd5" x="0" y="1540" width="1080" height="12" fill="#57b4c2"/><g class="dust">${dust}</g>`;
 }
 // dust drifts up slowly in the blueprint set
 const moDust = (tl: gsap.core.Timeline, $: (q: string) => string, s: Scene) =>
@@ -361,7 +361,7 @@ function moTiming(id: string, hidden = false) {
     <g id="${id}-glow" opacity="0"><path d="${belt}" fill="none" stroke="${MO.dShirt}" stroke-width="64" stroke-linejoin="round" opacity="0.55"/></g>
     <g id="${id}-broken" opacity="0"><path d="M${cx + R - 6} ${cy1 + 30} C ${cx + R + 30} ${cy1 + 200}, ${cx + 150} ${cy1 + 330}, ${cx + 200} ${cy1 + 420}" fill="none" stroke="${MO.o}" stroke-width="40" stroke-linecap="round"/><path d="M${cx + R - 6} ${cy1 + 30} C ${cx + R + 30} ${cy1 + 200}, ${cx + 150} ${cy1 + 330}, ${cx + 200} ${cy1 + 420}" fill="none" stroke="#3b3f4a" stroke-width="26" stroke-linecap="round"/>
       <path d="M${cx - r} ${cy2 + 10} C ${cx - r - 60} ${cy2 - 120}, ${cx - 180} ${cy2 - 240}, ${cx - 230} ${cy2 - 300}" fill="none" stroke="${MO.o}" stroke-width="40" stroke-linecap="round"/><path d="M${cx - r} ${cy2 + 10} C ${cx - r - 60} ${cy2 - 120}, ${cx - 180} ${cy2 - 240}, ${cx - 230} ${cy2 - 300}" fill="none" stroke="#3b3f4a" stroke-width="26" stroke-linecap="round"/></g>
-    <g id="${id}-qm"${moVis(hidden)}><rect x="330" y="630" width="420" height="800" rx="28" fill="${MO.navy}" stroke="${MO.o}" stroke-width="${MO_SW}"/>${moQuestion(`${id}-q`, cx, 1040, 1.2)}</g>
+    <g id="${id}-qm"${moVis(hidden)}><rect x="330" y="630" width="420" height="800" rx="28" fill="#3d2466" stroke="${MO.o}" stroke-width="${MO_SW}"/>${moQuestion(`${id}-q`, cx, 1040, 1.2)}</g>
   </g>`;
 }
 // the belt runs (teeth slide) and the pulleys turn: crank 2 turns for every cam turn

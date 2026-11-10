@@ -58,6 +58,7 @@ const vroom = (t: number, d = 1.2, v = 0.16) => { let ph = 0; const f = lp(0.2);
 const engine = (t0: number, t1: number, rate = 6, v = 0.07) => { for (let t = t0; t < t1 - 0.05; t += 1 / rate) { add(t, 0.1, (u) => Math.sin(TAU * 58 * u) * env(u, 0.004, 30), v); add(t + 0.5 / rate, 0.03, (u) => (Math.sin(TAU * 3100 * u) + noise() * 0.4) * Math.exp(-u * 200), v * 0.25); } };
 const whirr = (t0: number, d: number, v = 0.06) => { let ph = 0; add(t0, d, (u) => { ph += TAU * (90 + 70 * Math.min(1, u / 0.8)) / SR; return (Math.sin(ph) + 0.3 * Math.sin(3 * ph)) * Math.min(1, u / 0.3) * Math.min(1, (d - u) / 0.2); }, v); };
 
+const ding = (t: number, v = 0.13) => [[1568, 0], [2349, 0.05]].forEach(([f, dt]) => add(t + dt, 0.6, (u) => (Math.sin(TAU * f * u) + 0.3 * Math.sin(TAU * f * 2.76 * u) * Math.exp(-u * 8)) * env(u, 0.002, 6), v));
 // ---- the cues, scene by scene (times match the animation in visuals.ts)
 boing(K('hook', 'q'), 0.18, 420);
 whoosh(T0('hook') + 0.9, 1.8, 0.14); whoosh(K('armo', 'tube') + 0.45, 1.0, 0.16); twinkle(K('armo', 'tube') + 1.0, 0.05);
@@ -100,11 +101,10 @@ bonk(K('snap', 'hit'), 0.4); clank(K('snap', 'hit') + 0.02, 0.3, 380); twinkle(K
 engine(T0('dist'), T1('dist'), 6, 0.05);
 flip(K('manual', 'man') - 0.2); flip(K('manual', 'man') - 0.05, 0.08);
 boom(K('outro', 'boom'), 0.25); vroom(K('outro', 'drive'), 1.25); honk(K('outro', 'drive') + 0.7);
-for (let i = 0; i < 5; i++) { puff(T0('sub') + 0.2 + i * 0.95, 0.12); puff(T0('sub') + 0.65 + i * 0.95, 0.1); }
-[0.2, 0.5].forEach((dt) => boing(T0('sub') + dt, 0.18, 320, 0.4)); jingle(K('sub', 'screws') + 0.05);
+boing(T0('sub') + 0.05, 0.22, 260); for (let i = 0; i < 8; i++) plip(T0('sub') + 0.1 + i * 0.07, 0.06, 1400 + i * 120);
+ding(T0('sub') + 0.35, 0.16); [0.2, 0.5].forEach((dt) => boing(T0('sub') + dt, 0.16, 340, 0.4)); twinkle(T0('sub') + 1.2, 0.04); twinkle(T0('sub') + 3.0, 0.04);
 
 // every piece marker (scenes.json "marks"): a bright "ding" as the ring lands, and a whoosh when the camera zooms to it
-const ding = (t: number, v = 0.13) => [[1568, 0], [2349, 0.05]].forEach(([f, dt]) => add(t + dt, 0.6, (u) => (Math.sin(TAU * f * u) + 0.3 * Math.sin(TAU * f * 2.76 * u) * Math.exp(-u * 8)) * env(u, 0.002, 6), v));
 for (const s of P.scenes) for (const m of s.marks || []) { const t = K(s.id, m.k) + (m.dt || 0); ding(t + 0.12); if (m.z) whoosh(t + 0.15, 0.35, 0.18); }
 
 // ---- foley.wav (float), then own-music.wav = music + foley

@@ -440,13 +440,23 @@ defineVisuals({
   },
   sub: {
     bg: MO.bg1, ink: MO.navy,
-    html: () => mvBurst(`<g transform="translate(250 330) scale(0.55)">${moEngine('e', { valves: true, pipes: true, cams: true, plug: true })}</g>${moSmoke('s1', 520, 700, 0.7)}${moSmoke('s2', 600, 690, 0.6, '#6f7685')}
-      ${moTico('tk', 220, 1590, 0.6, 'palm')}${moDota('d', 800, 1590, 0.75, 'down', true)}`),
+    // the banner: stars around, "¡SUSCRÍBANSE!" over the Idio-two logo, Tico (idea bulb, arms crossed) and Dota (arms up, dizzy stars)
+    html: () => svg(`${moBurst('bg', MO.bg1, MO.bg2, 540, 1000, false)}<g id="cam"><g id="camP"><g id="camZ">
+      <g id="stars">${[[150, 560, 34], [930, 520, 30], [250, 760, 20], [860, 780, 22], [130, 1380, 26], [960, 1330, 34], [300, 1560, 22], [820, 1580, 20]].map(([x, y, r], i) => `<g id="st${i}">${moStar(x, y, r)}</g>`).join('')}</g>
+      ${moCallout('sub', 540, 600, '¡SUSCRÍBANSE!')}${moLogo('logo', 540, 870, 178)}
+      ${moTico('tk', 420, 1560, 0.8, 'cross')}${moDota('d', 680, 1560, 0.95, 'up')}
+    </g></g></g>`),
     anim(tl, s, K, $) {
-      mvBase(tl, s, $); mvHold(tl, $, 30, s);
-      for (let i = 0; i < 5; i++) { moPuff(tl, $('#s1'), s.t0 + 0.2 + i * 0.95); moPuff(tl, $('#s2'), s.t0 + 0.65 + i * 0.95); }
-      tl.set($('#d-screws'), { opacity: 1 }, K('screws')); moPop(tl, $('#d-screws'), K('screws'), 0.3);
+      mvBase(tl, s, $);
+      tl.set($('#tk-bulb'), { opacity: 1 }, s.t0); moPop(tl, $('#tk-bulb'), s.t0 + 0.15, 0.4);
+      moDizzy(tl, $, 'd', s.t0 + 0.1, s.t1);
+      moPop(tl, $('#logo'), s.t0 + 0.05, 0.5);
+      moPopIn(tl, $('#sub'), s.t0 + 0.3);
+      tl.to($('#sub'), { scale: 1.08, transformOrigin: '50% 50%', duration: 0.25, yoyo: true, repeat: 7, ease: 'sine.inOut' }, s.t0 + 1.0);
+      for (let i = 0; i < 8; i++) { moPop(tl, $(`#st${i}`), s.t0 + 0.1 + i * 0.07, 0.35); tl.to($(`#st${i}`), { rotation: i % 2 ? 20 : -20, scale: 1.15, transformOrigin: '50% 50%', duration: 0.5, yoyo: true, repeat: Math.floor((s.t1 - s.t0) / 0.5) - 1, ease: 'sine.inOut' }, s.t0 + 0.6 + i * 0.05); }
       moHop(tl, $('#d'), s.t0 + 0.2, 2, 30);
+      tl.fromTo($('#tk-head'), { rotation: -6, svgOrigin: '0 -360' }, { rotation: 6, duration: 0.14, yoyo: true, repeat: 3, ease: 'sine.inOut' }, K('screws'));
+      tl.to($('#tk-brows'), { y: -12, duration: 0.15, yoyo: true, repeat: 1 }, K('screws') + 0.6);
       mvTalk(tl, $, 'd', s, 'dota');
     },
   },

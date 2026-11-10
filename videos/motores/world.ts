@@ -206,11 +206,11 @@ function moDizzy(tl: gsap.core.Timeline, $: (q: string) => string, id: string, t
 }
 
 // ---------------- sets
-function moBurst(id: string, c1 = MO.bg1, c2 = MO.bg2, cx = 540, cy = 1050) {
+function moBurst(id: string, c1 = MO.bg1, c2 = MO.bg2, cx = 540, cy = 1050, floor = true) {
   let w = ''; for (let i = 0; i < 24; i += 2) { const a = i / 24 * Math.PI * 2, b = (i + 1) / 24 * Math.PI * 2, R = 2400; w += `<path d="M0 0 L${(Math.cos(a) * R).toFixed(0)} ${(Math.sin(a) * R).toFixed(0)} L${(Math.cos(b) * R).toFixed(0)} ${(Math.sin(b) * R).toFixed(0)}Z" fill="${c2}"/>`; }
   return `<rect width="1080" height="1920" fill="${c1}"/><g transform="translate(${cx} ${cy})"><g id="${id}">${w}</g></g>
     <circle cx="540" cy="1000" r="1250" fill="none" stroke="#e7a95a" stroke-width="900" opacity="0.28"/><circle cx="540" cy="1000" r="980" fill="none" stroke="#e7a95a" stroke-width="300" opacity="0.14"/>
-    <rect x="0" y="1520" width="1080" height="400" fill="#f1c98a"/><rect x="0" y="1520" width="1080" height="16" fill="#e2ad6a"/><rect x="0" y="1600" width="1080" height="320" fill="#000" opacity="0.05"/>`;
+    ${floor ? '<rect x="0" y="1520" width="1080" height="400" fill="#f1c98a"/><rect x="0" y="1520" width="1080" height="16" fill="#e2ad6a"/><rect x="0" y="1600" width="1080" height="320" fill="#000" opacity="0.05"/>' : ''}`;
 }
 function moPrint() {
   let g = ''; for (let x = 0; x <= 1080; x += 60) g += `<line x1="${x}" y1="0" x2="${x}" y2="1920" stroke="${MO.grid}" stroke-width="2"/>`;
@@ -428,6 +428,19 @@ function moCarIdio(id: string, tid: string, did: string, x: number, y: number, s
       <text x="-174" y="-40" text-anchor="middle" font-size="27" font-weight="900" fill="${O}" style="font-family: var(--font), system-ui, sans-serif; letter-spacing: 1px">${plate}</text></g>
     ${wheel('w1', -160)}${wheel('w2', 170)}
   </g></g>`;
+}
+// the channel logo like the banner: "Idio" blue, "-" orange, "two" yellow, thick dark outline and a soft drop shadow
+function moLogo(id: string, x: number, y: number, fs = 200) {
+  const t = (fill: string, dx = 0, dy = 0, extra = '') => `<text x="${x + dx}" y="${y + dy}" text-anchor="middle" font-size="${fs}" font-weight="900" letter-spacing="-4" ${extra} style="font-family: var(--font), system-ui, sans-serif">${fill}</text>`;
+  const spans = `<tspan fill="${MO.tShirt}">Idio</tspan><tspan fill="#e8622a">-</tspan><tspan fill="${MO.dShirt}">two</tspan>`;
+  return `<g id="${id}">${t('Idio-two', 10, 14, `fill="#000" opacity="0.16"`)}${t(spans, 0, 0, `stroke="${MO.o}" stroke-width="${fs * 0.09}" stroke-linejoin="round" paint-order="stroke"`)}</g>`;
+}
+// a big call-out on a pill (the "¡SUSCRÍBANSE!" above the logo)
+function moCallout(id: string, x: number, y: number, text: string, c = MO.red, fs = 74) {
+  const w = text.length * fs * 0.66 + 90;
+  return `<g id="${id}"><g transform="translate(${x} ${y})"><rect x="${-w / 2 + 8}" y="-50" width="${w}" height="112" rx="56" fill="#000" opacity="0.22"/>
+    ${moVol((a) => `<rect x="${-w / 2}" y="-58" width="${w}" height="112" rx="56" ${a}/>`, c, { sx: 0, sy: 14, k: 0.22, sw: 9, hi: `<rect x="${-w / 2 + 34}" y="-46" width="${w * 0.45}" height="14" rx="7" fill="#fff" opacity="0.35"/>` })}
+    <text x="0" y="${fs * 0.36}" text-anchor="middle" font-size="${fs}" font-weight="900" fill="#fff" stroke="${MO.o}" stroke-width="10" stroke-linejoin="round" paint-order="stroke" style="font-family: var(--font), system-ui, sans-serif">${text}</text></g></g>`;
 }
 // one of the 4 strokes: a small card with a mini cylinder and its word
 function moStroke(id: string, x: number, y: number, word: string, c: string, pistonUp: boolean) {

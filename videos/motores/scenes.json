@@ -1084,10 +1084,7 @@
    "id": "sub",
    "from": 399,
    "type": "closing",
-   "label": "Idio-two",
-   "title": "¡Suscríbanse!",
-   "highlight": "Suscríbanse",
-   "visual": "burst; Dota next to a smoking engine with 3 leftover screws; Tico facepalm",
+   "visual": "the banner: stars, ¡SUSCRÍBANSE! over the Idio-two logo, Tico with the idea bulb and arms crossed, Dota arms up with dizzy stars, talking",
    "mood": "playful",
    "keys": [
     {
@@ -1098,9 +1095,6 @@
     }
    ],
    "transition": "cut",
-   "ambience": [
-    "room"
-   ],
    "t0": 145.413,
    "t1": 150.361
   }

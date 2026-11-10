@@ -212,13 +212,11 @@ function moBurst(id: string, c1 = MO.bg1, c2 = MO.bg2, cx = 540, cy = 1050, floo
     <circle cx="540" cy="1000" r="1250" fill="none" stroke="#e7a95a" stroke-width="900" opacity="0.28"/><circle cx="540" cy="1000" r="980" fill="none" stroke="#e7a95a" stroke-width="300" opacity="0.14"/>
     ${floor ? '<rect x="0" y="1520" width="1080" height="400" fill="#f1c98a"/><rect x="0" y="1520" width="1080" height="16" fill="#e2ad6a"/><rect x="0" y="1600" width="1080" height="320" fill="#000" opacity="0.05"/>' : ''}`;
 }
-function moPrint() {
-  let g = ''; for (let x = 0; x <= 1080; x += 60) g += `<line x1="${x}" y1="0" x2="${x}" y2="1920" stroke="${MO.grid}" stroke-width="2"/>`;
-  for (let y = 0; y <= 1920; y += 60) g += `<line x1="0" y1="${y}" x2="1080" y2="${y}" stroke="${MO.grid}" stroke-width="2"/>`;
-  const dust = [...Array(18)].map((_, i) => `<circle cx="${(i * 211) % 1080}" cy="${520 + ((i * 337) % 1100)}" r="${3 + (i % 3) * 2}" fill="#9fb6e8" opacity="${0.25 + (i % 3) * 0.12}"/>`).join('');
-  return `<rect width="1080" height="1920" fill="${MO.navy}"/>${g}<circle cx="540" cy="1050" r="560" fill="#2b3d6e" opacity="0.65"/><circle cx="540" cy="1050" r="380" fill="#33497f" opacity="0.45"/>
-    <circle cx="540" cy="1000" r="1250" fill="none" stroke="#0e1630" stroke-width="900" opacity="0.4"/>
-    <rect x="0" y="1540" width="1080" height="380" fill="#16203b"/><rect x="0" y="1540" width="1080" height="12" fill="#2a3a63"/><g class="dust">${dust}</g>`;
+function moPrint() {   // the workshop backdrop: deep petrol blue, plain (no lines), a soft spotlight behind the pieces, dark corners and a floor
+  const dust = [...Array(18)].map((_, i) => `<circle cx="${(i * 211) % 1080}" cy="${520 + ((i * 337) % 1100)}" r="${3 + (i % 3) * 2}" fill="#bff0f7" opacity="${0.2 + (i % 3) * 0.1}"/>`).join('');
+  return `<rect width="1080" height="1920" fill="#0f4a5c"/><circle cx="540" cy="1050" r="600" fill="#17667b" opacity="0.8"/><circle cx="540" cy="1050" r="400" fill="#1f7a8f" opacity="0.6"/>
+    <circle cx="540" cy="1000" r="1250" fill="none" stroke="#06232d" stroke-width="900" opacity="0.55"/>
+    <rect x="0" y="1540" width="1080" height="380" fill="#0a3340"/><rect x="0" y="1540" width="1080" height="12" fill="#1d6a7d"/><g class="dust">${dust}</g>`;
 }
 // dust drifts up slowly in the blueprint set
 const moDust = (tl: gsap.core.Timeline, $: (q: string) => string, s: Scene) =>

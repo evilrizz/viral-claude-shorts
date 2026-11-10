@@ -140,7 +140,7 @@ defineVisuals({
     },
   },
   rod: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { head: false })}${mvTicoC('point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 180, s);
@@ -152,7 +152,7 @@ defineVisuals({
     },
   },
   cycle: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { head: false })}${moSpinArrow('sa', 540, 1300, 150)}<g id="ud">${moArrow('ua', 780, 1060, 780, 900, MO.dShirt, 18)}${moArrow('da', 780, 1000, 780, 1160, MO.dShirt, 18)}</g>${mvTicoC('point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false);
@@ -163,7 +163,7 @@ defineVisuals({
     },
   },
   names: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { head: false })}${moTag('tb', 820, 1150, 'BIELA')}${moTag('tcg', 540, 1500, 'CIGÜEÑAL')}${mvTicoC()}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false);
@@ -173,7 +173,7 @@ defineVisuals({
     },
   },
   closed: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', {})}<rect x="398" y="800" width="284" height="84" fill="#aab6c8" stroke="${MO.o}" stroke-width="${MO_SW}"/>${moSmoke('sm', 540, 950, 0.8)}
       <g id="x"><g transform="translate(540 760)"><rect x="-70" y="-14" width="140" height="28" rx="14" fill="${MO.red}" stroke="${MO.o}" stroke-width="6" transform="rotate(45)"/><rect x="-70" y="-14" width="140" height="28" rx="14" fill="${MO.red}" stroke="${MO.o}" stroke-width="6" transform="rotate(-45)"/></g></g>${mvTicoC('point')}`),
     anim(tl, s, K, $) {
@@ -186,7 +186,7 @@ defineVisuals({
     },
   },
   valves: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true })}${moArrow('ain', 160, 834, 330, 834, MO.gas)}${moArrow('aout', 760, 834, 930, 834, '#9aa3b2')}${moSmoke('sm', 880, 760, 0.7)}${mvTicoC('point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 700, s, { mix: true });
@@ -201,7 +201,7 @@ defineVisuals({
     },
   },
   vname: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true })}${moTag('tg', 540, 640, 'VÁLVULAS')}${mvTicoC()}${mvDotaC('up')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 90, s);
@@ -213,7 +213,7 @@ defineVisuals({
     },
   },
   strokes: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moStroke('s1', 300, 780, 'ENTRA', MO.gas, false)}${moStroke('s2', 780, 780, 'APRIETA', MO.gas, true)}${moStroke('s3', 780, 1190, 'EXPLOTA', MO.fire, false)}${moStroke('s4', 300, 1190, 'SALE', '#9aa3b2', true)}
       ${moArrow('a1', 430, 780, 640, 780, MO.dShirt, 16)}${moArrow('a2', 780, 950, 780, 1030, MO.dShirt, 16)}${moArrow('a3', 640, 1190, 430, 1190, MO.dShirt, 16)}${moArrow('a4', 300, 1030, 300, 950, MO.dShirt, 16)}`),
     anim(tl, s, K, $) {
@@ -223,7 +223,7 @@ defineVisuals({
     },
   },
   timing: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true })}${moQuestion('q', 540, 620, 0.55)}${mvTicoC()}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 0, s);
@@ -233,7 +233,7 @@ defineVisuals({
     },
   },
   cams: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true, cams: true })}${moTag('tg', 820, 600, 'ÁRBOL DE LEVAS', undefined, 38)}${mvTicoC('point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 0, s);
@@ -244,7 +244,7 @@ defineVisuals({
     },
   },
   ratio: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true, cams: true })}${moTag('t1', 820, 600, 'LEVAS ×1')}${moTag('t2', 540, 1500, 'CIGÜEÑAL ×2')}${moSpinArrow('sa', 540, 1300, 150)}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false);
@@ -253,7 +253,7 @@ defineVisuals({
     },
   },
   plug: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true, cams: true, plug: true })}${mvTicoC()}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 180, s);
@@ -262,7 +262,7 @@ defineVisuals({
     },
   },
   bujia: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true, cams: true, plug: true })}${moTag('tg', 820, 600, 'BUJÍA')}${mvTicoC('point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 180, s, { mix: true });
@@ -274,7 +274,7 @@ defineVisuals({
     },
   },
   onlyone: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`<g id="g1">${moStroke('s1', 300, 780, 'ENTRA', MO.gas, false)}</g><g id="g2">${moStroke('s2', 780, 780, 'APRIETA', MO.gas, true)}</g>${moStroke('s3', 780, 1190, 'EXPLOTA', MO.fire, false)}<g id="g4">${moStroke('s4', 300, 1190, 'SALE', '#9aa3b2', true)}</g>
       ${moTag('t3', 780, 1410, 'EMPUJA', MO.red)}${moTag('tg', 300, 1410, 'DE GORRA', '#6f7685')}`),
     anim(tl, s, K, $) {
@@ -285,7 +285,7 @@ defineVisuals({
     },
   },
   disc: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true, cams: true, plug: true, fly: true })}${mvTicoC('point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false);
@@ -296,7 +296,7 @@ defineVisuals({
     },
   },
   inercia: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true, cams: true, plug: true, fly: true })}${moTag('tg', 540, 600, 'VOLANTE DE INERCIA')}${mvTicoC()}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false);
@@ -318,7 +318,7 @@ defineVisuals({
     },
   },
   heat: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true, cams: true, plug: true, fly: true })}${moHeat('h1', 330, 900)}${moHeat('h2', 760, 900)}${mvTicoC()}${mvDotaC('down')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false);
@@ -334,7 +334,7 @@ defineVisuals({
     },
   },
   oil: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true, cams: true, plug: true, fly: true })}${[0, 1, 2, 3, 4].map((i) => moDrop('o' + i, 400 + i * 70, 560, 0.5, MO.oil)).join('')}${moTag('tg', 540, 1580, 'ACEITE', '#b8860b')}${mvTicoC('point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false);
@@ -346,7 +346,7 @@ defineVisuals({
     },
   },
   rad: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`<path id="hose" d="M600 980 C 480 900, 420 880, 330 900 M330 1200 C 430 1230, 520 1220, 600 1180" fill="none" stroke="${MO.o}" stroke-width="44" stroke-linecap="round"/>
       <path id="hoseC" d="M600 980 C 480 900, 420 880, 330 900 M330 1200 C 430 1230, 520 1220, 600 1180" fill="none" stroke="${MO.cool}" stroke-width="26" stroke-linecap="round" stroke-dasharray="30 22"/>
       <g transform="translate(365 418) scale(0.62)">${moEngine('e', { valves: true, pipes: true, cams: true, plug: true, fly: true })}</g>${moRadiator('rd', 230, 1050)}${moTag('tg', 240, 1340, 'RADIADOR')}${moHeat('hh', 230, 820, 2)}`),
@@ -361,7 +361,7 @@ defineVisuals({
     },
   },
   promised: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${mvFront(true, 0.82, 600, 1010)}${moTico('tk', 190, 1590, 0.5, 'point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false);
@@ -372,7 +372,7 @@ defineVisuals({
     },
   },
   links: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${mvFront(false, 0.82, 600, 1010)}${moTag('tl1', 600, 550, 'LEVAS')}${moTag('tl2', 600, 1490, 'CIGÜEÑAL')}${moTico('tk', 190, 1590, 0.5)}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false);
@@ -382,7 +382,7 @@ defineVisuals({
     },
   },
   snap: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`<g id="fv">${mvFront(false, 0.82, 600, 1010)}</g><g id="cv" opacity="0">${moPrint()}${moEngine('e', { valves: true, pipes: true, cams: true, plug: true })}${moTag('tg', 820, 600, '¡ABIERTA!', MO.red)}
       <g id="hitStars" opacity="0">${moStar(560, 930, 34)}${moStar(660, 880, 26)}${moStar(470, 900, 22)}</g>${moBoom('hb', 610, 935, 0.6)}</g>`),
     anim(tl, s, K, $) {
@@ -402,7 +402,7 @@ defineVisuals({
     },
   },
   dist: {
-    bg: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvPrint(`${mvFront(false, 0.82, 600, 1010)}${moTag('tg', 600, 1520, 'DISTRIBUCIÓN', MO.red)}${moTico('tk', 190, 1590, 0.5, 'point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false);

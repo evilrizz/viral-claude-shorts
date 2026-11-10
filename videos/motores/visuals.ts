@@ -29,7 +29,7 @@ const MV_BG: Record<string, [string, boolean]> = {
   cams: ['#0f4a5c', false], ratio: ['#3d2466', false], plug: ['#0f5c4a', false], bujia: ['#1d2a4d', false],
   onlyone: ['#5c1a2e', false], disc: ['#0f4a5c', false], inercia: ['#3d2466', false], touch: ['#bfe8dc', true],
   heat: ['#1d2a4d', false], oil: ['#3d2466', false], rad: ['#7a3b1e', false], promised: ['#3d2466', false],
-  links: ['#0f5c4a', false], snap: ['#4a1626', false], dist: ['#1d2a4d', false], manual: ['#e8833a', true], outro: ['#8fd3ff', true],
+  links: ['#0f5c4a', false], snap: ['#4a1626', false], dist: ['#1d2a4d', false], manual: ['#e8833a', true],
 };
 // lighten (t > 0) or darken (t < 0) a #rrggbb colour
 function mvShade(hex: string, t: number) {
@@ -55,7 +55,7 @@ function mvBase(tl: MvTl, s: Scene, $: Mv$, burst = true) {
     moMarkIn(tl, $, `mk${i}`, m.x, m.y, t, d, !!m.label);
   });
   if (burst && document.querySelector($('#bg'))) tl.fromTo($('#bg'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 24, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
-  else moDust(tl, $, s);
+  else if (document.querySelector($('.dust'))) moDust(tl, $, s);
   const i = SCENES.scenes.findIndex((x) => x.id === s.id);
   moCamera(tl, $, s, i % 2 ? 1 : -1);
   for (const [id, kind] of [['tk', 'tico'], ['tc', 'tico'], ['d', 'dota'], ['dc', 'dota']] as const) if (document.querySelector($(`#${id}-rig`))) moAlive(tl, $, id, s, kind);
@@ -449,16 +449,45 @@ defineVisuals({
     },
   },
   outro: {
-    bg: '#0f4a5c',
-    html: () => mvBurst(`${f2Hill('hl', 1340, F2.green, F2.greenD, 30)}${moSmoke('ex1', 230, 1290, 0.7)}${moSmoke('ex2', 180, 1270, 0.9)}<g id="car">${moCarIdio('cr', 'tk', 'd', 540, 1250, 1.1)}${moBoom('bm', 795, 1180, 0.5)}</g>`),
+    bg: '#8fd3ff', ink: MO.navy,
+    // on the road: sky, sun, clouds, mountains far away, green hills, the road with its yellow line, posts and a sign.
+    // When they leave, everything scrolls back at its own speed (far = slow, near = fast) while the car speeds off.
+    html: () => {
+      const posts = [...Array(8)].map((_, i) => { const x = -260 + i * 260; return `<rect x="${x - 8}" y="1478" width="16" height="70" rx="5" fill="#f4f6fa" stroke="${MO.o}" stroke-width="5"/><rect x="${x - 8}" y="1488" width="16" height="12" fill="${MO.red}"/>`; }).join('');
+      const trees = [[120, 1150, 1], [330, 1170, 0.8], [760, 1160, 0.9], [990, 1150, 1.1], [1250, 1165, 0.9]].map(([x, y, k]) => `<g transform="translate(${x} ${y}) scale(${k})"><rect x="-8" y="-10" width="16" height="50" fill="#8a5a3b" stroke="${MO.o}" stroke-width="5"/>${moVol((a) => `<circle cx="0" cy="-50" r="48" ${a}/>`, '#2fae74', { sx: 10, sy: 10, sw: 6 })}</g>`).join('');
+      return svg(`<rect width="1080" height="1920" fill="#8fd3ff"/><rect x="0" y="880" width="1080" height="320" fill="#c3ecff"/>
+      <g id="cam"><g id="camP"><g id="camZ">
+        ${f2Sun('sunR', 840, 640, 70)}
+        <g id="clouds">${f2Cloud('c1', 230, 720, 0.7)}${f2Cloud('c2', 640, 600, 0.55)}${f2Cloud('c3', 980, 850, 0.5)}</g>
+        <g id="mtn"><path d="M-100 1200 L90 980 L220 1080 L420 900 L600 1070 L780 950 L960 1080 L1200 960 L1300 1200Z" fill="#7aa6d6" stroke="${MO.o}" stroke-width="6" stroke-linejoin="round"/>
+          <path d="M420 900 L470 960 L440 950 L420 975 L395 952 L372 958Z M780 950 L822 1000 L795 992 L780 1010 L760 994 L742 998Z" fill="#fff"/></g>
+        <g id="hills"><path d="M-200 1250 C 100 1120, 400 1170, 640 1150 S 1100 1110, 1400 1170 L1400 1260 L-200 1260Z" fill="#5cc98a" stroke="${MO.o}" stroke-width="6"/>${trees}
+          <g transform="translate(900 1080)"><rect x="-6" y="0" width="12" height="160" fill="#9aa3b2" stroke="${MO.o}" stroke-width="5"/>${moVol((a) => `<rect x="-95" y="-70" width="190" height="80" rx="10" ${a}/>`, '#1f8a4c', { sx: 0, sy: 10, sw: 6 })}
+            <text x="0" y="-18" text-anchor="middle" font-size="34" font-weight="900" fill="#fff" style="font-family: var(--font), system-ui, sans-serif">SALIDA ➜</text></g></g>
+        <rect x="0" y="1240" width="1080" height="220" fill="#4a4f5c"/><rect x="0" y="1240" width="1080" height="10" fill="#e9ecf2"/><rect x="0" y="1450" width="1080" height="10" fill="#e9ecf2"/>
+        <rect x="0" y="1250" width="1080" height="30" fill="#000" opacity="0.12"/>
+        <line id="dash" x1="-100" y1="1300" x2="1200" y2="1300" stroke="#ffd23d" stroke-width="12" stroke-dasharray="80 60"/>
+        <rect x="0" y="1460" width="1080" height="460" fill="#3ccf91"/><rect x="0" y="1460" width="1080" height="14" fill="#24a872"/>
+        <g id="posts">${posts}</g>
+        ${moSmoke('ex1', 230, 1300, 0.7)}${moSmoke('ex2', 180, 1280, 0.9)}<g id="car">${moCarIdio('cr', 'tk', 'd', 540, 1250, 1.1)}${moBoom('bm', 795, 1180, 0.5)}</g>
+      </g></g></g>`);
+    },
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
       moFlash(tl, $('#bm'), K('boom'), 0.4);
+      tl.fromTo($('#clouds'), { x: 0 }, { x: -40, duration: K('drive') - s.t0, ease: 'none' }, s.t0);
+      tl.fromTo($('#sunR .rays'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 40, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
       tl.fromTo($('#car'), { y: 0 }, { y: -6, duration: 0.09, yoyo: true, repeat: Math.floor((K('drive') - s.t0) / 0.09), ease: 'none' }, s.t0);
-      tl.to($('#car'), { x: 1100, duration: 1.3, ease: 'power2.in' }, K('drive'));
-      tl.to($('#cr-w1, #cr-w2'), { rotation: 900, transformOrigin: '50% 50%', duration: 1.3, ease: 'power2.in' }, K('drive'));
-      moPuff(tl, $('#ex1'), K('drive') + 0.05, -80); moPuff(tl, $('#ex2'), K('drive') + 0.3, -100);
-      moHop(tl, $('#d'), K('drive') - 0.4, 4, 18);
+      // off they go: the car speeds right, the road and the world scroll back (parallax)
+      const d = 1.3, go = K('drive');
+      tl.to($('#car'), { x: 1100, duration: d, ease: 'power2.in' }, go);
+      tl.to($('#cr-w1, #cr-w2'), { rotation: 900, transformOrigin: '50% 50%', duration: d, ease: 'power2.in' }, go);
+      tl.fromTo($('#dash'), { strokeDashoffset: 0 }, { strokeDashoffset: 1400, duration: s.t1 - go, ease: 'power2.in' }, go);
+      tl.fromTo($('#posts'), { x: 0 }, { x: -1040, duration: s.t1 - go, ease: 'power2.in' }, go);
+      tl.fromTo($('#hills'), { x: 0 }, { x: -220, duration: s.t1 - go, ease: 'power2.in' }, go);
+      tl.fromTo($('#mtn'), { x: 0 }, { x: -60, duration: s.t1 - go, ease: 'power2.in' }, go);
+      moPuff(tl, $('#ex1'), go + 0.05, -80); moPuff(tl, $('#ex2'), go + 0.3, -100);
+      moHop(tl, $('#d'), go - 0.4, 4, 18);
       mvTalk(tl, $, 'tk', s, 'tico');
     },
   },

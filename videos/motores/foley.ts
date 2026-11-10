@@ -2,7 +2,7 @@
 // Cartoon foley for "motores": a layer of sound effects with their own level, on top of the synthesized music.
 //   usage: node videos/motores/foley.ts            (run it after any change to scenes.json, then render)
 //   1) runs core/music.ts -> music.wav (the score with its own sfx), 2) synthesizes foley.wav from the cues below,
-//   3) writes own-music.wav = music + foley (+FOLEY_DB). mix.ts puts it 16 dB under the voice, so the foley lands ~8 dB under it.
+//   3) writes own-music.wav = music + foley (+FOLEY_DB). mix.ts puts it 16 dB under the voice, so the foley lands ~4 dB under it (and ducks while someone talks).
 //   Deterministic: no clocks, a seeded noise. Explosions are soft (low-passed, short, no clipping).
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -103,7 +103,7 @@ for (let i = 0; i < 5; i++) { puff(T0('sub') + 0.2 + i * 0.95, 0.12); puff(T0('s
 [0.2, 0.5].forEach((dt) => boing(T0('sub') + dt, 0.18, 320, 0.4)); jingle(K('sub', 'screws') + 0.05);
 
 // ---- foley.wav (float), then own-music.wav = music + foley
-const FOLEY_DB = 8;
+const FOLEY_DB = 12;
 const wav = (file: string, a: Float32Array, b: Float32Array) => {
   const n = a.length, buf = Buffer.alloc(44 + n * 8);
   buf.write('RIFF', 0); buf.writeUInt32LE(36 + n * 8, 4); buf.write('WAVE', 8); buf.write('fmt ', 12); buf.writeUInt32LE(16, 16); buf.writeUInt16LE(3, 20); buf.writeUInt16LE(2, 22);

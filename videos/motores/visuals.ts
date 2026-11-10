@@ -254,11 +254,10 @@ defineVisuals({
   },
   plug: {
     bg: MO.navy,
-    html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true, cams: true, plug: true })}${moTag('tg', 820, 600, 'DOS PUNTITAS', undefined, 38)}${mvTicoC()}`),
+    html: () => mvPrint(`${moEngine('e', { valves: true, pipes: true, cams: true, plug: true })}${mvTicoC()}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $, false); mvHold(tl, $, 180, s);
       tl.set($('#e-plug'), { opacity: 0 }, s.t0).fromTo($('#e-plug'), { y: -500, opacity: 1 }, { y: 0, duration: 0.45, ease: 'bounce.out', immediateRender: false }, K('plug') - 0.3);
-      moPopIn(tl, $('#tg'), K('plug') + 0.5);
       mvTalk(tl, $, 'tc', s, 'tico');
     },
   },

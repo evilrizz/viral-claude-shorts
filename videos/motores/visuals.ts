@@ -17,7 +17,7 @@ function mvTalk(tl: MvTl, $: Mv$, id: string, s: Scene, who: 'tico' | 'dota') {
 const mvTicoC = (pose: MoTicoPose = 'cross') => moTico('tc', 190, 1590, 0.48, pose);
 const mvDotaC = (pose: MoDotaPose = 'down') => moDota('dc', 900, 1590, 0.55, pose, true);
 // background + camera wrapper
-const mvBurst = (body: string, over = '') => svg(`${moBurst('bg')}<g id="cam"><g id="camP"><g id="camZ">${body}</g>${over}</g></g>`);
+const mvBurst = (body: string, over = '') => svg(`${moPrint()}<g id="cam"><g id="camP"><g id="camZ">${body}</g>${over}</g></g>`);   // every scene uses the workshop backdrop (only the ending keeps the banner)
 const mvPrint = (body: string, over = '') => svg(`${moPrint()}<g id="cam"><g id="camP"><g id="camZ">${body}</g>${over}</g></g>`);
 // every scene: the set moves (sunburst turns / dust drifts), the camera snaps in and punches on the keys, and the characters are alive
 interface MvMark { k: string; dt?: number; x: number; y: number; r: number; z?: number; hold?: number; label?: string }
@@ -29,7 +29,7 @@ function mvBase(tl: MvTl, s: Scene, $: Mv$, burst = true) {
     if (m.z) moZoom(tl, $, m.x, m.y, m.z, t - 0.05, d);
     moMarkIn(tl, $, `mk${i}`, m.x, m.y, t, d, !!m.label);
   });
-  if (burst) tl.fromTo($('#bg'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 24, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
+  if (burst && document.querySelector($('#bg'))) tl.fromTo($('#bg'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 24, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
   else moDust(tl, $, s);
   const i = SCENES.scenes.findIndex((x) => x.id === s.id);
   moCamera(tl, $, s, i % 2 ? 1 : -1);
@@ -44,7 +44,7 @@ const mvFront = (hidden: boolean, sc = 0.8, cx = 540, cy = 1000) => `<g transfor
 
 defineVisuals({
   hook: {
-    bg: MO.bg1, ink: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvBurst(`${mvFront(true, 0.8, 620, 1000)}${moTico('tk', 220, 1590, 0.55)}`, moSpot(620, 1170, 520)),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
@@ -56,7 +56,7 @@ defineVisuals({
     },
   },
   ruin: {
-    bg: MO.bg1, ink: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvBurst(`${mvFront(true, 0.8, 620, 1000)}${moSmoke('sm1', 520, 640, 1)}${moSmoke('sm2', 700, 620, 0.8)}${moSmoke('sm3', 610, 600, 1.1, '#6f7685')}${moTico('tk', 220, 1590, 0.55, 'point')}`, moSpot(620, 1170, 520)),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
@@ -70,7 +70,7 @@ defineVisuals({
     },
   },
   ask: {
-    bg: MO.bg1, ink: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvBurst(`${mvFront(true, 0.42, 540, 880)}${moTico('tk', 270, 1590, 0.62)}<g id="dg">${moDota('d', 760, 1580, 0.85, 'hug')}${moWheel('wh', 760, 1460, 0.55)}</g>`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
@@ -80,7 +80,7 @@ defineVisuals({
     },
   },
   idiot: {
-    bg: MO.bg1, ink: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvBurst(`${mvFront(true, 0.42, 540, 880)}${moTico('tk', 270, 1590, 0.62)}${moDota('d', 760, 1580, 0.85, 'hug')}${moWheel('wh', 760, 1460, 0.55)}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
@@ -91,7 +91,7 @@ defineVisuals({
     },
   },
   armo: {
-    bg: MO.bg1, ink: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvBurst(`${moTable('tb', 1300, 380, 960)}<g id="tubeG">${moTube('tu', 680, 1300, 300, 180)}</g>${moTag('tg', 680, 880, 'UN TUBO')}${moTico('tk', 230, 1590, 0.62, 'hold')}`, moSpot(680, 1120, 450)),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
@@ -103,7 +103,7 @@ defineVisuals({
     },
   },
   tube: {
-    bg: MO.bg1, ink: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvBurst(`${moTable('tb', 1380, 160, 920)}<g id="tubeG">${moTube('tu', 540, 1380, 380, 240)}</g>${moDrop('drop', 540, 640, 0.9)}${moSpark('sp', 540, 1260, 1.1)}${moBoom('bm', 540, 1190, 1.15)}${moSmoke('sm', 540, 900, 1.2)}${moTico('tk', 170, 1590, 0.45)}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
@@ -115,7 +115,7 @@ defineVisuals({
     },
   },
   piston: {
-    bg: MO.bg1, ink: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvBurst(`${moTable('tb', 1380, 160, 920)}${moTube('tu', 540, 1380, 380, 240)}${mvLid('lid', 1060)}${moBoom('bm', 540, 1050, 0.9)}${moTag('tg', 540, 850, 'PISTÓN')}${moTico('tk', 170, 1590, 0.45, 'point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
@@ -127,7 +127,7 @@ defineVisuals({
     },
   },
   stuck: {
-    bg: MO.bg1, ink: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvBurst(`${moTable('tb', 1380, 300, 780)}${moTube('tu', 540, 1380, 380, 240)}${mvLid('lid', 1060)}${moBoom('bm', 540, 1050, 0.9)}${moTico('tk', 170, 1590, 0.45)}${moDota('d', 900, 1590, 0.55, 'up', true)}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
@@ -306,7 +306,7 @@ defineVisuals({
     },
   },
   touch: {
-    bg: MO.bg1, ink: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvBurst(`<g transform="translate(-60 230) scale(0.82)">${moEngine('e', { valves: true, pipes: true, cams: true, plug: true, fly: true })}</g><g id="dg">${moDota('d', 820, 1580, 0.8, 'up', true)}</g>`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
@@ -413,7 +413,7 @@ defineVisuals({
     },
   },
   manual: {
-    bg: MO.bg1, ink: MO.navy,
+    bg: '#0f4a5c',
     html: () => mvBurst(`${moManual('mn', 590, 1000, 0.8)}${moTico('tk', 230, 1590, 0.62, 'point')}`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
@@ -424,8 +424,8 @@ defineVisuals({
     },
   },
   outro: {
-    bg: MO.bg1, ink: MO.navy,
-    html: () => mvBurst(`${f2Hill('hl', 1340, '#e8c27a', '#d7a85a', 30)}${moSmoke('ex1', 230, 1290, 0.7)}${moSmoke('ex2', 180, 1270, 0.9)}<g id="car">${moCarIdio('cr', 'tk', 'd', 540, 1250, 1.1)}${moBoom('bm', 795, 1180, 0.5)}</g>`),
+    bg: '#0f4a5c',
+    html: () => mvBurst(`${f2Hill('hl', 1340, '#17667b', '#0d4252', 30)}${moSmoke('ex1', 230, 1290, 0.7)}${moSmoke('ex2', 180, 1270, 0.9)}<g id="car">${moCarIdio('cr', 'tk', 'd', 540, 1250, 1.1)}${moBoom('bm', 795, 1180, 0.5)}</g>`),
     anim(tl, s, K, $) {
       mvBase(tl, s, $);
       moFlash(tl, $('#bm'), K('boom'), 0.4);

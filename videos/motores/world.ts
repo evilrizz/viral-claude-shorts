@@ -170,7 +170,7 @@ function moFocus(tl: gsap.core.Timeline, $: (q: string) => string, x: number, y:
   tl.fromTo($('#spot'), { opacity: 0 }, { opacity: 0.5, duration: d, ease: 'sine.inOut', immediateRender: false }, t);
 }
 // the spotlight that dims everything around the focus (place it with the same centre as the zoom)
-const moSpot = (x: number, y: number, r = 430) => `<circle id="spot" cx="${x}" cy="${y}" r="${r + 900}" fill="none" stroke="#1a1006" stroke-width="1800" opacity="0"/>`;
+const moSpot = (x: number, y: number, r = 430) => `<circle id="spot" cx="${x}" cy="${y}" r="${r + 900}" fill="none" stroke="#03161c" stroke-width="1800" opacity="0"/>`;
 // marks a new piece: a turning dashed yellow ring, a pulse and an arrow pointing at it (optional label under it)
 function moMark(id: string, x: number, y: number, r: number, label = '') {
   const side = x + r * 0.7 + 170 > 1000 ? -1 : 1, ex = x + side * r * 0.78, ey = y - r * 0.78, sx = ex + side * 120, sy = ey - 120;

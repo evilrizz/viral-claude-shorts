@@ -726,7 +726,9 @@ function avAirliner(id: string, x: number, y: number, s = 1) {
 // =====================================================================
 interface AvLinerOpts { eng?: boolean; stab?: boolean; elev?: boolean; fin?: boolean; rud?: boolean; ail?: boolean; flap?: boolean }
 const AV_LINER_ALL: AvLinerOpts = { eng: true, stab: true, elev: true, fin: true, rud: true, ail: true, flap: true };
-function avLiner(id: string, x: number, y: number, s = 1, o: AvLinerOpts = {}) {
+// stage: how far the board plane has turned into a real airliner (0 board … 5 airliner with the IDIO-TWO livery)
+//   1 metal wings · 2 the plank becomes the fuselage · 3 cockpit windows · 4 passenger windows + stripe · 5 livery
+function avLiner(id: string, x: number, y: number, s = 1, o: AvLinerOpts = {}, stage = 5) {
   const O = '#22252e', poly = (pts: number[][], fill: string) => `<path d="M${pts.map((p) => p.join(' ')).join(' L')}Z" fill="${fill}" stroke="${O}" stroke-width="4" stroke-linejoin="round"/>`;
   const part = (pid: string, on: boolean, inner: string, hi: string) => `<g id="${id}-${pid}"${avVis(on)}><g id="${id}-${pid}M">${inner}<g id="${id}-${pid}Hi" opacity="0">${hi}</g></g></g>`;
   const P = (pid: string, on: boolean, pts: number[][], fill: string) => part(pid, on, poly(pts, fill), poly(pts, 'url(#gLime)'));
@@ -736,12 +738,16 @@ function avLiner(id: string, x: number, y: number, s = 1, o: AvLinerOpts = {}) {
   const engHi = (ex: number, ey: number, k: number) => `<g transform="translate(${ex} ${ey}) scale(${k})"><rect x="-80" y="-26" width="160" height="54" rx="27" fill="url(#gLime)" stroke="${O}" stroke-width="4"/></g>`;
   return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})"><g id="${id}-body">
     ${P('stabF', !!o.stab, [[-340, -22], [-410, -62], [-440, -62], [-372, -22]], 'url(#gW)')}
-    ${poly([[-60, 10], [-180, -150], [-140, -150], [60, 6]], '#b8c2d2')}
+    <g id="${id}-farW"${avVis(stage >= 1)}>${poly([[-60, 10], [-180, -150], [-140, -150], [60, 6]], '#b8c2d2')}</g><g id="${id}-farB"${avVis(stage < 1)}>${poly([[-60, 10], [-180, -150], [-140, -150], [60, 6]], 'url(#gW)')}</g>
     ${part('engF', !!o.eng, engine(-150, -96, 0.6, `${id}-fan2`), engHi(-150, -96, 0.6))}
     ${P('fin', !!o.fin, [[-300, -24], [-390, -200], [-344, -200], [-250, -24]], 'url(#gTail)')}${P('rud', !!o.rud, [[-344, -200], [-390, -200], [-418, -200], [-338, -24], [-300, -24]], 'url(#gOr)')}
-    <path d="M-420 -30 C -400 -62, -320 -64, -220 -64 L 300 -64 C 380 -64, 430 -40, 450 -10 C 440 20, 400 40, 300 44 L -280 44 C -360 44, -410 10, -420 -30Z" fill="url(#gBody)" stroke="${O}" stroke-width="5"/>
-    <path d="M-400 0 C -300 30, 300 34, 440 0" stroke="#1b3fb0" stroke-width="12" fill="none"/>${wins}<path d="M392 -46 L428 -30 L420 -22 L384 -36Z" fill="#203050"/>
-    ${poly([[-60, 10], [120, 6], [-120, 150], [-170, 150]], 'url(#gMetal)')}
+    <g id="${id}-plank"${avVis(stage < 2)}>${poly([[-400, -18], [420, -18], [436, -30], [-384, -30]], 'url(#gWoodTop)')}${poly([[-400, -18], [420, -18], [420, 18], [-400, 18]], 'url(#gWood)')}<path d="M-360 0 C -100 -4, 100 6, 400 0" stroke="#a87a3e" stroke-width="3" fill="none" opacity="0.6"/></g>
+    <g id="${id}-tube"${avVis(stage >= 2)}><path d="M-420 -30 C -400 -62, -320 -64, -220 -64 L 300 -64 C 380 -64, 430 -40, 450 -10 C 440 20, 400 40, 300 44 L -280 44 C -360 44, -410 10, -420 -30Z" fill="url(#gBody)" stroke="${O}" stroke-width="5"/></g>
+    <g id="${id}-cock"${avVis(stage >= 3)}><path d="M392 -46 L428 -30 L420 -22 L384 -36Z" fill="#203050"/><path d="M372 -48 L384 -36 L376 -34 L364 -46Z" fill="#203050"/></g>
+    <g id="${id}-wins"${avVis(stage >= 4)}><path d="M-400 14 C -300 40, 300 44, 440 10" stroke="#1b3fb0" stroke-width="12" fill="none"/>${wins}</g>
+    <g id="${id}-livery"${avVis(stage >= 5)}><text x="270" y="30" text-anchor="middle" font-size="44" font-weight="900" font-style="italic" fill="#1b3fb0" stroke="#fff" stroke-width="6" paint-order="stroke" style="font-family: var(--font), system-ui, sans-serif; letter-spacing: 1px">IDIO-TWO</text>
+      <g transform="translate(-334 -116)"><circle r="30" fill="#ff7a3d" stroke="#fff" stroke-width="5"/><text x="0" y="12" text-anchor="middle" font-size="34" font-weight="900" fill="#fff" style="font-family: var(--font), system-ui, sans-serif">i2</text></g></g>
+    <g id="${id}-nearW"${avVis(stage >= 1)}>${poly([[-60, 10], [120, 6], [-120, 150], [-170, 150]], 'url(#gMetal)')}</g><g id="${id}-nearB"${avVis(stage < 1)}>${poly([[-60, 10], [120, 6], [-120, 150], [-170, 150]], 'url(#gW)')}</g>
     ${P('flap', !!o.flap, [[-58, 20], [-104, 82], [-132, 82], [-86, 20]], 'url(#gOr)')}${P('ail', !!o.ail, [[-128, 104], [-162, 148], [-190, 148], [-156, 104]], 'url(#gOr)')}
     ${part('eng', !!o.eng, engine(-30, 72, 1, `${id}-fan`), engHi(-30, 72, 1))}
     ${P('stab', !!o.stab, [[-330, 4], [-404, 44], [-436, 44], [-362, 4]], 'url(#gW)')}${P('elev', !!o.elev, [[-404, 44], [-436, 44], [-450, 56], [-418, 56]], 'url(#gOr)')}
@@ -769,4 +775,12 @@ function avLinerTop(id: string, x: number, y: number, s = 1) {
     <path d="M0 -400 C 40 -400, 50 -340, 50 -280 L50 300 C 50 330, 30 340, 0 340 C -30 340, -50 330, -50 300 L-50 -280 C -50 -340, -40 -400, 0 -400Z" fill="url(#gBody)" stroke="${O}" stroke-width="5"/>
     <rect x="-6" y="200" width="12" height="130" fill="url(#gTail)" stroke="${O}" stroke-width="3"/><g id="${id}-rudM"><rect x="-6" y="330" width="12" height="44" fill="url(#gOr)" stroke="${O}" stroke-width="3"/></g>
   </g></g></g>`;
+}
+
+// turns the board plane one stage further into the airliner (crossfade + a little sparkle), at t
+function avMorphTo(tl: gsap.core.Timeline, $: (q: string) => string, id: string, stage: number, t: number) {
+  const show: Record<number, string[]> = { 1: ['farW', 'nearW'], 2: ['tube'], 3: ['cock'], 4: ['wins'], 5: ['livery'] }, hide: Record<number, string[]> = { 1: ['farB', 'nearB'], 2: ['plank'] };
+  for (const k of show[stage] || []) tl.fromTo($(`#${id}-${k}`), { opacity: 0 }, { opacity: 1, duration: 0.45, ease: 'power1.out', immediateRender: false }, t);
+  for (const k of hide[stage] || []) tl.to($(`#${id}-${k}`), { opacity: 0, duration: 0.45, ease: 'power1.in' }, t);
+  tl.fromTo($(`#${id}-body`), { scaleX: 1, scaleY: 1, svgOrigin: '0 0' }, { keyframes: [{ scaleX: 1.04, scaleY: 0.96, duration: 0.12 }, { scaleX: 0.98, scaleY: 1.03, duration: 0.12 }, { scaleX: 1, scaleY: 1, duration: 0.12 }], immediateRender: false }, t);
 }

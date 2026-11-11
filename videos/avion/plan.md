@@ -16,6 +16,7 @@ Tempo 104 en E. Curva: curioso (gancho) → tenso (motores apagados) → juguet�
 
 ## Versión 2 (audio con la escena «¡Felicidades, ya tienes un avión!»)
 - **Armado del avión en estilo cielo** (segunda referencia del usuario): de «Te lo armo pieza por pieza» a «Ya tienes un avión». Cielo con degradado, nubes en 3 capas con paralaje, pasto; avión COMERCIAL (`avLiner`, de lado; `avLinerFront`, `avLinerTop`) con sombreado suave; la tabla con alas solo donde el guion la nombra (gancho, mesa, se estrella, cierre) para dar volumen; cada pieza nueva se pinta de lima y luego toma su color (`avPaint`); estela punteada; títulos en mayúsculas cursivas blancas con contorno. El ala en corte va sobre azul marino con rejilla (`avNavyGrid`).
+- **Evolución:** cada pieza vuelve la tabla un poco más avión comercial (`avMorphTo`): turbinas → alas metálicas; estabilizador → fuselaje; elevador → cabina; deriva → ventanillas y franja; timón → aerolínea IDIO-TWO (letrero y logo «i2» en la cola).
 - **Nueva escena:** la tabla con todas sus piezas brilla y se vuelve un avión comercial (`avAirliner`) que despega; Tico y Dota lo miran.
 - **Lo demás** (gancho, respuesta, Air Canada, turbulencia, cierre) sigue en el estilo oscuro de puntos; el final es el banner.
 - **Límite:** el estilo 3D del proyecto no se puede mezclar con flat2d en un mismo video; el volumen es con sombreado suave.

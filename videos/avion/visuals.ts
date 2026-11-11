@@ -207,17 +207,17 @@ defineVisuals({
     },
   },
   turb: {
-    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="pl">${avLiner('p', 560, 1000, 0.95, {})}</g>${vaTicoC('point')}`, true),
+    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="pl">${avLiner('p', 560, 1000, 0.95, {}, 0)}</g>${vaTicoC('point')}`, true),
     anim(tl, s, K, $) {
       vaBase(tl, s, $); avSkyRun(tl, $, s); vaBob(tl, $, 'pl', s, 8);
-      avPaint(tl, $, 'p', 'eng', K('turb') - 0.1, ['engF']);
+      avPaint(tl, $, 'p', 'eng', K('turb') - 0.1, ['engF']); avMorphTo(tl, $, 'p', 1, K('turb') + 0.3);
       tl.fromTo($('#p-fan, #p-fan2'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 3600, duration: s.t1 - K('turb'), ease: 'none' }, K('turb'));
       vaTalk(tl, $, 'tc', s, 'tico');
     },
   },
 
   motor: {
-    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="air">${[0, 1, 2, 3].map((i) => avArrow(`ai${i}`, 430 - i * 20, 1040 + i * 18, 220 - i * 30, 1040 + i * 18, '#ffffff', 10)).join('')}</g><g id="pl">${avLiner('p', 560, 1000, 0.95, { eng: true })}</g>
+    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="air">${[0, 1, 2, 3].map((i) => avArrow(`ai${i}`, 430 - i * 20, 1040 + i * 18, 220 - i * 30, 1040 + i * 18, '#ffffff', 10)).join('')}</g><g id="pl">${avLiner('p', 560, 1000, 0.95, { eng: true }, 1)}</g>
       ${avArrow('fwd', 700, 820, 940, 820, '#e6ff3a', 20)}<g id="dg">${avDota('d', 160, 1560, 0.6, 'down')}</g>${vaTicoC('point')}`, true),
     anim(tl, s, K, $) {
       vaBase(tl, s, $); avSkyRun(tl, $, s, 1.4); vaBob(tl, $, 'pl', s, 6);
@@ -231,7 +231,7 @@ defineVisuals({
   },
 
   pitch: {
-    html: () => vaSky(`<path id="wave" d="M-40 1010 C 120 920, 240 1100, 380 1010" fill="none" stroke="#fff" stroke-width="6" stroke-dasharray="4 16" stroke-linecap="round"/><g id="pl">${avLiner('p', 560, 1000, 0.95, { eng: true })}</g>${vaTicoC()}`),
+    html: () => vaSky(`<path id="wave" d="M-40 1010 C 120 920, 240 1100, 380 1010" fill="none" stroke="#fff" stroke-width="6" stroke-dasharray="4 16" stroke-linecap="round"/><g id="pl">${avLiner('p', 560, 1000, 0.95, { eng: true }, 1)}</g>${vaTicoC()}`),
     anim(tl, s, K, $) {
       vaBase(tl, s, $); avSkyRun(tl, $, s); tl.fromTo($('#p-fan, #p-fan2'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 7200, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
       tl.fromTo($('#p-body'), { rotation: -14, svgOrigin: '0 0' }, { rotation: 14, duration: 0.55, ease: 'sine.inOut', yoyo: true, repeat: Math.ceil((s.t1 - s.t0) / 0.55) }, s.t0);
@@ -242,21 +242,21 @@ defineVisuals({
   },
 
   stab: {
-    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="pl">${avLiner('p', 560, 1000, 0.95, { eng: true })}</g>${vaTicoC('point')}`),
+    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="pl">${avLiner('p', 560, 1000, 0.95, { eng: true }, 1)}</g>${vaTicoC('point')}`),
     anim(tl, s, K, $) {
       vaBase(tl, s, $); avSkyRun(tl, $, s); tl.fromTo($('#p-fan, #p-fan2'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 7200, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
       tl.fromTo($('#p-body'), { rotation: -12, svgOrigin: '0 0' }, { rotation: 12, duration: 0.55, ease: 'sine.inOut', yoyo: true, repeat: Math.ceil((K('stab') - s.t0) / 0.55) }, s.t0);
-      avPaint(tl, $, 'p', 'stab', K('stab') - 0.1, ['stabF']);
+      avPaint(tl, $, 'p', 'stab', K('stab') - 0.1, ['stabF']); avMorphTo(tl, $, 'p', 2, K('stab') + 0.4);
       tl.to($('#p-body'), { rotation: 0, svgOrigin: '0 0', duration: 0.9, ease: 'elastic.out(1, 0.5)' }, K('stab') + 0.3);
       vaTalk(tl, $, 'tc', s, 'tico');
     },
   },
 
   elev: {
-    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="pl">${avLiner('p', 560, 1000, 0.95, { eng: true, stab: true })}</g>${vaTicoC('point')}`),
+    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="pl">${avLiner('p', 560, 1000, 0.95, { eng: true, stab: true }, 2)}</g>${vaTicoC('point')}`),
     anim(tl, s, K, $) {
       vaBase(tl, s, $); avSkyRun(tl, $, s); tl.fromTo($('#p-fan, #p-fan2'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 7200, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
-      avPaint(tl, $, 'p', 'elev', s.t0 + 0.2);
+      avPaint(tl, $, 'p', 'elev', s.t0 + 0.2); avMorphTo(tl, $, 'p', 3, s.t0 + 0.6);
       tl.to($('#p-elevM'), { y: -22, duration: 0.3, ease: 'power2.out' }, K('up') - 0.1); tl.to($('#p-body'), { rotation: -12, svgOrigin: '0 0', duration: 0.5, ease: 'power2.inOut' }, K('up') + 0.1);
       tl.to($('#p-elevM'), { y: 22, duration: 0.3, ease: 'power2.out' }, K('down') - 0.1); tl.to($('#p-body'), { rotation: 10, svgOrigin: '0 0', duration: 0.5, ease: 'power2.inOut' }, K('down') + 0.1);
       tl.to($('#p-elevM'), { y: 0, duration: 0.3 }, K('down') + 0.9); tl.to($('#p-body'), { rotation: 0, svgOrigin: '0 0', duration: 0.5 }, K('down') + 0.9);
@@ -276,13 +276,13 @@ defineVisuals({
   },
 
   fin: {
-    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="pl">${avLiner('p', 560, 1000, 0.95, { eng: true, stab: true, elev: true })}</g>
+    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="pl">${avLiner('p', 560, 1000, 0.95, { eng: true, stab: true, elev: true }, 3)}</g>
       <g id="shark" opacity="0"><path d="M770 1480 L860 1340 L880 1480Z" fill="#5b6a80" stroke="${AV.o}" stroke-width="6" stroke-linejoin="round"/><path d="M740 1490 q 30 -12 60 0 q 30 12 60 0 q 30 -12 60 0" fill="none" stroke="#fff" stroke-width="6"/></g>${vaTicoC('point')}`),
     anim(tl, s, K, $) {
       vaBase(tl, s, $); avSkyRun(tl, $, s); tl.fromTo($('#p-fan, #p-fan2'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 7200, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
-      avPaint(tl, $, 'p', 'fin', K('fin') - 0.1);
+      avPaint(tl, $, 'p', 'fin', K('fin') - 0.1); avMorphTo(tl, $, 'p', 4, K('fin') + 0.4);
       tl.set($('#shark'), { opacity: 1 }, K('fin') + 0.6); tl.fromTo($('#shark'), { x: 200 }, { x: -60, duration: 1.2, ease: 'power1.inOut', immediateRender: false }, K('fin') + 0.6); tl.to($('#shark'), { opacity: 0, duration: 0.3 }, K('fin') + 1.6);
-      avPaint(tl, $, 'p', 'rud', K('rud') - 0.2);
+      avPaint(tl, $, 'p', 'rud', K('rud') - 0.2); avMorphTo(tl, $, 'p', 5, K('rud') + 0.6);
       tl.fromTo($('#p-rudM'), { scaleX: 1, svgOrigin: '-338 -110' }, { scaleX: 0.3, duration: 0.25, yoyo: true, repeat: 3, ease: 'sine.inOut' }, K('rud') + 0.3);
       vaTalk(tl, $, 'tc', s, 'tico');
     },

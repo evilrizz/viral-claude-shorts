@@ -106,6 +106,7 @@ defineVisuals({
     anim(tl, s, K, $) {
       vaBase(tl, s, $);
       avTicoPose(tl, $, 'tk', 'palm', K('palm') + 0.1);
+      avDotaEyes(tl, $, 'd', true, K('idiota'));
       tl.fromTo($('#d-pupils'), { x: -6 }, { x: 6, duration: 0.25, yoyo: true, repeat: 5, ease: 'sine.inOut' }, K('idiota'));
       vaTalk(tl, $, 'tk', s, 'tico');
     },
@@ -369,11 +370,11 @@ defineVisuals({
     html: () => vaBurst(`<g id="cabin"><rect x="60" y="560" width="960" height="980" rx="60" fill="#1d1f27" stroke="#3a3c46" stroke-width="10"/><rect x="60" y="560" width="960" height="120" rx="60" fill="#2a2c35"/>
       ${[0, 1, 2].map((i) => `<rect x="${170 + i * 300}" y="800" width="120" height="170" rx="56" fill="#5aa9ff" opacity="0.5" stroke="#3a3c46" stroke-width="10"/>`).join('')}</g>
       ${avSeat('st', 380, 1500, 1)}${avTico('tk', 330, 1500, 0.62, 'hold')}<rect x="250" y="1360" width="200" height="34" rx="10" fill="${AVP.orange}" stroke="${AV.o}" stroke-width="5"/><rect x="330" y="1356" width="44" height="42" rx="6" fill="#cfd4dd" stroke="${AV.o}" stroke-width="5"/>
-      <g id="dg">${avDota('d', 760, 1520, 0.7, 'up')}</g>${avBoom('bm', 760, 690, 0.5)}`),
+      <g id="dg">${avDota('d', 760, 1520, 0.7, 'up')}</g>${avBoom('bm', 760, 760, 0.5)}`),
     anim(tl, s, K, $) {
       vaBase(tl, s, $);
       tl.fromTo($('#cabin, #st'), { x: -6, y: 0 }, { x: 6, y: 4, duration: 0.07, yoyo: true, repeat: Math.ceil((s.t1 - K('shake')) / 0.07), ease: 'none', immediateRender: false }, K('shake'));
-      tl.to($('#dg'), { y: -690, rotation: 180, svgOrigin: '760 1300', duration: 0.45, ease: 'power3.in' }, K('bonk') - 0.45);
+      tl.to($('#dg'), { y: -520, rotation: 180, svgOrigin: '760 1300', duration: 0.45, ease: 'power3.in' }, K('bonk') - 0.45);
       avFlash(tl, $('#bm'), K('bonk'), 0.35);
       tl.set($('#d-bump'), { opacity: 1 }, K('bonk')); avDizzy(tl, $, 'd', K('bonk'), s.t1);
       vaTalk(tl, $, 'tk', s, 'tico');

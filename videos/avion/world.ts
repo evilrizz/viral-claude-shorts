@@ -121,7 +121,8 @@ function avDota(id: string, x: number, y: number, s = 1, pose: AvDotaPose = 'up'
       <ellipse cx="-70" cy="-276" rx="18" ry="10" fill="#ff8f8f" opacity="0.4"/><ellipse cx="74" cy="-276" rx="18" ry="10" fill="#ff8f8f" opacity="0.4"/>
       <circle id="${id}-black" cx="40" cy="-332" r="44" fill="#6a4a8c" opacity="0"/>
       <circle cx="-38" cy="-332" r="31" fill="#fff" stroke="${O}" stroke-width="7"/><circle cx="40" cy="-332" r="31" fill="#fff" stroke="${O}" stroke-width="7"/>
-      <g id="${id}-pupils"><circle cx="-28" cy="-326" r="13" fill="${O}"/><circle cx="48" cy="-342" r="13" fill="${O}"/><circle cx="-24" cy="-330" r="4" fill="#fff"/><circle cx="52" cy="-346" r="4" fill="#fff"/></g>
+      <g id="${id}-pupils"><g id="${id}-eyesOk"><circle cx="-34" cy="-330" r="13" fill="${O}"/><circle cx="44" cy="-330" r="13" fill="${O}"/><circle cx="-30" cy="-334" r="4" fill="#fff"/><circle cx="48" cy="-334" r="4" fill="#fff"/></g>
+        <g id="${id}-eyesCrazy" opacity="0"><circle cx="-28" cy="-326" r="13" fill="${O}"/><circle cx="48" cy="-342" r="13" fill="${O}"/><circle cx="-24" cy="-330" r="4" fill="#fff"/><circle cx="52" cy="-346" r="4" fill="#fff"/></g></g>
       <line x1="-70" y1="-382" x2="-12" y2="-376" stroke="${O}" stroke-width="9" stroke-linecap="round"/><line x1="12" y1="-372" x2="68" y2="-386" stroke="${O}" stroke-width="9" stroke-linecap="round"/>
       <circle cx="-10" cy="-284" r="4" fill="${O}"/><circle cx="8" cy="-284" r="4" fill="${O}"/>
       <g id="${id}-mouth"><ellipse cx="0" cy="-246" rx="25" ry="26" fill="#6b1a1a" stroke="${O}" stroke-width="7"/><ellipse cx="0" cy="-234" rx="14" ry="8" fill="#ff8fa3"/></g>
@@ -201,7 +202,12 @@ function avHop(tl: gsap.core.Timeline, sel: string, t: number, n = 2, h = 40) {
   tl.fromTo(sel, { y: 0 }, { y: -h, duration: 0.15, ease: 'power2.out', yoyo: true, repeat: n * 2 - 1 }, t);
 }
 // dizzy stars: show and spin around the head (loops until t1)
+// Dota looks straight ahead; his eyes go crazy only when something happens to him (hit, dizzy, called idiot)
+function avDotaEyes(tl: gsap.core.Timeline, $: (q: string) => string, id: string, crazy: boolean, t: number) {
+  tl.set($(`#${id}-eyesOk`), { opacity: crazy ? 0 : 1 }, t).set($(`#${id}-eyesCrazy`), { opacity: crazy ? 1 : 0 }, t);
+}
 function avDizzy(tl: gsap.core.Timeline, $: (q: string) => string, id: string, t0: number, t1: number) {
+  avDotaEyes(tl, $, id, true, t0);
   tl.set($(`#${id}-stars`), { opacity: 1 }, t0);
   tl.fromTo($(`#${id}-stars`), { rotation: -12, transformOrigin: '50% 50%' }, { rotation: 12, duration: 0.3, ease: 'sine.inOut', yoyo: true, repeat: Math.max(1, Math.ceil((t1 - t0) / 0.3)) }, t0);
 }

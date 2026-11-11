@@ -46,3 +46,11 @@ videos/motores/storyboard.md
 videos/motores/publicar.md
 videos/motores/foley.wav
 videos/motores/own-music.wav
+# avion (Idio-two): the voice, the character reference, the script text and the generated sound stay private
+videos/avion/audio.*
+videos/avion/assets/
+videos/avion/words.json
+videos/avion/analysis.*
+videos/avion/storyboard.md
+videos/avion/foley.wav
+videos/avion/own-music.wav

@@ -1,0 +1,15 @@
+# Avión (Idio-two): plan del mundo
+
+**Idea:** un avión se arma desde una tabla con dos alas: el ala curva e inclinada (sustentación), el motor, el estabilizador y el elevador, la deriva y el timón, los alerones y los flaps. Respuesta del gancho: sin motores no se cae como piedra, planea (Air Canada, 1983). Consejo: cinturón abrochado todo el vuelo.
+
+**Estilo (de los videos de referencia del usuario, sin copiar su contenido):** escenario casi negro con textura fina de puntos y dunas tenues; pocos acentos vivos (naranja #ff6a3d, lima #d4ff3a, azul aire #5aa9ff) y papel crema para fichas; las sombras de las piezas hechas de puntos; títulos sin recuadro, la palabra clave en naranja; fichas de archivo (Air Canada · 1983, sello PLANEÓ); barras de nivel con etiquetas monoespaciadas; cada pieza se señala UNA vez, cuando se dice su nombre, con esquinas de enfoque lima y una ficha de papel con su nombre. Tico y Dota exactamente como en `assets/tico-dota.png`.
+
+**Audio:** voces de ElevenLabs (otra sesión). Tiempos de palabras alineados con las 18 líneas sueltas (inicio de línea exacto; palabras estimadas dentro de cada frase).
+
+## Elenco
+- Tico, Dota (mismos que en motores; respiran, parpadean, Tico asiente al hablar, Dota rebota).
+- Avión de tabla, 4 vistas: de lado (`avPlaneSide`: tabla, ala, turbina con ventilador, estabilizador + elevador articulado, deriva + timón, flap), de frente (`avPlaneFront`: alerones articulados en ±300, turbinas), desde arriba (`avPlaneTop`: timón al final), ala en corte (`avAirfoil`: flujo de aire animado, inclinación, flap, flechas de aire hacia abajo y sustentación).
+- Utilería: medidor de combustible, ficha de archivo, barras de nivel, bici, piedra, asiento con cinturón, cabina.
+
+## Sonido
+Tempo 104 en E. Curva: curioso (gancho) → tenso (motores apagados) → juguetón (Dota) → calma/asombro al armar cada pieza, tenso en cada problema (cabecea, se va de lado, lento) → épico en Air Canada → triunfal en el consejo y el cierre. Capa de efectos (`foley.ts`): turbina y su apagado, viento por el ala, choque de la tabla, tapitas, timbre de bici, sello, clic del cinturón, golpe en el techo y "ding" en cada pieza.

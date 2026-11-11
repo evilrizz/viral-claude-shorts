@@ -1,0 +1,876 @@
+{
+ "style": "3d",
+ "fps": 30,
+ "format": "9:16",
+ "music": {
+  "bpm": 104,
+  "key": "E"
+ },
+ "notes": "3D version of the avion video (same audio, cut and sounds): low-poly 3D world, Tico and Dota in 3D, the board plane turning into the IDIO-TWO light plane piece by piece.",
+ "scenes": [
+  {
+   "id": "hook",
+   "from": 0,
+   "type": "question",
+   "label": "Idio-two",
+   "title": "Tabla + 2 alas = avión",
+   "highlight": "alas",
+   "visual": "Dota holds up the board with two taped wings; Tico arms crossed",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "alas",
+     "at": 7,
+     "sfx": "pop",
+     "t": 2.222
+    }
+   ],
+   "transition": "cut",
+   "t0": 0,
+   "t1": 3.997
+  },
+  {
+   "id": "off",
+   "from": 12,
+   "type": "question",
+   "label": "Pregunta",
+   "title": "¿Y si se apagan los motores?",
+   "highlight": "motores",
+   "visual": "the plane flies; its fan stops, smoke puff; a big ? appears",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "off",
+     "at": 16,
+     "sfx": "scratch",
+     "t": 5.144
+    },
+    {
+     "id": "cae",
+     "at": 20,
+     "sfx": "pop",
+     "t": 6.739
+    }
+   ],
+   "transition": "cut",
+   "t0": 3.997,
+   "t1": 9.771
+  },
+  {
+   "id": "obvio",
+   "from": 26,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Obvio sí, Tico!",
+   "highlight": "Obvio",
+   "visual": "Dota sure of himself with the board; Tico",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 26,
+     "sfx": "pop",
+     "t": 10.021
+    }
+   ],
+   "transition": "cut",
+   "t0": 9.771,
+   "t1": 11.995
+  },
+  {
+   "id": "idiot",
+   "from": 29,
+   "type": "object",
+   "label": "Idio-two",
+   "title": "Ay, Dota, qué idiota",
+   "highlight": "idiota",
+   "visual": "Tico facepalm; Dota confused",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "palm",
+     "at": 29,
+     "t": 12.245
+    },
+    {
+     "id": "idiota",
+     "at": 32,
+     "sfx": "fail",
+     "t": 13.325
+    }
+   ],
+   "transition": "cut",
+   "t0": 11.995,
+   "t1": 14.179
+  },
+  {
+   "id": "promise",
+   "from": 34,
+   "type": "object",
+   "label": "La promesa",
+   "title": "Al final te digo",
+   "highlight": "final",
+   "visual": "a video timeline bar with a marker at the end; Tico pointing",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "bar",
+     "at": 36,
+     "sfx": "pop",
+     "t": 14.822
+    }
+   ],
+   "transition": "cut",
+   "t0": 14.179,
+   "t1": 17.014
+  },
+  {
+   "id": "fuel",
+   "from": 43,
+   "type": "question",
+   "label": "Caso real",
+   "title": "Sin combustible en pleno vuelo",
+   "highlight": "combustible",
+   "visual": "fuel gauge needle drops to E; a redacted file card",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "gauge",
+     "at": 50,
+     "sfx": "riser",
+     "t": 19.363
+    },
+    {
+     "id": "file",
+     "at": 52,
+     "sfx": "pop",
+     "t": 20.518
+    }
+   ],
+   "transition": "cut",
+   "t0": 17.014,
+   "t1": 22.004
+  },
+  {
+   "id": "armo",
+   "from": 54,
+   "type": "process",
+   "label": "El plan",
+   "title": "Te lo armo pieza por pieza",
+   "highlight": "pieza",
+   "visual": "the board plane on a table, the camera focuses on it; Tico",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "board",
+     "at": 57,
+     "sfx": "thump",
+     "t": 23.052
+    }
+   ],
+   "transition": "cut",
+   "ambience": [
+    "room"
+   ],
+   "t0": 22.004,
+   "t1": 24.466
+  },
+  {
+   "id": "crash",
+   "from": 60,
+   "type": "object",
+   "label": "Paso 1",
+   "title": "Lo avientas… y se estrella",
+   "highlight": "estrella",
+   "visual": "Dota throws the board, it nosedives and crashes",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "throw",
+     "at": 61,
+     "sfx": "whoosh",
+     "t": 24.918
+    },
+    {
+     "id": "crash",
+     "at": 64,
+     "sfx": "impact",
+     "t": 25.813
+    }
+   ],
+   "transition": "cut",
+   "t0": 24.466,
+   "t1": 26.649
+  },
+  {
+   "id": "wing",
+   "from": 65,
+   "type": "process",
+   "label": "Paso 1",
+   "title": "Ala curva e inclinada",
+   "highlight": "curva",
+   "visual": "the wing in cut: curved top, it tilts; the air bends down behind it",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "curva",
+     "at": 70,
+     "sfx": "pop",
+     "t": 27.987
+    },
+    {
+     "id": "tilt",
+     "at": 77,
+     "sfx": "tick",
+     "t": 29.924
+    },
+    {
+     "id": "down",
+     "at": 80,
+     "sfx": "whoosh",
+     "t": 31.086
+    }
+   ],
+   "transition": "cut",
+   "t0": 26.649,
+   "t1": 32.205
+  },
+  {
+   "id": "lift",
+   "from": 83,
+   "type": "object",
+   "label": "Paso 1",
+   "title": "La sustentación",
+   "highlight": "sustentación",
+   "visual": "the air pushes the wing up: a big lime arrow",
+   "mood": "epic",
+   "keys": [
+    {
+     "id": "up",
+     "at": 90,
+     "sfx": "whoosh",
+     "t": 34.136
+    },
+    {
+     "id": "name",
+     "at": 91,
+     "t": 34.914
+    }
+   ],
+   "transition": "cut",
+   "t0": 32.205,
+   "t1": 36.634,
+   "marks": [
+    {
+     "k": "name"
+    }
+   ]
+  },
+  {
+   "id": "vuela",
+   "from": 95,
+   "type": "comparison",
+   "label": "Ojo",
+   "title": "Solo si el aire pasa rápido",
+   "highlight": "rápido",
+   "visual": "Dota cheers; the air runs fast, then stops and the lift is gone",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 95,
+     "sfx": "pop",
+     "t": 36.884
+    },
+    {
+     "id": "fast",
+     "at": 101,
+     "sfx": "whoosh",
+     "t": 39.778
+    },
+    {
+     "id": "still",
+     "at": 103,
+     "sfx": "fail",
+     "t": 40.925
+    }
+   ],
+   "transition": "cut",
+   "t0": 36.634,
+   "t1": 42.317
+  },
+  {
+   "id": "turb",
+   "from": 107,
+   "type": "object",
+   "label": "Paso 2",
+   "title": "Una hélice o una turbina",
+   "highlight": "turbina",
+   "visual": "the board plane gets a turbine under its wing",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "turb",
+     "at": 111,
+     "sfx": "pop",
+     "t": 44.011
+    }
+   ],
+   "transition": "cut",
+   "t0": 42.317,
+   "t1": 45.393
+  },
+  {
+   "id": "motor",
+   "from": 115,
+   "type": "process",
+   "label": "Paso 2",
+   "title": "Ese es el motor",
+   "highlight": "motor",
+   "visual": "the turbine blows air back, Dota behind flies off; the plane moves forward",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "blow",
+     "at": 116,
+     "sfx": "whoosh",
+     "t": 45.739
+    },
+    {
+     "id": "dota",
+     "at": 119,
+     "sfx": "whoosh",
+     "t": 46.749
+    },
+    {
+     "id": "name",
+     "at": 126,
+     "t": 49.292
+    }
+   ],
+   "transition": "cut",
+   "t0": 45.393,
+   "t1": 50.892,
+   "marks": [
+    {
+     "k": "name"
+    }
+   ]
+  },
+  {
+   "id": "pitch",
+   "from": 130,
+   "type": "question",
+   "label": "Problema",
+   "title": "El avión cabecea",
+   "highlight": "cabecea",
+   "visual": "the plane rocks nose up and down like a rocking horse",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "nose",
+     "at": 138,
+     "sfx": "tick",
+     "t": 53.689
+    }
+   ],
+   "transition": "cut",
+   "t0": 50.892,
+   "t1": 56.773
+  },
+  {
+   "id": "stab",
+   "from": 146,
+   "type": "object",
+   "label": "Paso 3",
+   "title": "El estabilizador",
+   "highlight": "estabilizador",
+   "visual": "a small wing at the tail appears; the rocking calms down",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "stab",
+     "at": 151,
+     "sfx": "pop",
+     "t": 58.212
+    },
+    {
+     "id": "name",
+     "at": 153,
+     "t": 59.218
+    }
+   ],
+   "transition": "cut",
+   "t0": 56.773,
+   "t1": 60.922,
+   "marks": [
+    {
+     "k": "name"
+    }
+   ]
+  },
+  {
+   "id": "elev",
+   "from": 157,
+   "type": "process",
+   "label": "Paso 3",
+   "title": "El elevador",
+   "highlight": "elevador",
+   "visual": "the elevator flap goes up and down and the nose follows",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "up",
+     "at": 162,
+     "sfx": "tick",
+     "t": 62.447
+    },
+    {
+     "id": "down",
+     "at": 164,
+     "sfx": "tick",
+     "t": 62.881
+    },
+    {
+     "id": "name",
+     "at": 168,
+     "t": 64.514
+    }
+   ],
+   "transition": "cut",
+   "t0": 60.922,
+   "t1": 66.222,
+   "marks": [
+    {
+     "k": "name"
+    }
+   ]
+  },
+  {
+   "id": "yaw",
+   "from": 172,
+   "type": "question",
+   "label": "Problema",
+   "title": "Se va de lado",
+   "highlight": "lado",
+   "visual": "top view: the plane fishtails like a car in mud",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "lado",
+     "at": 178,
+     "sfx": "scratch",
+     "t": 67.629
+    }
+   ],
+   "transition": "cut",
+   "t0": 66.222,
+   "t1": 70.269
+  },
+  {
+   "id": "fin",
+   "from": 184,
+   "type": "object",
+   "label": "Paso 4",
+   "title": "Deriva y timón",
+   "highlight": "timón",
+   "visual": "a fin standing up at the tail appears; then its rudder moves",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "fin",
+     "at": 187,
+     "sfx": "pop",
+     "t": 71.19
+    },
+    {
+     "id": "name",
+     "at": 193,
+     "t": 73.739
+    },
+    {
+     "id": "rud",
+     "at": 199,
+     "t": 75.448
+    }
+   ],
+   "transition": "cut",
+   "t0": 70.269,
+   "t1": 77.044,
+   "marks": [
+    {
+     "k": "name"
+    },
+    {
+     "k": "rud",
+     "dt": 0.1
+    }
+   ]
+  },
+  {
+   "id": "roll",
+   "from": 203,
+   "type": "question",
+   "label": "Paso 5",
+   "title": "¿Cómo das vuelta?",
+   "highlight": "vuelta",
+   "visual": "front view; flaps at the wing tips appear",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "tips",
+     "at": 212,
+     "sfx": "pop",
+     "t": 80.051
+    }
+   ],
+   "transition": "cut",
+   "t0": 77.044,
+   "t1": 81.162
+  },
+  {
+   "id": "ail",
+   "from": 215,
+   "type": "process",
+   "label": "Paso 5",
+   "title": "Los alerones",
+   "highlight": "alerones",
+   "visual": "one aileron up, the other down, the plane banks",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "up",
+     "at": 216,
+     "sfx": "tick",
+     "t": 81.663
+    },
+    {
+     "id": "bank",
+     "at": 224,
+     "sfx": "whoosh",
+     "t": 83.738
+    },
+    {
+     "id": "name",
+     "at": 228,
+     "t": 85.619
+    }
+   ],
+   "transition": "cut",
+   "t0": 81.162,
+   "t1": 87.53,
+   "marks": [
+    {
+     "k": "name"
+    }
+   ]
+  },
+  {
+   "id": "slow",
+   "from": 232,
+   "type": "question",
+   "label": "Problema",
+   "title": "Lento, el ala no empuja",
+   "highlight": "lento",
+   "visual": "the plane comes in slow to land; the speed and lift bars drop",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "lento",
+     "at": 240,
+     "sfx": "tick",
+     "t": 90.445
+    },
+    {
+     "id": "weak",
+     "at": 245,
+     "sfx": "fail",
+     "t": 91.827
+    }
+   ],
+   "transition": "cut",
+   "t0": 87.53,
+   "t1": 93.14
+  },
+  {
+   "id": "flaps",
+   "from": 247,
+   "type": "object",
+   "label": "Paso 6",
+   "title": "Los flaps",
+   "highlight": "flaps",
+   "visual": "the wing in cut: a flap slides out behind, the lift arrow grows",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "flap",
+     "at": 251,
+     "sfx": "whoosh",
+     "t": 94.683
+    },
+    {
+     "id": "name",
+     "at": 262,
+     "t": 98.202
+    }
+   ],
+   "transition": "cut",
+   "t0": 93.14,
+   "t1": 99.928,
+   "marks": [
+    {
+     "k": "name"
+    }
+   ]
+  },
+  {
+   "id": "bike",
+   "from": 266,
+   "type": "object",
+   "label": "Dota",
+   "title": "Como en la bici",
+   "highlight": "bici",
+   "visual": "Dota on a bike with his arms open; Tico agrees",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "bike",
+     "at": 266,
+     "sfx": "pop",
+     "t": 100.178
+    },
+    {
+     "id": "tico",
+     "at": 274,
+     "t": 103.427
+    }
+   ],
+   "transition": "cut",
+   "t0": 99.928,
+   "t1": 105.428
+  },
+  {
+   "id": "felicidades",
+   "from": 277,
+   "type": "object",
+   "label": "¡Listo!",
+   "title": "Ya tienes un avión",
+   "highlight": "avión",
+   "visual": "the board plane with all its parts glows and turns into a real airliner taking off from a runway; Tico and Dota look up, mouths open",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "glow",
+     "at": 280,
+     "sfx": "shimmer",
+     "t": 106.853
+    },
+    {
+     "id": "wow",
+     "at": 285,
+     "sfx": "impact",
+     "t": 110.08
+    }
+   ],
+   "transition": "cut",
+   "t0": 105.428,
+   "t1": 113.333
+  },
+  {
+   "id": "rock",
+   "from": 288,
+   "type": "question",
+   "label": "La respuesta",
+   "title": "No se cae como piedra",
+   "highlight": "piedra",
+   "visual": "engines off; a rock falls straight down, the plane does not",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "off",
+     "at": 297,
+     "sfx": "scratch",
+     "t": 116.043
+    },
+    {
+     "id": "rock",
+     "at": 305,
+     "sfx": "whoosh",
+     "t": 118.521
+    }
+   ],
+   "transition": "cut",
+   "t0": 113.333,
+   "t1": 119.476
+  },
+  {
+   "id": "glide",
+   "from": 307,
+   "type": "process",
+   "label": "La respuesta",
+   "title": "Planea",
+   "highlight": "Planea",
+   "visual": "the plane glides down a gentle diagonal, engines off",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "glide",
+     "at": 307,
+     "sfx": "whoosh",
+     "t": 119.726
+    }
+   ],
+   "transition": "cut",
+   "t0": 119.476,
+   "t1": 122.776
+  },
+  {
+   "id": "trade",
+   "from": 313,
+   "type": "comparison",
+   "label": "La respuesta",
+   "title": "Altura por velocidad",
+   "highlight": "velocidad",
+   "visual": "bars: height goes down, speed stays; the lift arrow keeps on",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "alt",
+     "at": 314,
+     "sfx": "tick",
+     "t": 123.385
+    },
+    {
+     "id": "vel",
+     "at": 316,
+     "sfx": "pop",
+     "t": 123.96
+    },
+    {
+     "id": "lift",
+     "at": 320,
+     "sfx": "shimmer",
+     "t": 125.523
+    }
+   ],
+   "transition": "cut",
+   "t0": 122.776,
+   "t1": 127.126
+  },
+  {
+   "id": "canada",
+   "from": 322,
+   "type": "stat",
+   "label": "Caso real",
+   "title": "Aterrizó planeando",
+   "highlight": "planeando",
+   "visual": "a file card: Air Canada, 1983, no fuel; stamp PLANEÓ",
+   "mood": "epic",
+   "keys": [
+    {
+     "id": "card",
+     "at": 323,
+     "sfx": "impact",
+     "t": 127.551
+    },
+    {
+     "id": "stamp",
+     "at": 341,
+     "sfx": "hit",
+     "t": 132.804
+    }
+   ],
+   "transition": "cut",
+   "t0": 127.126,
+   "t1": 134.205
+  },
+  {
+   "id": "turbu",
+   "from": 343,
+   "type": "object",
+   "label": "Consejo",
+   "title": "En una turbulencia",
+   "highlight": "turbulencia",
+   "visual": "cabin shaking; Tico belted and calm; Dota without belt bonks the ceiling",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "shake",
+     "at": 347,
+     "sfx": "riser",
+     "t": 135.429
+    },
+    {
+     "id": "bonk",
+     "at": 356,
+     "sfx": "impact",
+     "t": 138.039
+    }
+   ],
+   "transition": "cut",
+   "t0": 134.205,
+   "t1": 139.075
+  },
+  {
+   "id": "belt",
+   "from": 361,
+   "type": "closing",
+   "label": "Consejo",
+   "title": "Cinturón abrochado",
+   "highlight": "cinturón",
+   "visual": "Tico clicks his belt; Dota stuck to the ceiling",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "click",
+     "at": 365,
+     "sfx": "tick",
+     "t": 141.012
+    }
+   ],
+   "transition": "cut",
+   "t0": 139.075,
+   "t1": 142.959
+  },
+  {
+   "id": "outro",
+   "from": 369,
+   "type": "closing",
+   "label": "Idio-two",
+   "title": "Una tabla cruza el cielo",
+   "highlight": "cielo",
+   "visual": "Dota surfs the winged board across the sky; Tico runs behind",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "go",
+     "at": 371,
+     "sfx": "whoosh",
+     "t": 143.679
+    }
+   ],
+   "transition": "cut",
+   "t0": 142.959,
+   "t1": 146.678
+  },
+  {
+   "id": "sub",
+   "from": 378,
+   "type": "closing",
+   "visual": "the banner: ¡SUSCRÍBANSE! over the Idio-two logo, Tico and Dota",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "tabla",
+     "at": 385,
+     "sfx": "fail",
+     "t": 149.934
+    }
+   ],
+   "transition": "cut",
+   "t0": 146.678,
+   "t1": 151.562
+  }
+ ],
+ "duration": 151.562
+}

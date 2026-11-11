@@ -1,0 +1,53 @@
+{
+ "style": "3d",
+ "fps": 30,
+ "shots": [
+  {
+   "id": "test-chars",
+   "title": "Tico y Dota 3D",
+   "duration": 4,
+   "snap": [
+    0.5,
+    1.5,
+    2.5,
+    3.5
+   ]
+  },
+  {
+   "id": "test-plane",
+   "title": "Tabla → avioneta",
+   "duration": 4.6,
+   "snap": [
+    0.2,
+    1.0,
+    2.0,
+    3.0,
+    4.4
+   ]
+  },
+  {
+   "id": "test-props",
+   "title": "Utilería",
+   "duration": 1.5,
+   "snap": [
+    0.8
+   ]
+  },
+  {
+   "id": "test-cabin",
+   "title": "Cabina",
+   "duration": 1.5,
+   "snap": [
+    0.8
+   ]
+  },
+  {
+   "id": "test-wing",
+   "title": "Ala en corte",
+   "duration": 1.5,
+   "snap": [
+    0.8
+   ]
+  }
+ ]
+}

@@ -54,3 +54,13 @@ videos/avion/analysis.*
 videos/avion/storyboard.md
 videos/avion/foley.wav
 videos/avion/own-music.wav
+# every new video: the voice, the reference images, the script text and generated sound stay private (examples keep theirs)
+videos/*/audio.*
+videos/*/assets/
+videos/*/analysis.*
+videos/*/foley.wav
+videos/*/own-music.wav
+videos/*/publicar.md
+videos/*/words.json
+!videos/blue-sky/words.json
+!videos/aviones/words.json

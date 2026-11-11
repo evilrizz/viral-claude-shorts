@@ -20,3 +20,9 @@ Tempo 104 en E. Curva: curioso (gancho) → tenso (motores apagados) → juguet�
 - **Nueva escena:** la tabla con todas sus piezas brilla y se vuelve un avión comercial (`avAirliner`) que despega; Tico y Dota lo miran.
 - **Lo demás** (gancho, respuesta, Air Canada, turbulencia, cierre) sigue en el estilo oscuro de puntos; el final es el banner.
 - **Límite:** el estilo 3D del proyecto no se puede mezclar con flat2d en un mismo video; el volumen es con sombreado suave.
+
+## Versión 3
+- El avión es la **avioneta** de la referencia (ala alta, hélice, puntales, tren de aterrizaje) con la aerolínea IDIO-TWO (`avCessna`, `avCessnaFront`, `avCessnaTop`); la tabla se convierte en ella pieza por pieza (`avMorphTo`: 1 alas reales y puntal, 2 fuselaje, 3 ventanas, 4 franja y tren, 5 IDIO-TWO).
+- Más movimiento en el cielo: la cámara se mece como en vuelo, el avión cruza la pantalla, nubes más rápidas.
+- «Ya tienes un avión»: presentado como premio (acercamiento, rayos dorados, confeti, moño gigante, esquinas doradas).
+- Cabina de verdad (`avCabin`): paredes curvas, compartimentos, ventanillas con cielo que pasa, filas de asientos; Tico abrochado, Dota sentado sin cinturón sale volando al techo.

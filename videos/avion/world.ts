@@ -660,7 +660,7 @@ function avSky(ground = false) {
 }
 // clouds drift (far slow, near fast) — the plane flies right
 function avSkyRun(tl: gsap.core.Timeline, $: (q: string) => string, s: Scene, speed = 1) {
-  const d = s.t1 - s.t0;
+  const d = s.t1 - s.t0; speed *= 1.7;
   tl.fromTo($('#cl1'), { x: 0 }, { x: -120 * speed * d / 3, duration: d, ease: 'none' }, s.t0);
   tl.fromTo($('#cl2'), { x: 0 }, { x: -300 * speed * d / 3, duration: d, ease: 'none' }, s.t0);
   tl.fromTo($('#cl3'), { x: 0 }, { x: -600 * speed * d / 3, duration: d, ease: 'none' }, s.t0);
@@ -779,8 +779,90 @@ function avLinerTop(id: string, x: number, y: number, s = 1) {
 
 // turns the board plane one stage further into the airliner (crossfade + a little sparkle), at t
 function avMorphTo(tl: gsap.core.Timeline, $: (q: string) => string, id: string, stage: number, t: number) {
-  const show: Record<number, string[]> = { 1: ['farW', 'nearW'], 2: ['tube'], 3: ['cock'], 4: ['wins'], 5: ['livery'] }, hide: Record<number, string[]> = { 1: ['farB', 'nearB'], 2: ['plank'] };
+  const show: Record<number, string[]> = { 1: ['farW', 'nearW', 'strut'], 2: ['tube'], 3: ['wins', 'cock'], 4: ['stripe', 'gear'], 5: ['livery'] }, hide: Record<number, string[]> = { 1: ['farB', 'nearB'], 2: ['plank'] };
   for (const k of show[stage] || []) tl.fromTo($(`#${id}-${k}`), { opacity: 0 }, { opacity: 1, duration: 0.45, ease: 'power1.out', immediateRender: false }, t);
   for (const k of hide[stage] || []) tl.to($(`#${id}-${k}`), { opacity: 0, duration: 0.45, ease: 'power1.in' }, t);
   tl.fromTo($(`#${id}-body`), { scaleX: 1, scaleY: 1, svgOrigin: '0 0' }, { keyframes: [{ scaleX: 1.04, scaleY: 0.96, duration: 0.12 }, { scaleX: 0.98, scaleY: 1.03, duration: 0.12 }, { scaleX: 1, scaleY: 1, duration: 0.12 }], immediateRender: false }, t);
+}
+
+// =====================================================================
+//  The light plane of the user's reference (high wing, propeller, struts, landing gear) with the IDIO-TWO livery.
+//  Side view (nose right). stage 0 board … 5 finished plane (same stages as avMorphTo):
+//  1 cowling + real wings · 2 the plank becomes the fuselage · 3 windows · 4 stripe + landing gear · 5 livery
+//  Parts (avPaint): eng (cowling + prop), stab (+stabF), elev, fin, rud, ail, flap. Prop rotor: #id-fan.
+// =====================================================================
+function avCessna(id: string, x: number, y: number, s = 1, o: AvLinerOpts = {}, stage = 5) {
+  const O = '#22252e', poly = (pts: number[][], fill: string) => `<path d="M${pts.map((p) => p.join(' ')).join(' L')}Z" fill="${fill}" stroke="${O}" stroke-width="4" stroke-linejoin="round"/>`;
+  const P = (pid: string, on: boolean, pts: number[][], fill: string) => `<g id="${id}-${pid}"${avVis(on)}><g id="${id}-${pid}M">${poly(pts, fill)}<g id="${id}-${pid}Hi" opacity="0">${poly(pts, 'url(#gLime)')}</g></g></g>`;
+  const farW = [[180, -72], [60, -72], [140, -236], [250, -236]], nearW = [[180, -68], [60, -68], [-130, 196], [-14, 196]];
+  const body = 'M380 -20 C 380 -50, 330 -62, 260 -66 L 120 -72 L -40 -66 C -200 -50, -360 -32, -430 -26 L -430 -4 C -360 6, -200 30, -40 40 L 260 40 C 330 40, 380 20, 380 -20Z';
+  const blade = `<path d="M-12 0 C -14 -50, -6 -112, 0 -124 C 6 -112, 14 -50, 12 0Z" fill="#2b2f3a"/>`;
+  return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})"><g id="${id}-body">
+    ${P('stabF', !!o.stab, [[-344, -22], [-376, -74], [-406, -74], [-376, -22]], 'url(#gW)')}
+    <g id="${id}-farW"${avVis(stage >= 1)}>${poly(farW, 'url(#gW)')}</g><g id="${id}-farB"${avVis(stage < 1)}>${poly(farW, 'url(#gWoodTop)')}</g>
+    ${P('fin', !!o.fin, [[-290, -30], [-372, -178], [-404, -178], [-414, -24]], 'url(#gW)')}${P('rud', !!o.rud, [[-404, -178], [-432, -178], [-444, -18], [-414, -24]], 'url(#gOr)')}
+    <g id="${id}-gear"${avVis(stage >= 4)}><path d="M60 36 L30 100 M300 30 L310 92" stroke="${O}" stroke-width="10" stroke-linecap="round"/><circle cx="26" cy="108" r="22" fill="#2b2f3a"/><circle cx="26" cy="108" r="9" fill="#cfd4dd"/><circle cx="312" cy="100" r="16" fill="#2b2f3a"/><circle cx="312" cy="100" r="6" fill="#cfd4dd"/></g>
+    <g id="${id}-plank"${avVis(stage < 2)}>${poly([[-430, -18], [380, -18], [396, -30], [-414, -30]], 'url(#gWoodTop)')}${poly([[-430, -18], [380, -18], [380, 18], [-430, 18]], 'url(#gWood)')}<path d="M-400 0 C -100 -4, 100 6, 370 0" stroke="#a87a3e" stroke-width="3" fill="none" opacity="0.6"/></g>
+    <g id="${id}-tube"${avVis(stage >= 2)}><path d="${body}" fill="url(#gBody)" stroke="${O}" stroke-width="5"/><path d="M240 -64 C 150 -70, 60 -70, -40 -64" stroke="#fff" stroke-width="6" fill="none" opacity="0.8"/></g>
+    <g id="${id}-wins"${avVis(stage >= 3)}><path d="M246 -62 L300 -56 L292 -26 L238 -30Z" fill="#7cc0f5" stroke="${O}" stroke-width="4"/><rect x="150" y="-60" width="70" height="34" rx="10" fill="#7cc0f5" stroke="${O}" stroke-width="4"/><rect x="70" y="-60" width="66" height="34" rx="10" fill="#7cc0f5" stroke="${O}" stroke-width="4"/><path d="M80 -56 L120 -56" stroke="#fff" stroke-width="4" opacity="0.7"/></g>
+    <g id="${id}-stripe"${avVis(stage >= 4)}><path d="M372 4 C 300 16, 100 18, -40 14 C -200 4, -350 -8, -428 -14" stroke="#ff7a3d" stroke-width="12" fill="none"/><path d="M372 20 C 300 30, 100 32, -40 28" stroke="#1b3fb0" stroke-width="6" fill="none"/></g>
+    <g id="${id}-livery"${avVis(stage >= 5)}><text x="-150" y="-2" text-anchor="middle" font-size="40" font-weight="900" font-style="italic" fill="#1b3fb0" stroke="#fff" stroke-width="6" paint-order="stroke" style="font-family: var(--font), system-ui, sans-serif">IDIO-TWO</text>
+      <g transform="translate(-378 -110)"><circle r="26" fill="#ff7a3d" stroke="#fff" stroke-width="5"/><text x="0" y="11" text-anchor="middle" font-size="30" font-weight="900" fill="#fff" style="font-family: var(--font), system-ui, sans-serif">i2</text></g></g>
+    <g id="${id}-nearW"${avVis(stage >= 1)}>${poly(nearW, 'url(#gW)')}<path d="M-120 186 L-28 186" stroke="#ff7a3d" stroke-width="10"/></g><g id="${id}-nearB"${avVis(stage < 1)}>${poly(nearW, 'url(#gWoodTop)')}</g>
+    <g id="${id}-strut"${avVis(stage >= 1)}><path d="M70 36 L-40 130" stroke="${O}" stroke-width="12" stroke-linecap="round"/><path d="M70 36 L-40 130" stroke="#cfd4dd" stroke-width="6" stroke-linecap="round"/></g>
+    ${P('flap', !!o.flap, [[33, -29], [-21, 48], [-47, 48], [7, -29]], 'url(#gOr)')}${P('ail', !!o.ail, [[-80, 130], [-120, 190], [-146, 190], [-106, 130]], 'url(#gOr)')}
+    ${P('stab', !!o.stab, [[-330, 0], [-380, 60], [-420, 60], [-372, 0]], 'url(#gW)')}${P('elev', !!o.elev, [[-380, 60], [-420, 60], [-436, 74], [-396, 74]], 'url(#gOr)')}
+    <g id="${id}-eng"${avVis(!!o.eng)}><g id="${id}-engM">${poly([[300, -60], [372, -48], [410, -16], [372, 26], [300, 38]], 'url(#gOr)')}<g id="${id}-engHi" opacity="0">${poly([[300, -60], [372, -48], [410, -16], [372, 26], [300, 38]], 'url(#gLime)')}</g>
+      <g transform="translate(418 -10) scale(0.26 1)"><g id="${id}-fan">${blade}<g transform="rotate(180)">${blade}</g></g></g><g id="${id}-fan2"></g><ellipse cx="418" cy="-10" rx="10" ry="14" fill="#ff9a5a" stroke="${O}" stroke-width="4"/></g></g>
+  </g></g></g>`;
+}
+// front view of the light plane: high wing on top, prop disc in front, ailerons at the tips (hinged at ±360), landing gear
+function avCessnaFront(id: string, x: number, y: number, s = 1, o: { ail?: boolean } = {}) {
+  const O = '#22252e', ail = (sd: number) => `<g id="${id}-ail${sd > 0 ? 'R' : 'L'}"><path d="M${360 * sd} -104 L${470 * sd} -104 L${470 * sd} -82 L${360 * sd} -82Z" fill="url(#gOr)" stroke="${O}" stroke-width="4"/></g>`;
+  return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})"><g id="${id}-body">
+    <path d="M-6 -100 L-12 -230 L12 -230 L6 -100Z" fill="url(#gW)" stroke="${O}" stroke-width="4"/>
+    <path d="M-470 -104 L470 -104 L470 -82 L-470 -82Z" fill="url(#gW)" stroke="${O}" stroke-width="4"/><path d="M-60 -60 L-260 -90 M60 -60 L260 -90" stroke="${O}" stroke-width="8"/>
+    <g id="${id}-ails"${avVis(!!o.ail)}>${ail(1)}${ail(-1)}</g>
+    <path d="M-40 60 L-110 140 M40 60 L110 140" stroke="${O}" stroke-width="10"/><circle cx="-112" cy="148" r="22" fill="#2b2f3a"/><circle cx="112" cy="148" r="22" fill="#2b2f3a"/>
+    <ellipse cx="0" cy="-10" rx="90" ry="96" fill="url(#gBody)" stroke="${O}" stroke-width="5"/><path d="M-60 -60 Q0 -84 60 -60 L54 -36 Q0 -54 -54 -36Z" fill="#7cc0f5" stroke="${O}" stroke-width="4"/>
+    <circle cx="0" cy="20" r="34" fill="url(#gOr)" stroke="${O}" stroke-width="4"/><circle cx="0" cy="20" r="130" fill="#dfe6ef" opacity="0.25"/><g transform="translate(0 20)"><g id="${id}-fan0"><rect x="-6" y="-128" width="12" height="256" rx="6" fill="#2b2f3a" opacity="0.8"/></g></g><g id="${id}-fan1"></g><circle cx="0" cy="20" r="12" fill="#ff9a5a" stroke="${O}" stroke-width="4"/>
+  </g></g></g>`;
+}
+// top view (nose up): straight high wing, tail plane, the rudder at the very end (hinged at y = 330), prop at the nose
+function avCessnaTop(id: string, x: number, y: number, s = 1) {
+  const O = '#22252e';
+  return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})"><g id="${id}-body">
+    <path d="M-30 250 L-170 270 L-170 310 L-30 300 L30 300 L170 310 L170 270 L30 250Z" fill="url(#gW)" stroke="${O}" stroke-width="4"/>
+    <path d="M0 -380 C 40 -380, 56 -320, 56 -260 L30 320 C 20 340, -20 340, -30 320 L-56 -260 C -56 -320, -40 -380, 0 -380Z" fill="url(#gBody)" stroke="${O}" stroke-width="5"/>
+    <path d="M-470 -150 L470 -150 L470 -70 L-470 -70Z" fill="url(#gW)" stroke="${O}" stroke-width="4"/><path d="M-470 -80 L-380 -80 M380 -80 L470 -80" stroke="#ff7a3d" stroke-width="10"/>
+    <rect x="-8" y="-404" width="16" height="30" fill="url(#gOr)" stroke="${O}" stroke-width="3"/><rect x="-120" y="-412" width="240" height="10" rx="5" fill="#2b2f3a" opacity="0.6"/>
+    <rect x="-6" y="200" width="12" height="130" fill="url(#gW)" stroke="${O}" stroke-width="3"/><g id="${id}-rudM"><rect x="-6" y="330" width="12" height="40" fill="url(#gOr)" stroke="${O}" stroke-width="3"/></g>
+    <text x="0" y="-100" text-anchor="middle" font-size="46" font-weight="900" font-style="italic" fill="#1b3fb0" style="font-family: var(--font), system-ui, sans-serif">IDIO-TWO</text>
+  </g></g></g>`;
+}
+// a big red gift bow (for the "prize")
+function avBow(id: string, x: number, y: number, s = 1) {
+  const O = '#22252e';
+  return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0 C -60 -80, -150 -60, -120 0 C -150 60, -60 70, 0 0Z" fill="#ff3d57" stroke="${O}" stroke-width="5"/><path d="M0 0 C 60 -80, 150 -60, 120 0 C 150 60, 60 70, 0 0Z" fill="#ff3d57" stroke="${O}" stroke-width="5"/>
+    <path d="M-10 6 L-50 110 L-20 96 L0 120 Z M10 6 L50 110 L20 96 L0 120Z" fill="#e02443" stroke="${O}" stroke-width="5" stroke-linejoin="round"/><circle r="26" fill="#ff5a6e" stroke="${O}" stroke-width="5"/></g></g>`;
+}
+// golden prize rays behind something (rotating group #id)
+const avRays = (id: string, x: number, y: number) => `<g transform="translate(${x} ${y})"><g id="${id}">${[...Array(16)].map((_, i) => `<path d="M0 0 L${(Math.cos(i * Math.PI / 8) * 1400).toFixed(0)} ${(Math.sin(i * Math.PI / 8) * 1400).toFixed(0)} L${(Math.cos(i * Math.PI / 8 + 0.12) * 1400).toFixed(0)} ${(Math.sin(i * Math.PI / 8 + 0.12) * 1400).toFixed(0)}Z" fill="#ffd84a" opacity="0.55"/>`).join('')}</g></g>`;
+const avConfetti = (n = 36) => `<g id="confetti">${[...Array(n)].map((_, i) => { const x = 120 + (i * 137) % 840, y = 520 + (i * 97) % 260, c = ['#ff5a5f', '#ffd23d', '#3ccf91', '#4c7dff', '#ff8a3d', '#8b6cff'][i % 6]; return `<g class="bit"><g transform="translate(${x} ${y}) rotate(${(i * 47) % 360}) scale(1.8)">${i % 3 === 0 ? `<circle r="8" fill="${c}"/>` : `<rect x="-9" y="-5" width="18" height="10" rx="3" fill="${c}"/>`}</g></g>`; }).join('')}</g>`;
+// the cabin seen from the side: curved wall, overhead bins, oval windows with moving sky (#winSky), rows of seats; seat i at x = 150 + i * 260
+function avCabin(n = 4) {
+  const seatX = (i: number) => 150 + i * 260;
+  const wins = [...Array(4)].map((_, i) => `<g transform="translate(${seatX(i) + 60} 860)"><rect x="-58" y="-86" width="116" height="172" rx="56" fill="#cfc8b8" stroke="#8f8878" stroke-width="6"/><rect x="-44" y="-70" width="88" height="140" rx="44" fill="url(#gSky)"/>
+    <g clip-path="url(#winClip${i})"><g class="winSky">${avCloud(0, 10, 0.25)}${avCloud(120, -30, 0.2)}${avCloud(-120, 30, 0.22)}</g></g><clipPath id="winClip${i}"><rect x="-44" y="-70" width="88" height="140" rx="44"/></clipPath></g>`).join('');
+  return `<rect width="1080" height="1920" fill="#d9d1c2"/><path d="M0 520 C 300 470, 780 470, 1080 520 L1080 700 L0 700Z" fill="#ece6da" stroke="#b8b0a0" stroke-width="6"/>
+    ${[...Array(4)].map((_, i) => `<rect x="${i * 270 + 10}" y="560" width="250" height="120" rx="14" fill="#f4efe6" stroke="#b8b0a0" stroke-width="5"/><rect x="${i * 270 + 100}" y="648" width="70" height="10" rx="5" fill="#b8b0a0"/>`).join('')}
+    <rect x="0" y="700" width="1080" height="12" fill="#fff6d8" opacity="0.8"/>${wins}
+    <rect x="0" y="1500" width="1080" height="420" fill="#3d4a6b"/><rect x="0" y="1500" width="1080" height="14" fill="#2b3550"/>${[...Array(12)].map((_, i) => `<circle cx="${(i * 97) % 1080}" cy="${1560 + (i * 53) % 300}" r="6" fill="#4a5880"/>`).join('')}
+    <g id="seatBacks">${[...Array(n)].map((_, i) => `<g transform="translate(${seatX(i)} 0)"><path d="M-110 1340 L-128 1060 Q-130 1030 -100 1030 L-70 1030 Q-46 1030 -48 1060 L-40 1340Z" fill="#2f5fd9" stroke="${AV.o}" stroke-width="6"/><rect x="-126" y="1030" width="80" height="60" rx="16" fill="#e9eef5" stroke="${AV.o}" stroke-width="5"/></g>`).join('')}</g>`;
+}
+// the front part of a seat (cushion, armrest and pedestal) that covers the sitter's legs; belt optional
+function avSeatFront(i: number, belt = false, id = '') {
+  const x = 150 + i * 260;
+  return `<g transform="translate(${x} 0)"><rect x="-120" y="1320" width="200" height="60" rx="18" fill="#2f5fd9" stroke="${AV.o}" stroke-width="6"/><rect x="-120" y="1380" width="200" height="120" fill="#24489f" stroke="${AV.o}" stroke-width="6"/>
+    <rect x="-120" y="1270" width="40" height="70" rx="10" fill="#b8c0cf" stroke="${AV.o}" stroke-width="5"/>${belt ? `<g id="${id}"><rect x="-90" y="1296" width="170" height="26" rx="8" fill="#ff7a3d" stroke="${AV.o}" stroke-width="5"/><rect x="-14" y="1292" width="34" height="34" rx="6" fill="#cfd4dd" stroke="${AV.o}" stroke-width="5"/></g>` : ''}</g>`;
 }

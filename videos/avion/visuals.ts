@@ -418,13 +418,13 @@ defineVisuals({
     // inside the plane: rows of seats, windows with sky; Tico buckled, Dota sitting without a belt bonks the bins
     html: () => svg(`<g id="cam"><g id="camP"><g id="camZ"><g id="cabin">${avCabin(4)}</g>
       ${avTico('tk', 400, 1420, 0.62, 'hold')}${avSeatFront(1, true, 'beltT')}
-      <g id="dg">${avDota('d', 670, 1400, 0.68, 'down')}</g>${avSeatFront(2, false)}${avBoom('bm', 670, 700, 0.5)}</g></g></g>`, AV_SKY_DEFS),
+      <g id="dg"><g id="dgS">${avDota('d', 670, 1400, 0.68, 'down')}</g></g>${avSeatFront(2, false)}${avBoom('bm', 670, 700, 0.5)}</g></g></g>`, AV_SKY_DEFS),
     anim(tl, s, K, $) {
       vaBase(tl, s, $, false, false);
       tl.fromTo($('.winSky'), { x: 60 }, { x: -120, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
       tl.fromTo($('#cabin, #seatBacks'), { rotation: -1.5, svgOrigin: '540 1200' }, { rotation: 1.5, duration: 0.09, yoyo: true, repeat: 2 * Math.floor((s.t1 - K('shake') - 0.3) / 0.18) - 1, ease: 'none', immediateRender: false }, K('shake'));
       tl.to($('#cabin, #seatBacks'), { rotation: 0, svgOrigin: '540 1200', duration: 0.15 }, s.t1 - 0.2);
-      tl.fromTo($('#tk, #dg'), { y: 0 }, { y: -10, duration: 0.09, yoyo: true, repeat: Math.ceil((K('bonk') - K('shake')) / 0.09), ease: 'none', immediateRender: false }, K('shake'));
+      tl.fromTo($('#tk, #dgS'), { y: 0 }, { y: -10, duration: 0.09, yoyo: true, repeat: 2 * Math.floor((K('bonk') - K('shake') - 0.5) / 0.18) - 1, ease: 'none', immediateRender: false }, K('shake'));
       tl.to($('#dg'), { y: -560, rotation: 180, svgOrigin: '670 1240', duration: 0.45, ease: 'power3.in' }, K('bonk') - 0.45);
       avFlash(tl, $('#bm'), K('bonk'), 0.35);
       tl.set($('#d-bump'), { opacity: 1 }, K('bonk')); avDizzy(tl, $, 'd', K('bonk'), s.t1);

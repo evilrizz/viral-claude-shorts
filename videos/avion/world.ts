@@ -719,3 +719,54 @@ function avAirliner(id: string, x: number, y: number, s = 1) {
     <g id="${id}-gear"><line x1="300" y1="44" x2="300" y2="80" stroke="${O}" stroke-width="8"/><circle cx="300" cy="86" r="14" fill="#2b2f3a"/><line x1="-20" y1="44" x2="-20" y2="84" stroke="${O}" stroke-width="10"/><circle cx="-34" cy="92" r="16" fill="#2b2f3a"/><circle cx="-4" cy="92" r="16" fill="#2b2f3a"/></g>
   </g></g>`;
 }
+
+// =====================================================================
+//  The commercial airliner with parts that can be added (for the explanation), in 3 views.
+//  Side view (nose right): parts eng, stab (+stabF), elev, fin, rud, ail, flap — each with a lime "Hi" twin (avPaint).
+// =====================================================================
+interface AvLinerOpts { eng?: boolean; stab?: boolean; elev?: boolean; fin?: boolean; rud?: boolean; ail?: boolean; flap?: boolean }
+const AV_LINER_ALL: AvLinerOpts = { eng: true, stab: true, elev: true, fin: true, rud: true, ail: true, flap: true };
+function avLiner(id: string, x: number, y: number, s = 1, o: AvLinerOpts = {}) {
+  const O = '#22252e', poly = (pts: number[][], fill: string) => `<path d="M${pts.map((p) => p.join(' ')).join(' L')}Z" fill="${fill}" stroke="${O}" stroke-width="4" stroke-linejoin="round"/>`;
+  const part = (pid: string, on: boolean, inner: string, hi: string) => `<g id="${id}-${pid}"${avVis(on)}><g id="${id}-${pid}M">${inner}<g id="${id}-${pid}Hi" opacity="0">${hi}</g></g></g>`;
+  const P = (pid: string, on: boolean, pts: number[][], fill: string) => part(pid, on, poly(pts, fill), poly(pts, 'url(#gLime)'));
+  const wins = [...Array(17)].map((_, i) => `<rect x="${-260 + i * 30}" y="-34" width="14" height="20" rx="6" fill="#203050"/>`).join('');
+  const engine = (ex: number, ey: number, k: number, fid: string) => `<g transform="translate(${ex} ${ey}) scale(${k})"><rect x="-80" y="-26" width="160" height="54" rx="27" fill="url(#gMetal)" stroke="${O}" stroke-width="4"/><rect x="-80" y="-26" width="40" height="54" rx="14" fill="#1b3fb0" opacity="0.85"/>
+    <g transform="translate(80 1)"><ellipse rx="12" ry="26" fill="#2b2f3a" stroke="${O}" stroke-width="3"/><g transform="scale(0.45 1)"><g id="${fid}">${[0, 1, 2, 3, 4, 5].map((k2) => `<rect x="-3" y="-24" width="6" height="24" fill="#aab4c4" transform="rotate(${k2 * 60})"/>`).join('')}</g></g></g></g>`;
+  const engHi = (ex: number, ey: number, k: number) => `<g transform="translate(${ex} ${ey}) scale(${k})"><rect x="-80" y="-26" width="160" height="54" rx="27" fill="url(#gLime)" stroke="${O}" stroke-width="4"/></g>`;
+  return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})"><g id="${id}-body">
+    ${P('stabF', !!o.stab, [[-340, -22], [-410, -62], [-440, -62], [-372, -22]], 'url(#gW)')}
+    ${poly([[-60, 10], [-180, -150], [-140, -150], [60, 6]], '#b8c2d2')}
+    ${part('engF', !!o.eng, engine(-150, -96, 0.6, `${id}-fan2`), engHi(-150, -96, 0.6))}
+    ${P('fin', !!o.fin, [[-300, -24], [-390, -200], [-344, -200], [-250, -24]], 'url(#gTail)')}${P('rud', !!o.rud, [[-344, -200], [-390, -200], [-418, -200], [-338, -24], [-300, -24]], 'url(#gOr)')}
+    <path d="M-420 -30 C -400 -62, -320 -64, -220 -64 L 300 -64 C 380 -64, 430 -40, 450 -10 C 440 20, 400 40, 300 44 L -280 44 C -360 44, -410 10, -420 -30Z" fill="url(#gBody)" stroke="${O}" stroke-width="5"/>
+    <path d="M-400 0 C -300 30, 300 34, 440 0" stroke="#1b3fb0" stroke-width="12" fill="none"/>${wins}<path d="M392 -46 L428 -30 L420 -22 L384 -36Z" fill="#203050"/>
+    ${poly([[-60, 10], [120, 6], [-120, 150], [-170, 150]], 'url(#gMetal)')}
+    ${P('flap', !!o.flap, [[-58, 20], [-104, 82], [-132, 82], [-86, 20]], 'url(#gOr)')}${P('ail', !!o.ail, [[-128, 104], [-162, 148], [-190, 148], [-156, 104]], 'url(#gOr)')}
+    ${part('eng', !!o.eng, engine(-30, 72, 1, `${id}-fan`), engHi(-30, 72, 1))}
+    ${P('stab', !!o.stab, [[-330, 4], [-404, 44], [-436, 44], [-362, 4]], 'url(#gW)')}${P('elev', !!o.elev, [[-404, 44], [-436, 44], [-450, 56], [-418, 56]], 'url(#gOr)')}
+  </g></g></g>`;
+}
+// front view (looking at its nose): wings left-right with dihedral, engines under them, ailerons at the tips (hinged at ±340), fin on top
+function avLinerFront(id: string, x: number, y: number, s = 1, o: { ail?: boolean; eng?: boolean } = {}) {
+  const O = '#22252e', ail = (sd: number) => `<g id="${id}-ail${sd > 0 ? 'R' : 'L'}"><path d="M${340 * sd} ${-18} L${440 * sd} ${-30} L${440 * sd} ${-14} L${340 * sd} ${-2}Z" fill="url(#gOr)" stroke="${O}" stroke-width="4" stroke-linejoin="round"/></g>`;
+  const eng = (ex: number, i: number) => `<g transform="translate(${ex} 56)"><circle r="44" fill="url(#gMetal)" stroke="${O}" stroke-width="4"/><circle r="32" fill="#2b2f3a"/><g id="${id}-fan${i}">${[0, 1, 2, 3, 4, 5, 6, 7].map((k) => `<rect x="-3" y="-30" width="6" height="30" fill="#aab4c4" transform="rotate(${k * 45})"/>`).join('')}</g><circle r="8" fill="#e6ebf2"/></g>`;
+  return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})"><g id="${id}-body">
+    <path d="M-6 -60 L-14 -240 L14 -240 L6 -60Z" fill="url(#gTail)" stroke="${O}" stroke-width="4"/><path d="M-170 -50 L170 -50 L170 -40 L-170 -40Z" fill="#c9d1de" stroke="${O}" stroke-width="3"/>
+    <path d="M-440 -14 L0 20 L440 -14 L440 -30 L0 0 L-440 -30Z" fill="url(#gMetal)" stroke="${O}" stroke-width="4" stroke-linejoin="round"/>
+    <g id="${id}-ails"${avVis(!!o.ail)}>${ail(1)}${ail(-1)}</g>
+    <g${avVis(o.eng !== false)}><line x1="-200" y1="10" x2="-200" y2="20" stroke="${O}" stroke-width="10"/><line x1="200" y1="10" x2="200" y2="20" stroke="${O}" stroke-width="10"/>${eng(-200, 0)}${eng(200, 1)}</g>
+    <circle r="74" fill="url(#gBody)" stroke="${O}" stroke-width="5"/><path d="M-40 -30 Q0 -50 40 -30 L34 -14 Q0 -26 -34 -14Z" fill="#203050"/><path d="M-60 30 Q0 60 60 30" stroke="#1b3fb0" stroke-width="10" fill="none"/>
+  </g></g></g>`;
+}
+// top view (nose up): body, swept wings with engines, tail plane, fin line and the rudder at the very end (hinged at y = 330)
+function avLinerTop(id: string, x: number, y: number, s = 1) {
+  const O = '#22252e';
+  return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})"><g id="${id}-body">
+    <path d="M-40 -20 L-430 150 L-430 190 L-40 110 L40 110 L430 190 L430 150 L40 -20Z" fill="url(#gMetal)" stroke="${O}" stroke-width="4" stroke-linejoin="round"/>
+    ${[-200, 200].map((ex) => `<rect x="${ex - 22}" y="${20 + Math.abs(ex) * 0.2}" width="44" height="110" rx="20" fill="url(#gMetal)" stroke="${O}" stroke-width="4"/>`).join('')}
+    <path d="M-30 250 L-170 330 L-170 350 L-30 320 L30 320 L170 350 L170 330 L30 250Z" fill="#c9d1de" stroke="${O}" stroke-width="4"/>
+    <path d="M0 -400 C 40 -400, 50 -340, 50 -280 L50 300 C 50 330, 30 340, 0 340 C -30 340, -50 330, -50 300 L-50 -280 C -50 -340, -40 -400, 0 -400Z" fill="url(#gBody)" stroke="${O}" stroke-width="5"/>
+    <rect x="-6" y="200" width="12" height="130" fill="url(#gTail)" stroke="${O}" stroke-width="3"/><g id="${id}-rudM"><rect x="-6" y="330" width="12" height="44" fill="url(#gOr)" stroke="${O}" stroke-width="3"/></g>
+  </g></g></g>`;
+}

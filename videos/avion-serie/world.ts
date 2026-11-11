@@ -94,8 +94,9 @@ function asMouth(cx: number, cy: number, k: number, shape: number, smile = 1) {
 }
 
 // ---------------- the drawings (static skeleton of elements; the driver fills their shapes each drawing)
+let AS_UID = 0;   // every drawing gets its own clip ids (a clip with the same id in a hidden scene would hide the pupils)
 function asCharSvg(id: string, kind: AsKind, x: number, y: number, s: number, pose: string, flip: boolean) {
-  const K = AS_K[kind], O = AS.o, [hx, hy] = K.head;
+  const K = AS_K[kind], O = AS.o, [hx, hy] = K.head, u = ++AS_UID;
   const limb = (n: string, w: number, c: string) => `<path id="${id}-${n}O" fill="none" stroke="${O}" stroke-width="${w + 15}" stroke-linecap="round"/><path id="${id}-${n}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/><path id="${id}-${n}H" fill="none" stroke="#fff" stroke-opacity="0.18" stroke-width="${w * 0.28}" stroke-linecap="round"/>`;
   const hand = (n: string, r: number) => `<g id="${id}-${n}"><ellipse rx="${r * 1.12}" ry="${r}" fill="${K.skin}" stroke="${O}" stroke-width="7"/><ellipse cx="${-r * 0.35}" cy="${-r * 0.3}" rx="${r * 0.4}" ry="${r * 0.25}" fill="#fff" opacity="0.18"/><g id="${id}-${n}F" opacity="0"><rect x="${r * 0.7}" y="${-8}" width="${r * 1.4}" height="16" rx="8" fill="${K.skin}" stroke="${O}" stroke-width="6"/></g></g>`;
   const foot = (sx: number) => `<ellipse cx="${sx * (K.foot + 4)}" cy="-14" rx="${kind === 'tico' ? 50 : 38}" ry="${kind === 'tico' ? 22 : 18}" fill="${K.face}" stroke="${O}" stroke-width="7"/>`;
@@ -118,9 +119,9 @@ function asCharSvg(id: string, kind: AsKind, x: number, y: number, s: number, po
        <circle id="${id}-black" cx="40" cy="-332" r="44" fill="#6a4a8c" opacity="0"/>
        <circle cx="-10" cy="-284" r="4" fill="${O}"/><circle cx="8" cy="-284" r="4" fill="${O}"/>`;
   const E = kind === 'tico' ? [[-50, -478, 36], [50, -478, 36]] : [[-38, -332, 28], [40, -332, 28]];
-  const eyes = E.map(([ex, ey, r], i) => `<clipPath id="${id}-cl${i}"><circle cx="${ex}" cy="${ey}" r="${r}"/></clipPath><circle cx="${ex}" cy="${ey}" r="${r}" fill="#fff" stroke="${kind === 'dota' ? O : 'none'}" stroke-width="7"/>`).join('');
-  const pupils = E.map(([ex, ey], i) => `<g clip-path="url(#${id}-cl${i})"><circle id="${id}-pu${i}" cx="${ex}" cy="${ey}" r="${kind === 'tico' ? 13 : 13}" fill="${O}"/><circle id="${id}-ps${i}" cx="${ex + 4}" cy="${ey - 4}" r="4" fill="#fff"/></g>`).join('');
-  const lids = E.map(([, , ], i) => `<path id="${id}-lid${i}" clip-path="url(#${id}-cl${i})" fill="${kind === 'tico' ? K.face : K.face}" stroke="${O}" stroke-width="6"/>`).join('');
+  const eyes = E.map(([ex, ey, r], i) => `<clipPath id="${id}-cl${i}u${u}"><circle cx="${ex}" cy="${ey}" r="${r}"/></clipPath><circle cx="${ex}" cy="${ey}" r="${r}" fill="#fff" stroke="${kind === 'dota' ? O : 'none'}" stroke-width="7"/>`).join('');
+  const pupils = E.map(([ex, ey], i) => `<g clip-path="url(#${id}-cl${i}u${u})"><circle id="${id}-pu${i}" cx="${ex}" cy="${ey}" r="${kind === 'tico' ? 13 : 13}" fill="${O}"/><circle id="${id}-ps${i}" cx="${ex + 4}" cy="${ey - 4}" r="4" fill="#fff"/></g>`).join('');
+  const lids = E.map(([, , ], i) => `<path id="${id}-lid${i}" clip-path="url(#${id}-cl${i}u${u})" fill="${kind === 'tico' ? K.face : K.face}" stroke="${O}" stroke-width="6"/>`).join('');
   const glasses = kind === 'tico' ? `<line x1="-130" y1="-478" x2="-92" y2="-478" stroke="${O}" stroke-width="8"/><line x1="130" y1="-478" x2="92" y2="-478" stroke="${O}" stroke-width="8"/><line x1="-8" y1="-478" x2="8" y2="-478" stroke="${O}" stroke-width="8"/>
       <circle cx="-50" cy="-478" r="42" fill="none" stroke="${O}" stroke-width="9"/><circle cx="50" cy="-478" r="42" fill="none" stroke="${O}" stroke-width="9"/><path d="M-78 -496 Q-66 -510 -50 -512" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.8"/><path d="M22 -496 Q34 -510 50 -512" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.8"/>` : '';
   const brows = `<g id="${id}-brows"><path id="${id}-br0" fill="none" stroke="${O}" stroke-width="${kind === 'tico' ? 11 : 9}" stroke-linecap="round"/><path id="${id}-br1" fill="none" stroke="${O}" stroke-width="${kind === 'tico' ? 11 : 9}" stroke-linecap="round"/></g>`;

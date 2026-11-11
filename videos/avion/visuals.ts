@@ -48,7 +48,7 @@ function vaBackdrop(s: Scene, $: Va$) {
   const sec = document.getElementById('sc-' + s.id); if (sec) { sec.style.background = b; if (light) sec.style.setProperty('--ink', AV.navy); }
 }
 interface VaMark { k: string; dt?: number; x: number; y: number; r: number; z?: number; hold?: number; label?: string }
-function vaBase(tl: VaTl, s: Scene, $: Va$, burst = true) {
+function vaBase(tl: VaTl, s: Scene, $: Va$, burst = true, cam = true) {
   vaBackdrop(s, $);
   const marks = (s as unknown as { marks?: VaMark[] }).marks || [], camZ = document.querySelector($('#camZ'));
   marks.forEach((m, i) => {
@@ -60,7 +60,7 @@ function vaBase(tl: VaTl, s: Scene, $: Va$, burst = true) {
   if (burst && document.querySelector($('#bg'))) tl.fromTo($('#bg'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 24, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
   else if (document.querySelector($('.dust'))) avDust(tl, $, s);
   const i = SCENES.scenes.findIndex((x) => x.id === s.id);
-  avCamera(tl, $, s, i % 2 ? 1 : -1);
+  if (cam) avCamera(tl, $, s, i % 2 ? 1 : -1);
   if (VA_SKY.has(s.id)) {
     const d = s.t1 - s.t0, dir = i % 2 ? 1 : -1;
     tl.fromTo($('#camP'), { rotation: -2.5 * dir, svgOrigin: '540 1000' }, { rotation: 2.5 * dir, duration: d, ease: 'sine.inOut', immediateRender: false }, s.t0);
@@ -420,9 +420,10 @@ defineVisuals({
       ${avTico('tk', 400, 1420, 0.62, 'hold')}${avSeatFront(1, true, 'beltT')}
       <g id="dg">${avDota('d', 670, 1400, 0.68, 'down')}</g>${avSeatFront(2, false)}${avBoom('bm', 670, 700, 0.5)}</g></g></g>`, AV_SKY_DEFS),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $, false);
+      vaBase(tl, s, $, false, false);
       tl.fromTo($('.winSky'), { x: 60 }, { x: -120, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
-      tl.fromTo($('#cabin, #seatBacks'), { rotation: -1.5, svgOrigin: '540 1200' }, { rotation: 1.5, duration: 0.09, yoyo: true, repeat: Math.ceil((s.t1 - K('shake')) / 0.09), ease: 'none', immediateRender: false }, K('shake'));
+      tl.fromTo($('#cabin, #seatBacks'), { rotation: -1.5, svgOrigin: '540 1200' }, { rotation: 1.5, duration: 0.09, yoyo: true, repeat: 2 * Math.floor((s.t1 - K('shake') - 0.3) / 0.18) - 1, ease: 'none', immediateRender: false }, K('shake'));
+      tl.to($('#cabin, #seatBacks'), { rotation: 0, svgOrigin: '540 1200', duration: 0.15 }, s.t1 - 0.2);
       tl.fromTo($('#tk, #dg'), { y: 0 }, { y: -10, duration: 0.09, yoyo: true, repeat: Math.ceil((K('bonk') - K('shake')) / 0.09), ease: 'none', immediateRender: false }, K('shake'));
       tl.to($('#dg'), { y: -560, rotation: 180, svgOrigin: '670 1240', duration: 0.45, ease: 'power3.in' }, K('bonk') - 0.45);
       avFlash(tl, $('#bm'), K('bonk'), 0.35);
@@ -435,18 +436,28 @@ defineVisuals({
     bg: '#d9d1c2', ink: '#10204a',
     html: () => svg(`<g id="cam"><g id="camP"><g id="camZ">${avCabin(4)}
       ${avTico('tk', 400, 1420, 0.62, 'hold')}${avSeatFront(1, false)}<g id="beltL"><rect x="316" y="1296" width="96" height="26" rx="8" fill="#ff7a3d" stroke="${AV.o}" stroke-width="5"/></g><g id="beltR"><rect x="412" y="1296" width="90" height="26" rx="8" fill="#ff7a3d" stroke="${AV.o}" stroke-width="5"/><rect x="396" y="1292" width="34" height="34" rx="6" fill="#cfd4dd" stroke="${AV.o}" stroke-width="5"/></g>
-      ${avSeatFront(2, false)}<g id="dg"><g transform="rotate(180 670 1030)">${avDota('d', 670, 1400, 0.62, 'up')}</g></g></g></g></g>`, AV_SKY_DEFS),
+      <g id="clic" opacity="0"><g transform="translate(470 1210) rotate(-8)"><rect x="-80" y="-34" width="160" height="68" rx="14" fill="#ffd23d" stroke="${AV.o}" stroke-width="6"/><text x="0" y="16" text-anchor="middle" font-size="44" font-weight="900" fill="${AV.o}" style="font-family: var(--font), system-ui, sans-serif">¡CLIC!</text></g></g>
+      ${avSeatFront(2, false)}<g id="dg"><g transform="translate(0 -560) rotate(180 670 1240)">${avDota('d', 670, 1400, 0.68, 'down')}</g></g></g></g></g>`, AV_SKY_DEFS),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $, false);
-      tl.fromTo($('.winSky'), { x: 40 }, { x: -100, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
+      vaBase(tl, s, $, false, false);
+      tl.fromTo($('.winSky'), { x: -120 }, { x: -260, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
       tl.set($('#d-bump'), { opacity: 1 }, s.t0); avDizzy(tl, $, 'd', s.t0, s.t1);
-      tl.fromTo($('#dg'), { x: -6 }, { x: 6, duration: 0.4, yoyo: true, repeat: Math.ceil((s.t1 - s.t0) / 0.4), ease: 'sine.inOut' }, s.t0);
-      tl.fromTo($('#beltL'), { x: -120, rotation: -20, svgOrigin: '316 1309' }, { x: 0, rotation: 0, duration: 0.3, ease: 'power3.out' }, K('click') - 0.3);
-      tl.fromTo($('#beltR'), { x: 120, rotation: 20, svgOrigin: '502 1309' }, { x: 0, rotation: 0, duration: 0.3, ease: 'power3.out' }, K('click') - 0.3);
-      avZoom(tl, $, 560, 1100, 1.25, K('click') - 0.5, 0.9);
+      tl.fromTo($('#dg'), { x: 0 }, { x: 8, duration: 0.4, yoyo: true, repeat: Math.ceil((s.t1 - s.t0) / 0.4), ease: 'sine.inOut' }, s.t0 + 0.2);
+      // close-up on Tico: the two ends come in, CLICK, a tug to tighten it
+      // the belt is already on (as in the turbulence): Tico pulls the strap and it tightens with a CLICK
+      avZoom(tl, $, 370, 1300, 2.0, K('click') - 0.75, s.t1 - K('click') + 1);
+      tl.to($('#dg'), { opacity: 0, duration: 0.3 }, K('click') - 0.75);
+      tl.to($('#beltR'), { x: 26, duration: 0.18, ease: 'power2.in' }, K('click') - 0.2);
+      tl.to($('#beltL, #beltR'), { scaleX: 0.86, svgOrigin: '410 1309', duration: 0.12, ease: 'power3.out' }, K('click'));
+      tl.to($('#beltR'), { x: 0, duration: 0.15, ease: 'power2.out' }, K('click'));
+      tl.fromTo($('#tk'), { y: 0 }, { y: 8, duration: 0.1, yoyo: true, repeat: 1 }, K('click'));
+      tl.set($('#clic'), { opacity: 1 }, K('click')); avPopIn(tl, $('#clic'), K('click'));
+      tl.to($('#clic'), { opacity: 0, duration: 0.3 }, K('click') + 1.1);
+      tl.fromTo($('#tk-nod'), { rotation: 0, svgOrigin: '0 -360' }, { rotation: 6, duration: 0.2, yoyo: true, repeat: 1, immediateRender: false }, K('click') + 0.4);
       vaTalk(tl, $, 'tk', s, 'tico');
     },
   },
+
 
   sub: {
     bg: AV.bg1, ink: AV.navy,

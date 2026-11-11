@@ -31,7 +31,7 @@ const lp = (k: number) => { let y = 0; return (x: number) => (y += k * (x - y));
 
 // ---- the sounds
 const boing = (t: number, v = 0.35, f = 330, pan = 0) => { let ph = 0; add(t, 0.45, (u) => { ph += TAU * (f * (1 + 0.35 * Math.sin(TAU * 18 * u) * Math.exp(-u * 6)) * (1 + u * 0.6)) / SR; return Math.sin(ph) * env(u, 0.004, 7); }, v, pan); };
-const slide = (t: number, d = 0.6, f0 = 380, f1 = 1700, v = 0.22) => { let ph = 0; add(t, d, (u) => { ph += TAU * (f0 + (f1 - f0) * (u / d) ** 1.4) / SR; return (Math.sin(ph) + 0.25 * Math.sin(2 * ph)) * Math.min(1, u / 0.02) * Math.min(1, (d - u) / 0.05); }, v); };
+const slide = (t: number, d = 0.6, f0 = 380, f1 = 1700, v = 0.22) => { let ph = 0; add(t, d, (u) => { ph += TAU * (f0 + (f1 - f0) * Math.max(0, u / d) ** 1.4) / SR; return (Math.sin(ph) + 0.25 * Math.sin(2 * ph)) * Math.min(1, u / 0.02) * Math.min(1, (d - u) / 0.05); }, v); };
 const whoosh = (t: number, d = 0.4, v = 0.3, pan = 0) => { const f = lp(0.12); add(t, d, (u) => f(noise()) * Math.sin(Math.PI * u / d) ** 2 * 3, v, pan); };
 const bonk = (t: number, v = 0.4) => { add(t, 0.25, (u) => (Math.sin(TAU * 780 * u) * 0.7 + Math.sin(TAU * 1240 * u) * 0.4) * env(u, 0.001, 28), v); add(t, 0.2, (u) => Math.sin(TAU * (140 - 200 * u) * u) * env(u, 0.002, 20), v * 0.9); };
 const clank = (t: number, v = 0.3, base = 520, pan = 0) => { const fr = [1, 2.51, 4.23, 6.07].map((k) => k * base); add(t, 0.5, (u) => fr.reduce((a, f, j) => a + Math.sin(TAU * f * u) * Math.exp(-u * (9 + j * 6)) / (j + 1), 0) * Math.min(1, u / 0.001) + noise() * Math.exp(-u * 120) * 0.4, v, pan); };
@@ -89,6 +89,7 @@ wind(T0('roll'), T1('ail') - T0('roll'), 0.04); clank(K('roll', 'tips') - 0.1, 0
 jet(T0('slow'), T1('slow') - T0('slow'), 0.05, 200, 150);
 wind(T0('flaps'), T1('flaps') - T0('flaps'), 0.04); ratchet(K('flaps', 'flap') - 0.1, 6, 0.1);
 bell(K('bike', 'bike') + 0.2); for (let t = T0('bike'); t < T1('bike') - 0.2; t += 0.5) add(t, 0.08, (u) => Math.sin(TAU * 140 * u) * Math.exp(-u * 40), 0.04);
+twinkle(K('felicidades', 'glow'), 0.07); whoosh(K('felicidades', 'glow') + 0.3, 0.6, 0.2); jet(K('felicidades', 'glow') + 0.4, T1('felicidades') - K('felicidades', 'glow') - 0.4, 0.1, 120, 320); thud(K('felicidades', 'wow'), 0.2);
 jet(T0('rock'), K('rock', 'off') - T0('rock'), 0.06); spindown(K('rock', 'off')); puff(K('rock', 'off') + 0.1, 0.14); slide(K('rock', 'rock'), 0.6, 900, 300, 0.12); thud(K('rock', 'rock') + 0.62, 0.3);
 wind(T0('glide'), T1('trade') - T0('glide'), 0.06);
 paper(K('canada', 'card') - 0.15, 0.16); thud(K('canada', 'stamp'), 0.4); wind(T0('canada'), K('canada', 'stamp') - T0('canada'), 0.04);

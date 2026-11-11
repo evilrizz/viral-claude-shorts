@@ -54,7 +54,7 @@
    ],
    "transition": "cut",
    "t0": 3.997,
-   "t1": 9.772
+   "t1": 9.771
   },
   {
    "id": "obvio",
@@ -70,12 +70,12 @@
      "id": "dota",
      "at": 26,
      "sfx": "pop",
-     "t": 10.022
+     "t": 10.021
     }
    ],
    "transition": "cut",
-   "t0": 9.772,
-   "t1": 11.997
+   "t0": 9.771,
+   "t1": 11.995
   },
   {
    "id": "idiot",
@@ -90,18 +90,18 @@
     {
      "id": "palm",
      "at": 29,
-     "t": 12.247
+     "t": 12.245
     },
     {
      "id": "idiota",
      "at": 32,
      "sfx": "fail",
-     "t": 13.326
+     "t": 13.325
     }
    ],
    "transition": "cut",
-   "t0": 11.997,
-   "t1": 14.18
+   "t0": 11.995,
+   "t1": 14.179
   },
   {
    "id": "promise",
@@ -117,12 +117,12 @@
      "id": "bar",
      "at": 36,
      "sfx": "pop",
-     "t": 14.824
+     "t": 14.822
     }
    ],
    "transition": "cut",
-   "t0": 14.18,
-   "t1": 17.016
+   "t0": 14.179,
+   "t1": 17.014
   },
   {
    "id": "fuel",
@@ -138,18 +138,18 @@
      "id": "gauge",
      "at": 50,
      "sfx": "riser",
-     "t": 19.365
+     "t": 19.363
     },
     {
      "id": "file",
      "at": 52,
      "sfx": "pop",
-     "t": 20.52
+     "t": 20.518
     }
    ],
    "transition": "cut",
-   "t0": 17.016,
-   "t1": 22.006
+   "t0": 17.014,
+   "t1": 22.004
   },
   {
    "id": "armo",
@@ -165,15 +165,15 @@
      "id": "board",
      "at": 57,
      "sfx": "thump",
-     "t": 23.055
+     "t": 23.052
     }
    ],
    "transition": "cut",
    "ambience": [
     "room"
    ],
-   "t0": 22.006,
-   "t1": 24.47
+   "t0": 22.004,
+   "t1": 24.466
   },
   {
    "id": "crash",
@@ -189,18 +189,18 @@
      "id": "throw",
      "at": 61,
      "sfx": "whoosh",
-     "t": 24.922
+     "t": 24.918
     },
     {
      "id": "crash",
      "at": 64,
      "sfx": "impact",
-     "t": 25.817
+     "t": 25.813
     }
    ],
    "transition": "cut",
-   "t0": 24.47,
-   "t1": 26.652
+   "t0": 24.466,
+   "t1": 26.649
   },
   {
    "id": "wing",
@@ -216,24 +216,24 @@
      "id": "curva",
      "at": 70,
      "sfx": "pop",
-     "t": 27.99
+     "t": 27.987
     },
     {
      "id": "tilt",
      "at": 77,
      "sfx": "tick",
-     "t": 29.928
+     "t": 29.924
     },
     {
      "id": "down",
      "at": 80,
      "sfx": "whoosh",
-     "t": 31.09
+     "t": 31.086
     }
    ],
    "transition": "cut",
-   "t0": 26.652,
-   "t1": 32.208
+   "t0": 26.649,
+   "t1": 32.205
   },
   {
    "id": "lift",
@@ -249,12 +249,12 @@
      "id": "up",
      "at": 90,
      "sfx": "whoosh",
-     "t": 34.14
+     "t": 34.136
     },
     {
      "id": "name",
      "at": 91,
-     "t": 34.917
+     "t": 34.914
     }
    ],
    "transition": "cut",
@@ -270,8 +270,8 @@
      "label": "SUSTENTACIÓN"
     }
    ],
-   "t0": 32.208,
-   "t1": 36.638
+   "t0": 32.205,
+   "t1": 36.634
   },
   {
    "id": "vuela",
@@ -287,24 +287,24 @@
      "id": "dota",
      "at": 95,
      "sfx": "pop",
-     "t": 36.888
+     "t": 36.884
     },
     {
      "id": "fast",
      "at": 101,
      "sfx": "whoosh",
-     "t": 39.784
+     "t": 39.778
     },
     {
      "id": "still",
      "at": 103,
      "sfx": "fail",
-     "t": 40.931
+     "t": 40.925
     }
    ],
    "transition": "cut",
-   "t0": 36.638,
-   "t1": 42.323
+   "t0": 36.634,
+   "t1": 42.317
   },
   {
    "id": "turb",
@@ -320,12 +320,12 @@
      "id": "turb",
      "at": 111,
      "sfx": "pop",
-     "t": 44.017
+     "t": 44.011
     }
    ],
    "transition": "cut",
-   "t0": 42.323,
-   "t1": 45.399
+   "t0": 42.317,
+   "t1": 45.393
   },
   {
    "id": "motor",
@@ -341,35 +341,34 @@
      "id": "blow",
      "at": 116,
      "sfx": "whoosh",
-     "t": 45.745
+     "t": 45.739
     },
     {
      "id": "dota",
      "at": 119,
      "sfx": "whoosh",
-     "t": 46.756
+     "t": 46.749
     },
     {
      "id": "name",
      "at": 126,
-     "t": 49.298
+     "t": 49.292
     }
    ],
    "transition": "cut",
    "marks": [
     {
      "k": "name",
-     "dt": 0,
-     "x": 726,
-     "y": 1074,
-     "r": 100,
+     "x": 919,
+     "y": 996,
+     "r": 75,
      "z": 1.3,
      "hold": 1.2,
      "label": "MOTOR"
     }
    ],
-   "t0": 45.399,
-   "t1": 50.899
+   "t0": 45.393,
+   "t1": 50.892
   },
   {
    "id": "pitch",
@@ -385,12 +384,12 @@
      "id": "nose",
      "at": 138,
      "sfx": "tick",
-     "t": 53.696
+     "t": 53.689
     }
    ],
    "transition": "cut",
-   "t0": 50.899,
-   "t1": 56.78
+   "t0": 50.892,
+   "t1": 56.773
   },
   {
    "id": "stab",
@@ -406,29 +405,28 @@
      "id": "stab",
      "at": 151,
      "sfx": "pop",
-     "t": 58.22
+     "t": 58.212
     },
     {
      "id": "name",
      "at": 153,
-     "t": 59.225
+     "t": 59.218
     }
    ],
    "transition": "cut",
    "marks": [
     {
      "k": "name",
-     "dt": 0,
-     "x": 352,
-     "y": 1000,
+     "x": 205,
+     "y": 1010,
      "r": 110,
      "z": 1.3,
      "hold": 1.2,
      "label": "ESTABILIZADOR"
     }
    ],
-   "t0": 56.78,
-   "t1": 60.93
+   "t0": 56.773,
+   "t1": 60.922
   },
   {
    "id": "elev",
@@ -444,35 +442,34 @@
      "id": "up",
      "at": 162,
      "sfx": "tick",
-     "t": 62.454
+     "t": 62.447
     },
     {
      "id": "down",
      "at": 164,
      "sfx": "tick",
-     "t": 62.888
+     "t": 62.881
     },
     {
      "id": "name",
      "at": 168,
-     "t": 64.521
+     "t": 64.514
     }
    ],
    "transition": "cut",
    "marks": [
     {
      "k": "name",
-     "dt": 0,
-     "x": 243,
-     "y": 1000,
-     "r": 85,
+     "x": 161,
+     "y": 1044,
+     "r": 70,
      "z": 1.3,
      "hold": 1,
      "label": "ELEVADOR"
     }
    ],
-   "t0": 60.93,
-   "t1": 66.23
+   "t0": 60.922,
+   "t1": 66.222
   },
   {
    "id": "yaw",
@@ -488,12 +485,12 @@
      "id": "lado",
      "at": 178,
      "sfx": "scratch",
-     "t": 67.637
+     "t": 67.629
     }
    ],
    "transition": "cut",
-   "t0": 66.23,
-   "t1": 70.277
+   "t0": 66.222,
+   "t1": 70.269
   },
   {
    "id": "fin",
@@ -509,44 +506,42 @@
      "id": "fin",
      "at": 187,
      "sfx": "pop",
-     "t": 71.198
+     "t": 71.19
     },
     {
      "id": "name",
      "at": 193,
-     "t": 73.747
+     "t": 73.739
     },
     {
      "id": "rud",
      "at": 199,
-     "t": 75.456
+     "t": 75.448
     }
    ],
    "transition": "cut",
    "marks": [
     {
      "k": "name",
-     "dt": 0,
-     "x": 330,
-     "y": 864,
-     "r": 135,
+     "x": 213,
+     "y": 899,
+     "r": 100,
      "z": 1.2,
      "hold": 1.1,
      "label": "DERIVA"
     },
     {
      "k": "rud",
-     "dt": 0,
-     "x": 244,
-     "y": 864,
-     "r": 110,
+     "x": 161,
+     "y": 899,
+     "r": 80,
      "z": 1.2,
      "hold": 0.9,
      "label": "TIMÓN"
     }
    ],
-   "t0": 70.277,
-   "t1": 77.052
+   "t0": 70.269,
+   "t1": 77.044
   },
   {
    "id": "roll",
@@ -562,12 +557,12 @@
      "id": "tips",
      "at": 212,
      "sfx": "pop",
-     "t": 80.06
+     "t": 80.051
     }
    ],
    "transition": "cut",
-   "t0": 77.052,
-   "t1": 81.171
+   "t0": 77.044,
+   "t1": 81.162
   },
   {
    "id": "ail",
@@ -583,18 +578,18 @@
      "id": "up",
      "at": 216,
      "sfx": "tick",
-     "t": 81.672
+     "t": 81.663
     },
     {
      "id": "bank",
      "at": 224,
      "sfx": "whoosh",
-     "t": 83.747
+     "t": 83.738
     },
     {
      "id": "name",
      "at": 228,
-     "t": 85.628
+     "t": 85.619
     }
    ],
    "transition": "cut",
@@ -610,8 +605,8 @@
      "label": "ALERONES"
     }
    ],
-   "t0": 81.171,
-   "t1": 87.54
+   "t0": 81.162,
+   "t1": 87.53
   },
   {
    "id": "slow",
@@ -627,18 +622,18 @@
      "id": "lento",
      "at": 240,
      "sfx": "tick",
-     "t": 90.455
+     "t": 90.445
     },
     {
      "id": "weak",
      "at": 245,
      "sfx": "fail",
-     "t": 91.837
+     "t": 91.827
     }
    ],
    "transition": "cut",
-   "t0": 87.54,
-   "t1": 93.15
+   "t0": 87.53,
+   "t1": 93.14
   },
   {
    "id": "flaps",
@@ -654,12 +649,12 @@
      "id": "flap",
      "at": 251,
      "sfx": "whoosh",
-     "t": 94.692
+     "t": 94.683
     },
     {
      "id": "name",
      "at": 262,
-     "t": 98.212
+     "t": 98.202
     }
    ],
    "transition": "cut",
@@ -675,8 +670,8 @@
      "label": "FLAPS"
     }
    ],
-   "t0": 93.15,
-   "t1": 99.939
+   "t0": 93.14,
+   "t1": 99.928
   },
   {
    "id": "bike",
@@ -692,21 +687,48 @@
      "id": "bike",
      "at": 266,
      "sfx": "pop",
-     "t": 100.189
+     "t": 100.178
     },
     {
      "id": "tico",
      "at": 274,
-     "t": 103.439
+     "t": 103.427
     }
    ],
    "transition": "cut",
-   "t0": 99.939,
-   "t1": 105.494
+   "t0": 99.928,
+   "t1": 105.428
+  },
+  {
+   "id": "felicidades",
+   "from": 277,
+   "type": "object",
+   "label": "¡Listo!",
+   "title": "Ya tienes un avión",
+   "highlight": "avión",
+   "visual": "the board plane with all its parts glows and turns into a real airliner taking off from a runway; Tico and Dota look up, mouths open",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "glow",
+     "at": 280,
+     "sfx": "shimmer",
+     "t": 106.853
+    },
+    {
+     "id": "wow",
+     "at": 285,
+     "sfx": "impact",
+     "t": 110.08
+    }
+   ],
+   "transition": "cut",
+   "t0": 105.428,
+   "t1": 113.333
   },
   {
    "id": "rock",
-   "from": 277,
+   "from": 288,
    "type": "question",
    "label": "La respuesta",
    "title": "No se cae como piedra",
@@ -716,24 +738,24 @@
    "keys": [
     {
      "id": "off",
-     "at": 286,
+     "at": 297,
      "sfx": "scratch",
-     "t": 108.204
+     "t": 116.043
     },
     {
      "id": "rock",
-     "at": 294,
+     "at": 305,
      "sfx": "whoosh",
-     "t": 110.682
+     "t": 118.521
     }
    ],
    "transition": "cut",
-   "t0": 105.494,
-   "t1": 111.637
+   "t0": 113.333,
+   "t1": 119.476
   },
   {
    "id": "glide",
-   "from": 296,
+   "from": 307,
    "type": "process",
    "label": "La respuesta",
    "title": "Planea",
@@ -743,18 +765,18 @@
    "keys": [
     {
      "id": "glide",
-     "at": 296,
+     "at": 307,
      "sfx": "whoosh",
-     "t": 111.887
+     "t": 119.726
     }
    ],
    "transition": "cut",
-   "t0": 111.637,
-   "t1": 114.936
+   "t0": 119.476,
+   "t1": 122.776
   },
   {
    "id": "trade",
-   "from": 302,
+   "from": 313,
    "type": "comparison",
    "label": "La respuesta",
    "title": "Altura por velocidad",
@@ -764,30 +786,30 @@
    "keys": [
     {
      "id": "alt",
-     "at": 303,
+     "at": 314,
      "sfx": "tick",
-     "t": 115.546
+     "t": 123.385
     },
     {
      "id": "vel",
-     "at": 305,
+     "at": 316,
      "sfx": "pop",
-     "t": 116.121
+     "t": 123.96
     },
     {
      "id": "lift",
-     "at": 309,
+     "at": 320,
      "sfx": "shimmer",
-     "t": 117.684
+     "t": 125.523
     }
    ],
    "transition": "cut",
-   "t0": 114.936,
-   "t1": 119.286
+   "t0": 122.776,
+   "t1": 127.126
   },
   {
    "id": "canada",
-   "from": 311,
+   "from": 322,
    "type": "stat",
    "label": "Caso real",
    "title": "Aterrizó planeando",
@@ -797,24 +819,24 @@
    "keys": [
     {
      "id": "card",
-     "at": 312,
+     "at": 323,
      "sfx": "impact",
-     "t": 119.711
+     "t": 127.551
     },
     {
      "id": "stamp",
-     "at": 330,
+     "at": 341,
      "sfx": "hit",
-     "t": 124.964
+     "t": 132.804
     }
    ],
    "transition": "cut",
-   "t0": 119.286,
-   "t1": 126.366
+   "t0": 127.126,
+   "t1": 134.205
   },
   {
    "id": "turbu",
-   "from": 332,
+   "from": 343,
    "type": "object",
    "label": "Consejo",
    "title": "En una turbulencia",
@@ -824,24 +846,24 @@
    "keys": [
     {
      "id": "shake",
-     "at": 336,
+     "at": 347,
      "sfx": "riser",
-     "t": 127.591
+     "t": 135.429
     },
     {
      "id": "bonk",
-     "at": 345,
+     "at": 356,
      "sfx": "impact",
-     "t": 130.201
+     "t": 138.039
     }
    ],
    "transition": "cut",
-   "t0": 126.366,
-   "t1": 131.236
+   "t0": 134.205,
+   "t1": 139.075
   },
   {
    "id": "belt",
-   "from": 350,
+   "from": 361,
    "type": "closing",
    "label": "Consejo",
    "title": "Cinturón abrochado",
@@ -851,18 +873,18 @@
    "keys": [
     {
      "id": "click",
-     "at": 354,
+     "at": 365,
      "sfx": "tick",
-     "t": 133.174
+     "t": 141.012
     }
    ],
    "transition": "cut",
-   "t0": 131.236,
-   "t1": 135.121
+   "t0": 139.075,
+   "t1": 142.959
   },
   {
    "id": "outro",
-   "from": 358,
+   "from": 369,
    "type": "closing",
    "label": "Idio-two",
    "title": "Una tabla cruza el cielo",
@@ -872,33 +894,33 @@
    "keys": [
     {
      "id": "go",
-     "at": 360,
+     "at": 371,
      "sfx": "whoosh",
-     "t": 135.841
+     "t": 143.679
     }
    ],
    "transition": "cut",
-   "t0": 135.121,
-   "t1": 138.842
+   "t0": 142.959,
+   "t1": 146.678
   },
   {
    "id": "sub",
-   "from": 367,
+   "from": 378,
    "type": "closing",
    "visual": "the banner: ¡SUSCRÍBANSE! over the Idio-two logo, Tico and Dota",
    "mood": "playful",
    "keys": [
     {
      "id": "tabla",
-     "at": 374,
+     "at": 385,
      "sfx": "fail",
-     "t": 142.097
+     "t": 149.934
     }
    ],
    "transition": "cut",
-   "t0": 138.842,
-   "t1": 143.726
+   "t0": 146.678,
+   "t1": 151.562
   }
  ],
- "duration": 143.726
+ "duration": 151.562
 }

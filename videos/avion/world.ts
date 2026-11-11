@@ -174,8 +174,8 @@ function avFocus(tl: gsap.core.Timeline, $: (q: string) => string, x: number, y:
 // the spotlight that dims everything around the focus (place it with the same centre as the zoom)
 const avSpot = (x: number, y: number, r = 430) => `<circle id="spot" cx="${x}" cy="${y}" r="${r + 900}" fill="none" stroke="#03161c" stroke-width="1800" opacity="0"/>`;
 // marks a new piece: a turning dashed yellow ring, a pulse and an arrow pointing at it (optional label under it)
-function avMark(id: string, x: number, y: number, r: number, label = '') {
-  const c = AVP.lime, L = Math.max(34, r * 0.32), k = (sx: number, sy: number) => `<path d="M${x + sx * r} ${y + sy * (r - L)} L${x + sx * r} ${y + sy * r} L${x + sx * (r - L)} ${y + sy * r}" fill="none" stroke="${c}" stroke-width="9" stroke-linecap="square"/>`;
+function avMark(id: string, x: number, y: number, r: number, label = '', c = AVP.lime) {
+  const L = Math.max(34, r * 0.32), k = (sx: number, sy: number) => `<path d="M${x + sx * r} ${y + sy * (r - L)} L${x + sx * r} ${y + sy * r} L${x + sx * (r - L)} ${y + sy * r}" fill="none" stroke="${c}" stroke-width="9" stroke-linecap="square"/>`;
   const w = label.length * 25 + 70, cx = Math.min(1000 - w, Math.max(80, x - r)), cy = Math.max(500, y - r - 92);
   return `<g id="${id}" opacity="0">
     <g id="${id}-pulse"><rect x="${x - r}" y="${y - r}" width="${2 * r}" height="${2 * r}" fill="none" stroke="${c}" stroke-width="3" opacity="0.6"/></g>
@@ -466,11 +466,11 @@ function avStroke(id: string, x: number, y: number, word: string, c: string, pis
 // =====================================================================
 //  The board plane (a wooden plank with wings) and what explains it. Nose to the right in the side view.
 // =====================================================================
-interface AvPlaneOpts { turb?: boolean; stab?: boolean; elev?: boolean; fin?: boolean; rud?: boolean; flap?: boolean; ail?: boolean; tape?: boolean }
+interface AvPlaneOpts { g?: boolean; turb?: boolean; stab?: boolean; elev?: boolean; fin?: boolean; rud?: boolean; flap?: boolean; ail?: boolean; tape?: boolean }
 const avAirfoilPath = (k: number) => `M${-70 * k} 0 C ${-62 * k} ${-26 * k}, ${60 * k} ${-30 * k}, ${130 * k} ${2 * k} C ${60 * k} ${10 * k}, ${-40 * k} ${14 * k}, ${-70 * k} 0Z`;
-function avPlank(x0: number, x1: number, h: number) {   // the wooden board, with grain
+function avPlank(x0: number, x1: number, h: number, fill: string = AVP.wood) {   // the wooden board, with grain
   const grain = [-0.45, -0.1, 0.25].map((f, i) => `<path d="M${x0 + 20} ${f * h} C ${x0 + (x1 - x0) * 0.3} ${f * h - 6}, ${x0 + (x1 - x0) * 0.6} ${f * h + 6}, ${x1 - 20 - i * 30} ${f * h}" stroke="${AVP.woodD}" stroke-width="3" fill="none" opacity="0.6"/>`).join('');
-  return avVol((a) => `<rect x="${x0}" y="${-h}" width="${x1 - x0}" height="${2 * h}" rx="8" ${a}/>`, AVP.wood, { sx: 0, sy: h * 0.6, k: 0.25, hi: grain + `<rect x="${x0 + 14}" y="${-h + 6}" width="${(x1 - x0) * 0.5}" height="5" rx="2" fill="#fff" opacity="0.3"/>` });
+  return avVol((a) => `<rect x="${x0}" y="${-h}" width="${x1 - x0}" height="${2 * h}" rx="8" ${a}/>`, fill, { sx: 0, sy: h * 0.6, k: 0.25, hi: grain + `<rect x="${x0 + 14}" y="${-h + 6}" width="${(x1 - x0) * 0.5}" height="5" rx="2" fill="#fff" opacity="0.3"/>` });
 }
 function avTurbine(id: string, x: number, y: number, r = 34) {   // a pod with a spinning fan at its mouth
   const blades = [...Array(8)].map((_, i) => `<path d="M0 0 L${(Math.cos(i * Math.PI / 4) * r * 0.85).toFixed(1)} ${(Math.sin(i * Math.PI / 4) * r * 0.85).toFixed(1)} L${(Math.cos(i * Math.PI / 4 + 0.35) * r * 0.85).toFixed(1)} ${(Math.sin(i * Math.PI / 4 + 0.35) * r * 0.85).toFixed(1)}Z" fill="${AVP.wingD}"/>`).join('');
@@ -495,10 +495,10 @@ function avPlaneSide(id: string, x: number, y: number, s = 1, o: AvPlaneOpts = {
 function avPlaneFront(id: string, x: number, y: number, s = 1, o: AvPlaneOpts = {}) {
   const O = AV.o, ail = (side: number) => `<g id="${id}-ail${side > 0 ? 'R' : 'L'}"><path d="M${300 * side} -15 L${420 * side} -11 L${420 * side} 11 L${300 * side} 15Z" fill="${AVP.orange}" stroke="${O}" stroke-width="6" stroke-linejoin="round"/></g>`;
   return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})"><g id="${id}-body">
-    <rect x="-4" y="-150" width="8" height="120" fill="${AVP.wing}" stroke="${O}" stroke-width="5"/><rect x="-150" y="-36" width="300" height="10" rx="4" fill="${AVP.wingD}" stroke="${O}" stroke-width="5"/>
-    ${avVol((a) => `<path d="M-300 -15 L300 -15 L300 15 L-300 15Z" ${a}/>`, AVP.wing, { sx: 0, sy: 9, k: 0.2 })}
+    <rect x="-4" y="-150" width="8" height="120" fill="${(o.g ? 'url(#gW)' : AVP.wing)}" stroke="${O}" stroke-width="5"/><rect x="-150" y="-36" width="300" height="10" rx="4" fill="${AVP.wingD}" stroke="${O}" stroke-width="5"/>
+    ${avVol((a) => `<path d="M-300 -15 L300 -15 L300 15 L-300 15Z" ${a}/>`, (o.g ? 'url(#gW)' : AVP.wing), { sx: 0, sy: 9, k: 0.2 })}
     <g id="${id}-ails"${avVis(!!o.ail)}>${ail(1)}${ail(-1)}</g>
-    ${avVol((a) => `<rect x="-30" y="-30" width="60" height="60" rx="8" ${a}/>`, AVP.wood, { sx: 12, sy: 12, k: 0.25 })}
+    ${avVol((a) => `<rect x="-30" y="-30" width="60" height="60" rx="8" ${a}/>`, (o.g ? 'url(#gWood)' : AVP.wood), { sx: 12, sy: 12, k: 0.25 })}
     <g${avVis(!!o.turb)}>${[-170, 170].map((tx, i) => `<rect x="${tx - 5}" y="8" width="10" height="18" fill="${AVP.wingD}" stroke="${O}" stroke-width="4"/><g transform="translate(${tx} 54)">${avVol((a) => `<circle r="32" ${a}/>`, '#c9ced8', { sx: 6, sy: 6 })}<circle r="22" fill="#3b3f4a" stroke="${O}" stroke-width="5"/><g id="${id}-fan${i}">${[0, 1, 2, 3, 4, 5].map((k) => `<rect x="-3" y="-20" width="6" height="20" fill="${AVP.wingD}" transform="rotate(${k * 60})"/>`).join('')}</g><circle r="6" fill="${AVP.orange}"/></g>`).join('')}</g>
   </g></g></g>`;
 }
@@ -506,10 +506,10 @@ function avPlaneFront(id: string, x: number, y: number, s = 1, o: AvPlaneOpts = 
 function avPlaneTop(id: string, x: number, y: number, s = 1, o: AvPlaneOpts = {}) {
   const O = AV.o;
   return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})"><g id="${id}-body">
-    ${avVol((a) => `<path d="M-30 -40 L-400 30 L-400 70 L-30 50 L30 50 L400 70 L400 30 L30 -40Z" ${a}/>`, AVP.wing, { sx: 0, sy: 14, k: 0.2 })}
-    <g${avVis(!!o.stab)}>${avVol((a) => `<path d="M-26 250 L-140 290 L-140 310 L-26 300 L26 300 L140 310 L140 290 L26 250Z" ${a}/>`, AVP.wing, { sx: 0, sy: 8, k: 0.2 })}</g>
-    <g transform="rotate(-90)">${avPlank(-330, 330, 26)}</g>
-    <g${avVis(!!o.fin)}><rect x="-6" y="190" width="12" height="110" fill="${AVP.wing}" stroke="${O}" stroke-width="5"/><g id="${id}-rud"${avVis(!!o.rud)}><g id="${id}-rudM"><rect x="-6" y="300" width="12" height="46" fill="${AVP.orange}" stroke="${O}" stroke-width="5"/></g></g></g>
+    ${avVol((a) => `<path d="M-30 -40 L-400 30 L-400 70 L-30 50 L30 50 L400 70 L400 30 L30 -40Z" ${a}/>`, (o.g ? 'url(#gW)' : AVP.wing), { sx: 0, sy: 14, k: 0.2 })}
+    <g${avVis(!!o.stab)}>${avVol((a) => `<path d="M-26 250 L-140 290 L-140 310 L-26 300 L26 300 L140 310 L140 290 L26 250Z" ${a}/>`, (o.g ? 'url(#gW)' : AVP.wing), { sx: 0, sy: 8, k: 0.2 })}</g>
+    <g transform="rotate(-90)">${avPlank(-330, 330, 26, o.g ? 'url(#gWood)' : AVP.wood)}</g>
+    <g${avVis(!!o.fin)}><rect x="-6" y="190" width="12" height="110" fill="${(o.g ? 'url(#gW)' : AVP.wing)}" stroke="${O}" stroke-width="5"/><g id="${id}-rud"${avVis(!!o.rud)}><g id="${id}-rudM"><rect x="-6" y="300" width="12" height="46" fill="${AVP.orange}" stroke="${O}" stroke-width="5"/></g></g></g>
   </g></g></g>`;
 }
 // the wing in cut (air flows left to right): curved top, a little tilt (#-tilt), the flap at the trailing edge, flow lines and the lift arrow
@@ -575,6 +575,18 @@ function avSeat(id: string, x: number, y: number, s = 1) {
 // =====================================================================
 const avTest = (body: string) => svg(`${avPrint()}${body}`, AV_DEFS);
 defineVisuals({
+  'test-sky': {
+    html: () => svg(`${avSky(true)}${avTrail('tr', 160, 1010)}${avPlane3('p3', 560, 1000, 1.05, { tape: true })}`, AV_SKY_DEFS),
+    anim(tl, s, K, $) {
+      avSkyRun(tl, $, s);
+      avPaint(tl, $, 'p3', 'prop', K('a')); tl.fromTo($('#p3-spin'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 3600, duration: s.t1 - K('a'), ease: 'none' }, K('a'));
+      avPaint(tl, $, 'p3', 'stab', K('b'), ['stabF', 'elev']); avPaint(tl, $, 'p3', 'fin', K('c'), ['rud']); avPaint(tl, $, 'p3', 'ail', K('d'), ['flap']);
+    },
+  },
+  'test-sky2': {
+    html: () => svg(`${avNavyGrid()}${avAirliner('al', 540, 760, 1)}${avPlaneFront('pf', 540, 1200, 0.9, { g: true, turb: true, ail: true })}${avPlaneTop('pt', 540, 1560, 0.4, { g: true, stab: true, fin: true, rud: true })}`, AV_SKY_DEFS),
+    anim() {},
+  },
   'test-side': {
     html: () => avTest(`${avPlaneSide('ps', 540, 1000, 1.25, { tape: true })}`),
     anim(tl, s, K, $) {
@@ -619,3 +631,91 @@ defineVisuals({
     anim() {},
   },
 });
+
+// =====================================================================
+//  SKY STYLE (the building part, from the user's second reference): bright sky, puffy clouds, grass,
+//  soft shading (gradients) for a 3D feel, new parts painted lime first, a dotted trail behind the plane.
+// =====================================================================
+const AV_SKY_DEFS = `${AV_DEFS}
+  <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a7fd9"/><stop offset="0.65" stop-color="#7cc0f5"/><stop offset="1" stop-color="#c4e6ff"/></linearGradient>
+  <linearGradient id="gCloud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d6e8f7"/></linearGradient>
+  <linearGradient id="gW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#bfc9d9"/></linearGradient>
+  <linearGradient id="gWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6e3bb"/><stop offset="1" stop-color="#c39252"/></linearGradient>
+  <linearGradient id="gWoodTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3d6"/><stop offset="1" stop-color="#ead1a0"/></linearGradient>
+  <linearGradient id="gOr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a5a"/><stop offset="1" stop-color="#d9441a"/></linearGradient>
+  <linearGradient id="gLime" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0ff7a"/><stop offset="1" stop-color="#a9d61c"/></linearGradient>
+  <linearGradient id="gMetal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2f5f9"/><stop offset="1" stop-color="#8f99aa"/></linearGradient>
+  <linearGradient id="gGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#86d35f"/><stop offset="1" stop-color="#3b8f37"/></linearGradient>
+  <linearGradient id="gNavy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c336f"/><stop offset="1" stop-color="#0c1838"/></linearGradient>
+  <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.55" stop-color="#e9eef5"/><stop offset="1" stop-color="#9aa6b8"/></linearGradient>
+  <linearGradient id="gTail" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3f7bff"/><stop offset="1" stop-color="#1b3fb0"/></linearGradient>`;
+const avCloud = (x: number, y: number, k: number, op = 1) => `<g transform="translate(${x} ${y}) scale(${k})" opacity="${op}"><ellipse cx="0" cy="40" rx="190" ry="40" fill="#b9d6ef"/><circle cx="-90" cy="10" r="62" fill="url(#gCloud)"/><circle cx="0" cy="-30" r="88" fill="url(#gCloud)"/><circle cx="95" cy="5" r="66" fill="url(#gCloud)"/><rect x="-150" y="10" width="300" height="56" rx="28" fill="url(#gCloud)"/></g>`;
+// the sky set: gradient sky, three layers of clouds (#cl1 far … #cl3 near, for parallax) and an optional green ground
+function avSky(ground = false) {
+  return `<rect width="1080" height="1920" fill="url(#gSky)"/>
+    <g id="cl1">${avCloud(160, 620, 0.55, 0.8)}${avCloud(860, 760, 0.45, 0.8)}${avCloud(560, 1380, 0.5, 0.75)}${avCloud(1240, 1150, 0.5, 0.8)}</g>
+    <g id="cl2">${avCloud(380, 900, 0.8)}${avCloud(1000, 1240, 0.75)}${avCloud(1500, 650, 0.8)}</g>
+    ${ground ? `<path d="M-40 1500 C 300 1440, 700 1480, 1120 1430 L1120 1960 L-40 1960Z" fill="url(#gGround)"/><path d="M-40 1560 C 260 1520, 640 1560, 1120 1520" stroke="#2f7a2c" stroke-width="6" fill="none" opacity="0.5"/>` : ''}
+    <g id="cl3">${avCloud(-60, 1650, 1.0)}${avCloud(1180, 520, 0.9)}</g>`;
+}
+// clouds drift (far slow, near fast) — the plane flies right
+function avSkyRun(tl: gsap.core.Timeline, $: (q: string) => string, s: Scene, speed = 1) {
+  const d = s.t1 - s.t0;
+  tl.fromTo($('#cl1'), { x: 0 }, { x: -120 * speed * d / 3, duration: d, ease: 'none' }, s.t0);
+  tl.fromTo($('#cl2'), { x: 0 }, { x: -300 * speed * d / 3, duration: d, ease: 'none' }, s.t0);
+  tl.fromTo($('#cl3'), { x: 0 }, { x: -600 * speed * d / 3, duration: d, ease: 'none' }, s.t0);
+}
+// the wing-cut set of the reference: navy with a faint grid and streaks of wind
+function avNavyGrid() {
+  let g = ''; for (let x = 0; x <= 1080; x += 72) g += `<line x1="${x}" y1="0" x2="${x}" y2="1920" stroke="#2b4590" stroke-width="2" opacity="0.5"/>`;
+  for (let y = 0; y <= 1920; y += 72) g += `<line x1="0" y1="${y}" x2="1080" y2="${y}" stroke="#2b4590" stroke-width="2" opacity="0.5"/>`;
+  const streaks = [...Array(26)].map((_, i) => `<line x1="${(i * 173) % 1080}" y1="${520 + ((i * 89) % 1100)}" x2="${((i * 173) % 1080) + 90}" y2="${520 + ((i * 89) % 1100)}" stroke="#c9dcff" stroke-width="4" stroke-linecap="round" opacity="0.35"/>`).join('');
+  return `<rect width="1080" height="1920" fill="url(#gNavy)"/>${g}<g id="cl1"><g id="streaks">${streaks}</g></g><g id="cl2"></g><g id="cl3"></g>`;
+}
+// the board plane in 3/4 view (nose right, seen a bit from above): plank with a top face, wings in perspective
+// (far half behind the plank, near half in front), and parts that can appear: prop (nose), stab + elev, fin + rud, ail, flap.
+// Each part has a lime "Hi" twin to paint it lime when it is added.
+interface AvP3 { prop?: boolean; stab?: boolean; elev?: boolean; fin?: boolean; rud?: boolean; ail?: boolean; flap?: boolean; tape?: boolean }
+function avPlane3(id: string, x: number, y: number, s = 1, o: AvP3 = {}) {
+  const O = AV.o, poly = (pts: number[][], fill: string, extra = '') => `<path d="M${pts.map((p) => p.join(' ')).join(' L')}Z" fill="${fill}" stroke="${O}" stroke-width="5" stroke-linejoin="round" ${extra}/>`;
+  const part = (pid: string, on: boolean, pts: number[][], fill: string) => `<g id="${id}-${pid}"${avVis(on)}><g id="${id}-${pid}M">${poly(pts, fill)}<g id="${id}-${pid}Hi" opacity="0">${poly(pts, 'url(#gLime)')}</g></g></g>`;
+  const farW = [[170, -160], [80, -160], [-4, 0], [86, 0]], nearW = [[86, 0], [-4, 0], [-100, 200], [-10, 200]];
+  const farS = [[-246, -70], [-292, -70], [-316, 0], [-270, 0]], nearS = [[-270, 0], [-316, 0], [-346, 84], [-300, 84]];
+  const fin = [[-250, -22], [-298, -170], [-330, -170], [-322, -22]], rud = [[-322, -22], [-330, -170], [-360, -170], [-356, -22]];
+  const elev = [[-316, 0], [-346, 84], [-368, 84], [-336, 0]], ail = [[-46, 104], [-90, 196], [-112, 196], [-68, 104]], flap = [[-2, 6], [-40, 86], [-66, 86], [-28, 6]];
+  const blade = `<path d="M-10 0 C -12 -40, -4 -96, 0 -110 C 6 -96, 12 -40, 10 0Z" fill="#3b3f4a"/>`;
+  return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})"><g id="${id}-body">
+    ${part('stabF', !!o.stab, farS, 'url(#gW)')}${poly(farW, 'url(#gW)')}
+    ${part('fin', !!o.fin, fin, 'url(#gW)')}${part('rud', !!o.rud, rud, 'url(#gOr)')}
+    ${poly([[-330, -12], [330, -12], [346, -26], [-314, -26]], 'url(#gWoodTop)')}${poly([[-330, -12], [330, -12], [330, 20], [-330, 20]], 'url(#gWood)')}${poly([[330, -12], [346, -26], [346, 6], [330, 20]], '#b5874a')}
+    <path d="M-300 2 C -100 -2, 100 6, 300 0" stroke="#a87a3e" stroke-width="3" fill="none" opacity="0.6"/>
+    ${o.tape ? `<rect x="20" y="-30" width="22" height="54" fill="#e3dccb" stroke="${O}" stroke-width="4" opacity="0.9"/><rect x="62" y="-30" width="20" height="54" fill="#e3dccb" stroke="${O}" stroke-width="4" opacity="0.9"/>` : ''}
+    ${poly(nearW, 'url(#gW)')}<path d="M86 0 L-10 200" stroke="#fff" stroke-width="6" opacity="0.7"/>
+    ${part('flap', !!o.flap, flap, 'url(#gOr)')}${part('ail', !!o.ail, ail, 'url(#gOr)')}
+    ${part('stab', !!o.stab, nearS, 'url(#gW)')}${part('elev', !!o.elev, elev, 'url(#gOr)')}
+    <g id="${id}-prop"${avVis(!!o.prop)}><g id="${id}-propM">${poly([[346, -26], [346, 20], [392, 6], [400, -6]], 'url(#gOr)')}<g id="${id}-propHi" opacity="0">${poly([[346, -26], [346, 20], [392, 6], [400, -6]], 'url(#gLime)')}</g>
+      <g transform="translate(404 -2) scale(0.28 1)"><g id="${id}-spin">${blade}<g transform="rotate(180)">${blade}</g></g></g><ellipse cx="404" cy="-2" rx="9" ry="12" fill="#ff9a5a" stroke="${O}" stroke-width="4"/></g></g>
+  </g></g></g>`;
+}
+// a new part appears painted lime and then takes its colour
+function avPaint(tl: gsap.core.Timeline, $: (q: string) => string, id: string, part: string, t: number, also: string[] = []) {
+  for (const p of [part, ...also]) { tl.set($(`#${id}-${p}`), { opacity: 1 }, t); avPop(tl, $(`#${id}-${p}M`), t, 0.45); tl.set($(`#${id}-${p}Hi`), { opacity: 1 }, t); tl.to($(`#${id}-${p}Hi`), { opacity: 0, duration: 0.6, ease: 'power1.in' }, t + 1.1); }
+}
+// dotted trail behind a flying plane (from its tail to the left edge)
+const avTrail = (id: string, x: number, y: number) => `<path id="${id}" d="M${x} ${y} C ${x - 200} ${y + 10}, ${x - 400} ${y - 20}, -60 ${y + 30}" fill="none" stroke="#ffffff" stroke-width="6" stroke-dasharray="4 16" stroke-linecap="round" opacity="0.85"/>`;
+// a real-looking airliner (side view, nose right): body, belly stripe, windows, swept wing, engines, blue tail, gear
+function avAirliner(id: string, x: number, y: number, s = 1) {
+  const O = '#22252e';
+  const wins = [...Array(16)].map((_, i) => `<rect x="${-240 + i * 30}" y="-34" width="14" height="20" rx="6" fill="#203050"/>`).join('');
+  return `<g id="${id}"><g transform="translate(${x} ${y}) scale(${s})">
+    <path d="M-60 10 L-180 -150 L-140 -150 L60 6Z" fill="#b8c2d2" stroke="${O}" stroke-width="4"/>
+    <path d="M-330 -20 L-420 -200 L-370 -200 L-280 -24Z" fill="url(#gTail)" stroke="${O}" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M-360 -10 L-460 -36 L-440 -46 L-330 -26Z" fill="#c9d1de" stroke="${O}" stroke-width="4"/>
+    <path d="M-400 -30 C -380 -60, -300 -64, -200 -64 L 300 -64 C 380 -64, 430 -40, 450 -10 C 440 20, 400 40, 300 44 L -260 44 C -340 44, -390 10, -400 -30Z" fill="url(#gBody)" stroke="${O}" stroke-width="5"/>
+    <path d="M-380 0 C -300 30, 300 34, 440 0" stroke="#1b3fb0" stroke-width="12" fill="none"/>${wins}
+    <path d="M392 -46 L428 -30 L420 -22 L384 -36Z" fill="#203050"/>
+    <path d="M-60 10 L120 6 L-120 150 L-170 150Z" fill="url(#gMetal)" stroke="${O}" stroke-width="4" stroke-linejoin="round"/>
+    <g transform="translate(-40 70)"><rect x="-70" y="-22" width="150" height="48" rx="24" fill="url(#gMetal)" stroke="${O}" stroke-width="4"/><ellipse cx="80" cy="2" rx="10" ry="22" fill="#2b2f3a"/></g>
+    <g id="${id}-gear"><line x1="300" y1="44" x2="300" y2="80" stroke="${O}" stroke-width="8"/><circle cx="300" cy="86" r="14" fill="#2b2f3a"/><line x1="-20" y1="44" x2="-20" y2="84" stroke="${O}" stroke-width="10"/><circle cx="-34" cy="92" r="16" fill="#2b2f3a"/><circle cx="-4" cy="92" r="16" fill="#2b2f3a"/></g>
+  </g></g>`;
+}

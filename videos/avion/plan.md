@@ -13,3 +13,9 @@
 
 ## Sonido
 Tempo 104 en E. Curva: curioso (gancho) → tenso (motores apagados) → juguetón (Dota) → calma/asombro al armar cada pieza, tenso en cada problema (cabecea, se va de lado, lento) → épico en Air Canada → triunfal en el consejo y el cierre. Capa de efectos (`foley.ts`): turbina y su apagado, viento por el ala, choque de la tabla, tapitas, timbre de bici, sello, clic del cinturón, golpe en el techo y "ding" en cada pieza.
+
+## Versión 2 (audio con la escena «¡Felicidades, ya tienes un avión!»)
+- **Armado del avión en estilo cielo** (segunda referencia del usuario): de «Te lo armo pieza por pieza» a «Ya tienes un avión». Cielo con degradado, nubes en 3 capas con paralaje, pasto; avión de tabla en 3/4 (`avPlane3`) con sombreado suave para dar volumen; cada pieza nueva se pinta de lima y luego toma su color (`avPaint`); estela punteada; títulos en mayúsculas cursivas blancas con contorno. El ala en corte va sobre azul marino con rejilla (`avNavyGrid`).
+- **Nueva escena:** la tabla con todas sus piezas brilla y se vuelve un avión comercial (`avAirliner`) que despega; Tico y Dota lo miran.
+- **Lo demás** (gancho, respuesta, Air Canada, turbulencia, cierre) sigue en el estilo oscuro de puntos; el final es el banner.
+- **Límite:** el estilo 3D del proyecto no se puede mezclar con flat2d en un mismo video; el volumen es con sombreado suave.

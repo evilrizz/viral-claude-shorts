@@ -5,8 +5,8 @@
 type VaTl = gsap.core.Timeline;
 type Va$ = (q: string) => string;
 // when each character speaks (from words.json): mouths move only inside these ranges
-const VA_TICO: [number, number][] = [[0.1, 9.28], [12.25, 36.19], [38.72, 99.54], [103.44, 104.84], [105.74, 138.32]];
-const VA_DOTA: [number, number][] = [[10.02, 11.49], [36.89, 38.23], [100.19, 102.55], [139.09, 143.37]];
+const VA_TICO: [number, number][] = [[0.1, 9.28], [12.25, 36.19], [38.72, 99.54], [103.43, 109.55], [113.5, 146.3]];
+const VA_DOTA: [number, number][] = [[10.02, 11.49], [36.88, 38.22], [100.18, 102.54], [110.08, 112.76], [146.93, 151.21]];
 function vaTalk(tl: VaTl, $: Va$, id: string, s: Scene, who: 'tico' | 'dota') {
   for (const [a, b] of who === 'tico' ? VA_TICO : VA_DOTA) {
     const t0 = Math.max(a, s.t0 + 0.05), t1 = Math.min(b, s.t1 - 0.05);
@@ -19,6 +19,10 @@ const vaDotaC = (pose: AvDotaPose = 'down') => avDota('dc', 900, 1590, 0.55, pos
 // background + camera wrapper
 const vaBurst = (body: string, over = '') => svg(`${avPrint()}<g id="cam"><g id="camP"><g id="camZ">${body}</g>${over}</g></g>`, AV_DEFS);
 const vaPrint = vaBurst;
+// the building part uses the sky style of the second reference
+const VA_SKY = new Set(['armo', 'crash', 'wing', 'lift', 'vuela', 'turb', 'motor', 'pitch', 'stab', 'elev', 'yaw', 'fin', 'roll', 'ail', 'slow', 'flaps', 'bike', 'felicidades']);
+const vaSky = (body: string, ground = false, over = '') => svg(`${avSky(ground)}<g id="cam"><g id="camP"><g id="camZ">${body}</g>${over}</g></g>`, AV_SKY_DEFS);
+const vaGrid = (body: string, over = '') => svg(`${avNavyGrid()}<g id="cam"><g id="camP"><g id="camZ">${body}</g>${over}</g></g>`, AV_SKY_DEFS);
 // every scene: the set moves (sunburst turns / dust drifts), the camera snaps in and punches on the keys, and the characters are alive
 // the backdrop: one colour for the whole video, chosen to contrast with everything on screen
 const VA_BG: Record<string, [string, boolean]> = {};   // one backdrop for the whole video (avPrint); a scene can still override it here
@@ -30,6 +34,11 @@ function vaShade(hex: string, t: number) {
 function vaBackdrop(s: Scene, $: Va$) {
   const sec0 = document.getElementById('sc-' + s.id);   // titles in this style: the key word just changes colour (no box)
   if (sec0) { sec0.style.setProperty('--accent', 'transparent'); sec0.style.setProperty('--accent-text', AVP.orange); sec0.style.setProperty('--label', '#2a2c35'); sec0.style.background = AVP.ink; }
+  if (sec0 && VA_SKY.has(s.id)) {   // captions of the sky style: upper case, italic, white with a dark outline, the key word in lime
+    sec0.style.setProperty('--accent-text', '#e6ff3a'); sec0.style.setProperty('--label', '#10204a'); sec0.style.background = '#2a7fd9';
+    const t = sec0.querySelector('.title') as HTMLElement | null;
+    if (t) { t.style.textTransform = 'uppercase'; t.style.fontStyle = 'italic'; t.style.fontWeight = '900'; t.style.letterSpacing = '0.5px'; t.style.color = '#fff'; t.style.setProperty('-webkit-text-stroke', '7px #10204a'); t.style.paintOrder = 'stroke fill'; t.style.textShadow = '0 6px 0 rgba(16,32,74,0.35)'; }
+  }
   const bg = VA_BG[s.id]; if (!bg) return;
   const [b, light] = bg, at = (id: string, k: string, val: string) => document.querySelector($('#' + id))?.setAttribute(k, val);
   at('bd0', 'fill', b); at('bd1', 'fill', vaShade(b, light ? 0.25 : 0.14)); at('bd2', 'fill', vaShade(b, light ? 0.45 : 0.24));
@@ -43,7 +52,7 @@ function vaBase(tl: VaTl, s: Scene, $: Va$, burst = true) {
   const marks = (s as unknown as { marks?: VaMark[] }).marks || [], camZ = document.querySelector($('#camZ'));
   marks.forEach((m, i) => {
     const key = (s.keys || []).find((k) => k.id === m.k), t = (key ? key.t : s.t0 + 0.5) + (m.dt || 0), d = m.hold || 1.4;
-    camZ?.insertAdjacentHTML('beforeend', avMark(`mk${i}`, m.x, m.y, m.r, m.label || ''));
+    camZ?.insertAdjacentHTML('beforeend', avMark(`mk${i}`, m.x, m.y, m.r, m.label || '', VA_SKY.has(s.id) ? '#10204a' : AVP.lime));
     if (m.z) avZoom(tl, $, m.x, m.y, m.z, t - 0.05, d);
     avMarkIn(tl, $, `mk${i}`, m.x, m.y, t, d, !!m.label);
   });
@@ -136,18 +145,19 @@ defineVisuals({
     },
   },
   armo: {
-    html: () => vaBurst(`${avTable('tb', 1280, 300, 980)}<g id="boardG">${avPlaneSide('pb', 640, 1230, 0.55, { tape: true })}</g>${avTico('tk', 200, 1590, 0.6, 'point')}`, avSpot(640, 1220, 360)),
+    html: () => vaSky(`${avTable('tb', 1300, 300, 980)}<g id="boardG">${avPlane3('pb', 640, 1250, 0.5, { tape: true })}</g>${avTico('tk', 200, 1590, 0.6, 'point')}`, true),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $);
+      vaBase(tl, s, $); avSkyRun(tl, $, s, 0.3);
       tl.fromTo($('#boardG'), { y: -1200 }, { y: 0, duration: 0.45, ease: 'bounce.out' }, K('board') - 0.4);
-      avFocus(tl, $, 640, 1220, 1.5, K('board') + 0.15, 1.0);
+      avZoom(tl, $, 640, 1250, 1.6, K('board') + 0.15, 1.2);
       vaTalk(tl, $, 'tk', s, 'tico');
     },
   },
+
   crash: {
-    html: () => vaBurst(`<g id="fly"><g id="flyIn">${avPlaneSide('pb', 0, 0, 0.5, { tape: true })}</g></g>${avSmoke('dust', 820, 1500, 1.1, '#5b5e68')}${avBoom('bm', 820, 1480, 0.7)}<g id="dg">${avDota('d', 230, 1580, 0.85, 'up')}</g>`),
+    html: () => vaSky(`<g id="fly"><g id="flyIn">${avPlane3('pb', 0, 0, 0.5, { tape: true })}</g></g>${avSmoke('dust', 820, 1500, 1.1, '#c8b48a')}${avBoom('bm', 820, 1480, 0.7)}<g id="dg">${avDota('d', 230, 1580, 0.85, 'up')}</g>`, true),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $);
+      vaBase(tl, s, $); avSkyRun(tl, $, s, 0.3);
       const dt = K('crash') - K('throw');
       vaMove(tl, $, '#fly', [300, 1230, 0], [300, 1230, 0], s.t0, 0.05);
       vaMove(tl, $, '#fly', [300, 1230, 0], [540, 1000, -10], K('throw'), dt * 0.45, 'power1.out');
@@ -158,8 +168,9 @@ defineVisuals({
       vaTalk(tl, $, 'd', s, 'dota');
     },
   },
+
   wing: {
-    html: () => vaBurst(`${avAirfoil('af', 540, 1120, 1)}${vaTicoC('point')}`),
+    html: () => vaGrid(`${avAirfoil('af', 540, 1120, 1)}${vaTicoC('point')}`),
     anim(tl, s, K, $) {
       vaBase(tl, s, $);
       tl.set($('#af-flow'), { opacity: 1 }, s.t0); avFlow(tl, $, 'af', s.t0, s.t1 - s.t0);
@@ -170,7 +181,7 @@ defineVisuals({
     },
   },
   lift: {
-    html: () => vaBurst(`${avAirfoil('af', 540, 1150, 1)}${vaTicoC('point')}`),
+    html: () => vaGrid(`${avAirfoil('af', 540, 1150, 1)}${vaTicoC('point')}`),
     anim(tl, s, K, $) {
       vaBase(tl, s, $);
       tl.set($('#af-flow'), { opacity: 1 }, s.t0).set($('#af-down'), { opacity: 1 }, s.t0).set($('#af-tilt'), { rotation: 8, svgOrigin: '0 0' }, s.t0); avFlow(tl, $, 'af', s.t0, s.t1 - s.t0);
@@ -180,7 +191,7 @@ defineVisuals({
     },
   },
   vuela: {
-    html: () => vaBurst(`${avAirfoil('af', 560, 1000, 0.75)}${avDota('d', 230, 1580, 0.75, 'up')}${avTico('tk', 860, 1590, 0.55)}`),
+    html: () => vaGrid(`${avAirfoil('af', 560, 1000, 0.75)}${avDota('d', 230, 1580, 0.75, 'up')}${avTico('tk', 860, 1590, 0.55)}`),
     anim(tl, s, K, $) {
       vaBase(tl, s, $);
       tl.set($('#af-flow'), { opacity: 1 }, s.t0).set($('#af-lift'), { opacity: 1 }, s.t0).set($('#af-tilt'), { rotation: 8, svgOrigin: '0 0' }, s.t0);
@@ -191,99 +202,100 @@ defineVisuals({
     },
   },
   turb: {
-    html: () => vaBurst(`<g id="pl">${avPlaneSide('p', 600, 1000, 1, {})}</g>${vaTicoC('point')}`),
+    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="pl">${avPlane3('p', 520, 1000, 1.05, { tape: true })}</g>${vaTicoC('point')}`, true),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $); vaBob(tl, $, 'pl', s, 6);
-      tl.set($('#p-turbG'), { opacity: 1 }, K('turb') - 0.1); avPop(tl, $('#p-turbG'), K('turb') - 0.1, 0.5);
-      vaFan(tl, $, '#p-turb-fan', K('turb'), s.t1 - K('turb'), 8);
+      vaBase(tl, s, $); avSkyRun(tl, $, s); vaBob(tl, $, 'pl', s, 8);
+      avPaint(tl, $, 'p', 'prop', K('turb') - 0.1);
+      tl.fromTo($('#p-spin'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 3600, duration: s.t1 - K('turb'), ease: 'none' }, K('turb'));
       vaTalk(tl, $, 'tc', s, 'tico');
     },
   },
+
   motor: {
-    html: () => vaBurst(`${vaStreaks()}<g id="air">${[0, 1, 2, 3].map((i) => avArrow(`ai${i}`, 560 - i * 30, 1060 + i * 10, 300 - i * 40, 1060 + i * 10, AVP.air, 14)).join('')}</g><g id="pl">${avPlaneSide('p', 600, 1000, 1, { turb: true })}</g>
-      ${avArrow('fwd', 760, 860, 960, 860, AVP.lime, 22)}<g id="dg">${avDota('d', 180, 1580, 0.7, 'down')}</g>${vaTicoC('point')}`),
+    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="air">${[0, 1, 2, 3].map((i) => avArrow(`ai${i}`, 860 - i * 20, 960 + i * 22, 640 - i * 30, 960 + i * 22, '#ffffff', 10)).join('')}</g><g id="pl">${avPlane3('p', 520, 1000, 1.05, { tape: true, prop: true })}</g>
+      ${avArrow('fwd', 700, 820, 940, 820, '#e6ff3a', 20)}<g id="dg">${avDota('d', 160, 1560, 0.6, 'down')}</g>${vaTicoC('point')}`, true),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $); vaBob(tl, $, 'pl', s, 6);
-      vaFan(tl, $, '#p-turb-fan', s.t0, s.t1 - s.t0, 14);
+      vaBase(tl, s, $); avSkyRun(tl, $, s, 1.4); vaBob(tl, $, 'pl', s, 6);
+      tl.fromTo($('#p-spin'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 7200, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
       tl.set($('#air'), { opacity: 0 }, s.t0).set($('#air'), { opacity: 1 }, K('blow'));
-      tl.fromTo($('#air g'), { x: 40, opacity: 0 }, { x: -60, opacity: 1, duration: 0.5, ease: 'none', repeat: Math.ceil((s.t1 - K('blow')) / 0.5), stagger: 0.12 }, K('blow'));
-      tl.to($('#dg'), { x: -500, y: -700, rotation: -540, svgOrigin: '180 1400', duration: 0.7, ease: 'power2.in' }, K('dota') + 0.1);
-      avPopIn(tl, $('#fwd'), K('dota') + 0.6); vaStreakRun(tl, $, s, 0.8);
+      tl.fromTo($('#air g'), { x: 40, opacity: 0 }, { x: -80, opacity: 1, duration: 0.5, ease: 'none', repeat: Math.ceil((s.t1 - K('blow')) / 0.5), stagger: 0.12 }, K('blow'));
+      tl.to($('#dg'), { x: -400, y: -700, rotation: -540, svgOrigin: '160 1400', duration: 0.7, ease: 'power2.in' }, K('dota') + 0.1);
+      avPopIn(tl, $('#fwd'), K('dota') + 0.6);
       vaTalk(tl, $, 'tc', s, 'tico');
     },
   },
+
   pitch: {
-    html: () => vaBurst(`${vaStreaks()}<g id="pl">${avPlaneSide('p', 600, 1000, 1, { turb: true })}</g><path id="wave" d="M160 1260 C 300 1160, 420 1360, 560 1260 S 820 1160, 960 1260" fill="none" stroke="${AVP.orange}" stroke-width="6" stroke-dasharray="14 12" opacity="0.8"/>${vaTicoC()}`),
+    html: () => vaSky(`<path id="wave" d="M-40 1010 C 120 920, 240 1100, 380 1010" fill="none" stroke="#fff" stroke-width="6" stroke-dasharray="4 16" stroke-linecap="round"/><g id="pl">${avPlane3('p', 520, 1000, 1.05, { tape: true, prop: true })}</g>${vaTicoC()}`),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $); vaStreakRun(tl, $, s);
-      vaFan(tl, $, '#p-turb-fan', s.t0, s.t1 - s.t0, 12);
+      vaBase(tl, s, $); avSkyRun(tl, $, s); tl.fromTo($('#p-spin'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 7200, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
       tl.fromTo($('#p-body'), { rotation: -14, svgOrigin: '0 0' }, { rotation: 14, duration: 0.55, ease: 'sine.inOut', yoyo: true, repeat: Math.ceil((s.t1 - s.t0) / 0.55) }, s.t0);
-      tl.fromTo($('#pl'), { y: -30 }, { y: 30, duration: 0.55, ease: 'sine.inOut', yoyo: true, repeat: Math.ceil((s.t1 - s.t0) / 0.55) }, s.t0 + 0.27);
+      tl.fromTo($('#pl'), { y: -40 }, { y: 40, duration: 0.55, ease: 'sine.inOut', yoyo: true, repeat: Math.ceil((s.t1 - s.t0) / 0.55) }, s.t0 + 0.27);
       tl.fromTo($('#wave'), { strokeDashoffset: 0 }, { strokeDashoffset: -300, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
       vaTalk(tl, $, 'tc', s, 'tico');
     },
   },
+
   stab: {
-    html: () => vaBurst(`${vaStreaks()}<g id="pl">${avPlaneSide('p', 600, 1000, 1, { turb: true })}</g>${vaTicoC('point')}`),
+    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="pl">${avPlane3('p', 520, 1000, 1.05, { tape: true, prop: true })}</g>${vaTicoC('point')}`),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $); vaStreakRun(tl, $, s);
-      vaFan(tl, $, '#p-turb-fan', s.t0, s.t1 - s.t0, 12);
+      vaBase(tl, s, $); avSkyRun(tl, $, s); tl.fromTo($('#p-spin'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 7200, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
       tl.fromTo($('#p-body'), { rotation: -12, svgOrigin: '0 0' }, { rotation: 12, duration: 0.55, ease: 'sine.inOut', yoyo: true, repeat: Math.ceil((K('stab') - s.t0) / 0.55) }, s.t0);
-      tl.set($('#p-stab'), { opacity: 1 }, K('stab') - 0.1); avPop(tl, $('#p-stab'), K('stab') - 0.1, 0.45);
+      avPaint(tl, $, 'p', 'stab', K('stab') - 0.1, ['stabF']);
       tl.to($('#p-body'), { rotation: 0, svgOrigin: '0 0', duration: 0.9, ease: 'elastic.out(1, 0.5)' }, K('stab') + 0.3);
       vaTalk(tl, $, 'tc', s, 'tico');
     },
   },
+
   elev: {
-    html: () => vaBurst(`${vaStreaks()}<g id="pl">${avPlaneSide('p', 600, 1000, 1, { turb: true, stab: true })}</g>${vaTicoC('point')}`),
+    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="pl">${avPlane3('p', 520, 1000, 1.05, { tape: true, prop: true, stab: true })}</g>${vaTicoC('point')}`),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $); vaStreakRun(tl, $, s);
-      vaFan(tl, $, '#p-turb-fan', s.t0, s.t1 - s.t0, 12);
-      tl.set($('#p-elev'), { opacity: 1 }, s.t0 + 0.2); avPop(tl, $('#p-elev'), s.t0 + 0.2, 0.4);
-      tl.to($('#p-elevM'), { rotation: -28, svgOrigin: '-322 0', duration: 0.3, ease: 'power2.out' }, K('up') - 0.1);
-      tl.to($('#p-body'), { rotation: -12, svgOrigin: '0 0', duration: 0.5, ease: 'power2.inOut' }, K('up') + 0.1);
-      tl.to($('#p-elevM'), { rotation: 28, svgOrigin: '-322 0', duration: 0.3, ease: 'power2.out' }, K('down') - 0.1);
-      tl.to($('#p-body'), { rotation: 10, svgOrigin: '0 0', duration: 0.5, ease: 'power2.inOut' }, K('down') + 0.1);
-      tl.to($('#p-elevM'), { rotation: 0, svgOrigin: '-322 0', duration: 0.3 }, K('down') + 0.9); tl.to($('#p-body'), { rotation: 0, svgOrigin: '0 0', duration: 0.5 }, K('down') + 0.9);
+      vaBase(tl, s, $); avSkyRun(tl, $, s); tl.fromTo($('#p-spin'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 7200, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
+      avPaint(tl, $, 'p', 'elev', s.t0 + 0.2);
+      tl.to($('#p-elevM'), { y: -22, duration: 0.3, ease: 'power2.out' }, K('up') - 0.1); tl.to($('#p-body'), { rotation: -12, svgOrigin: '0 0', duration: 0.5, ease: 'power2.inOut' }, K('up') + 0.1);
+      tl.to($('#p-elevM'), { y: 22, duration: 0.3, ease: 'power2.out' }, K('down') - 0.1); tl.to($('#p-body'), { rotation: 10, svgOrigin: '0 0', duration: 0.5, ease: 'power2.inOut' }, K('down') + 0.1);
+      tl.to($('#p-elevM'), { y: 0, duration: 0.3 }, K('down') + 0.9); tl.to($('#p-body'), { rotation: 0, svgOrigin: '0 0', duration: 0.5 }, K('down') + 0.9);
       vaTalk(tl, $, 'tc', s, 'tico');
     },
   },
+
   yaw: {
-    html: () => vaBurst(`<g id="mud">${[...Array(8)].map((_, i) => `<ellipse cx="${300 + (i * 97) % 480}" cy="${1300 + (i * 61) % 220}" rx="${20 + (i % 3) * 10}" ry="${10 + (i % 2) * 6}" fill="#6b4a2a" opacity="0.7"/>`).join('')}</g>${avPlaneTop('pt', 540, 1020, 0.85, { stab: true })}${vaTicoC()}`),
+    html: () => vaSky(`<path id="tw" d="M540 1700 C 440 1600, 640 1500, 540 1400" fill="none" stroke="#fff" stroke-width="6" stroke-dasharray="4 16" stroke-linecap="round"/>${avPlaneTop('pt', 540, 1000, 0.85, { g: true, stab: true })}${vaTicoC()}`),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $);
+      vaBase(tl, s, $); avSkyRun(tl, $, s, 0.6);
       tl.fromTo($('#pt-body'), { rotation: -14, svgOrigin: '0 0' }, { rotation: 14, duration: 0.42, ease: 'sine.inOut', yoyo: true, repeat: Math.ceil((s.t1 - s.t0) / 0.42) }, s.t0);
       tl.fromTo($('#pt-body'), { x: -30 }, { x: 30, duration: 0.42, ease: 'sine.inOut', yoyo: true, repeat: Math.ceil((s.t1 - s.t0) / 0.42) }, s.t0 + 0.21);
-      tl.fromTo($('#mud ellipse'), { y: 0, opacity: 0.7 }, { y: 180, opacity: 0, duration: 0.8, ease: 'none', repeat: Math.ceil((s.t1 - s.t0) / 0.8), stagger: 0.1 }, s.t0);
+      tl.fromTo($('#tw'), { strokeDashoffset: 0 }, { strokeDashoffset: -300, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
       vaTalk(tl, $, 'tc', s, 'tico');
     },
   },
+
   fin: {
-    html: () => vaBurst(`${vaStreaks()}<g id="pl">${avPlaneSide('p', 600, 1000, 1, { turb: true, stab: true, elev: true })}</g>
-      <g id="shark" opacity="0"><path d="M770 760 L860 620 L880 760Z" fill="#5b6a80" stroke="${AV.o}" stroke-width="6" stroke-linejoin="round"/><path d="M740 770 q 30 -12 60 0 q 30 12 60 0 q 30 -12 60 0" fill="none" stroke="${AVP.air}" stroke-width="6"/></g>${vaTicoC('point')}`),
+    html: () => vaSky(`${avTrail('tr', 140, 1010)}<g id="pl">${avPlane3('p', 520, 1000, 1.05, { tape: true, prop: true, stab: true, elev: true })}</g>
+      <g id="shark" opacity="0"><path d="M770 1480 L860 1340 L880 1480Z" fill="#5b6a80" stroke="${AV.o}" stroke-width="6" stroke-linejoin="round"/><path d="M740 1490 q 30 -12 60 0 q 30 12 60 0 q 30 -12 60 0" fill="none" stroke="#fff" stroke-width="6"/></g>${vaTicoC('point')}`),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $); vaStreakRun(tl, $, s);
-      vaFan(tl, $, '#p-turb-fan', s.t0, s.t1 - s.t0, 12);
-      tl.set($('#p-fin'), { opacity: 1 }, K('fin') - 0.1); avPop(tl, $('#p-fin'), K('fin') - 0.1, 0.45);
+      vaBase(tl, s, $); avSkyRun(tl, $, s); tl.fromTo($('#p-spin'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 7200, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
+      avPaint(tl, $, 'p', 'fin', K('fin') - 0.1);
       tl.set($('#shark'), { opacity: 1 }, K('fin') + 0.6); tl.fromTo($('#shark'), { x: 200 }, { x: -60, duration: 1.2, ease: 'power1.inOut', immediateRender: false }, K('fin') + 0.6); tl.to($('#shark'), { opacity: 0, duration: 0.3 }, K('fin') + 1.6);
-      tl.set($('#p-rud'), { opacity: 1 }, K('rud') - 0.2); avPop(tl, $('#p-rud'), K('rud') - 0.2, 0.35);
-      tl.fromTo($('#p-rudM'), { scaleX: 1, svgOrigin: '-326 0' }, { scaleX: 0.3, duration: 0.25, yoyo: true, repeat: 3, ease: 'sine.inOut' }, K('rud') + 0.3);
+      avPaint(tl, $, 'p', 'rud', K('rud') - 0.2);
+      tl.fromTo($('#p-rudM'), { scaleX: 1, svgOrigin: '-322 -96' }, { scaleX: 0.3, duration: 0.25, yoyo: true, repeat: 3, ease: 'sine.inOut' }, K('rud') + 0.3);
       vaTalk(tl, $, 'tc', s, 'tico');
     },
   },
+
   roll: {
-    html: () => vaBurst(`${vaStreaks()}<g id="pl">${avPlaneFront('pf', 540, 1000, 1, { turb: true })}</g>${vaTicoC()}`),
+    html: () => vaSky(`<g id="pl">${avPlaneFront('pf', 540, 1000, 1, { g: true, turb: true })}</g>${vaTicoC()}`),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $); vaStreakRun(tl, $, s); vaBob(tl, $, 'pl', s, 8);
+      vaBase(tl, s, $); avSkyRun(tl, $, s); vaBob(tl, $, 'pl', s, 8);
       vaFan(tl, $, '#pf-fan0', s.t0, s.t1 - s.t0, 10); vaFan(tl, $, '#pf-fan1', s.t0, s.t1 - s.t0, 10);
       tl.set($('#pf-ails'), { opacity: 1 }, K('tips') - 0.1); avPopIn(tl, $('#pf-ailR'), K('tips') - 0.1); avPopIn(tl, $('#pf-ailL'), K('tips') - 0.1);
       vaTalk(tl, $, 'tc', s, 'tico');
     },
   },
   ail: {
-    html: () => vaBurst(`${vaStreaks()}<g id="pl">${avPlaneFront('pf', 540, 1000, 1, { turb: true, ail: true })}</g>${avArrow('upA', 900, 900, 900, 820, AVP.lime, 14)}${avArrow('dnA', 180, 1100, 180, 1180, AVP.orange, 14)}${vaTicoC('point')}`),
+    html: () => vaSky(`<g id="pl">${avPlaneFront('pf', 540, 1000, 1, { g: true, turb: true, ail: true })}</g>${avArrow('upA', 900, 900, 900, 820, AVP.lime, 14)}${avArrow('dnA', 180, 1100, 180, 1180, AVP.orange, 14)}${vaTicoC('point')}`),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $); vaStreakRun(tl, $, s);
+      vaBase(tl, s, $); avSkyRun(tl, $, s);
       vaFan(tl, $, '#pf-fan0', s.t0, s.t1 - s.t0, 12); vaFan(tl, $, '#pf-fan1', s.t0, s.t1 - s.t0, 12);
       tl.to($('#pf-ailR'), { rotation: -24, svgOrigin: '300 0', duration: 0.3, ease: 'power2.out' }, K('up') - 0.1);
       tl.to($('#pf-ailL'), { rotation: -24, svgOrigin: '-300 0', duration: 0.3, ease: 'power2.out' }, K('up') + 0.6);
@@ -293,11 +305,11 @@ defineVisuals({
     },
   },
   slow: {
-    html: () => vaBurst(`<rect x="0" y="1380" width="1080" height="60" fill="#2a2c35"/>${[...Array(7)].map((_, i) => `<rect x="${60 + i * 160}" y="1404" width="80" height="12" fill="#e8e6dc" opacity="0.7"/>`).join('')}
-      <g id="pl">${avPlaneSide('p', 560, 1000, 0.75, vaAll)}</g>${avBar('bv', 730, 820, 'VELOCIDAD', AVP.lime, 260)}${avBar('bl', 910, 820, 'EMPUJE', AVP.air, 260)}${vaTicoC()}`),
+    html: () => vaSky(`<rect x="0" y="1380" width="1080" height="60" fill="#2a2c35"/>${[...Array(7)].map((_, i) => `<rect x="${60 + i * 160}" y="1404" width="80" height="12" fill="#e8e6dc" opacity="0.7"/>`).join('')}
+      <g id="pl">${avPlane3('p', 520, 1000, 0.8, { tape: true, prop: true, stab: true, elev: true, fin: true, rud: true, ail: true })}</g>${avBar('bv', 730, 820, 'VELOCIDAD', AVP.lime, 260)}${avBar('bl', 910, 820, 'EMPUJE', AVP.air, 260)}${vaTicoC()}`, true),
     anim(tl, s, K, $) {
       vaBase(tl, s, $);
-      vaFan(tl, $, '#p-turb-fan', s.t0, s.t1 - s.t0, 5);
+      tl.fromTo($('#p-spin'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 1800, duration: s.t1 - s.t0, ease: 'none' }, s.t0); avSkyRun(tl, $, s, 0.5);
       tl.fromTo($('#pl'), { x: -120, y: -40 }, { x: 60, y: 120, duration: s.t1 - s.t0, ease: 'sine.inOut' }, s.t0);
       avBarTo(tl, $, 'bv', 0.35, K('lento') - 0.1, 0.8, 812); avBarTo(tl, $, 'bl', 0.25, K('weak') - 0.1, 0.6, 812);
       tl.to($('#p-body'), { rotation: 8, svgOrigin: '0 0', duration: 0.5, yoyo: true, repeat: 1 }, K('weak'));
@@ -305,7 +317,7 @@ defineVisuals({
     },
   },
   flaps: {
-    html: () => vaBurst(`${avAirfoil('af', 540, 1100, 1)}${vaTicoC('point')}`),
+    html: () => vaGrid(`${avAirfoil('af', 540, 1100, 1)}${vaTicoC('point')}`),
     anim(tl, s, K, $) {
       vaBase(tl, s, $);
       tl.set($('#af-flow'), { opacity: 1 }, s.t0).set($('#af-tilt'), { rotation: 6, svgOrigin: '0 0' }, s.t0).set($('#af-lift'), { opacity: 1 }, s.t0); avFlow(tl, $, 'af', s.t0, s.t1 - s.t0, 0.6);
@@ -316,14 +328,33 @@ defineVisuals({
     },
   },
   bike: {
-    html: () => vaBurst(`${vaStreaks(12)}<g id="rider">${avBike('bk', 600, 1460, 1)}${avDota('d', 600, 1330, 0.75, 'up')}</g>${avTico('tk', 200, 1590, 0.55)}`),
+    html: () => vaSky(`<g id="rider">${avBike('bk', 600, 1460, 1)}${avDota('d', 600, 1330, 0.75, 'up')}</g>${avTico('tk', 200, 1590, 0.55)}`, true),
     anim(tl, s, K, $) {
-      vaBase(tl, s, $); vaStreakRun(tl, $, s, 1.6);
+      vaBase(tl, s, $); avSkyRun(tl, $, s, 1.2);
       tl.fromTo($('#bk-w1, #bk-w2'), { rotation: 0, transformOrigin: '50% 50%' }, { rotation: 1440, duration: s.t1 - s.t0, ease: 'none' }, s.t0);
       tl.fromTo($('#rider'), { y: 0 }, { y: -8, duration: 0.12, yoyo: true, repeat: Math.ceil((s.t1 - s.t0) / 0.12), ease: 'none' }, s.t0);
       tl.fromTo($('#d-nod'), { rotation: -6, svgOrigin: '0 -215' }, { rotation: 6, duration: 0.4, yoyo: true, repeat: 6, ease: 'sine.inOut', immediateRender: false }, K('bike') + 0.3);
       tl.fromTo($('#tk-head'), { rotation: -5, svgOrigin: '0 -360' }, { rotation: 5, duration: 0.25, yoyo: true, repeat: 3, ease: 'sine.inOut' }, K('tico'));
       vaTalk(tl, $, 'd', s, 'dota'); vaTalk(tl, $, 'tk', s, 'tico');
+    },
+  },
+  felicidades: {
+    html: () => vaSky(`<rect x="-40" y="1420" width="1160" height="80" fill="#4a4f5c"/>${[...Array(8)].map((_, i) => `<rect x="${i * 150}" y="1452" width="80" height="12" fill="#fff" opacity="0.8"/>`).join('')}
+      <g id="small">${avPlane3('pp', 540, 1000, 1.0, { tape: true, prop: true, stab: true, elev: true, fin: true, rud: true, ail: true, flap: true })}</g><circle id="glow" cx="540" cy="1000" r="420" fill="#fff" opacity="0"/>
+      <g id="big" opacity="0"><g id="bigM">${avAirliner('al', 0, 0, 0.95)}</g></g>${avArrow('lift2', 540, 960, 540, 760, '#e6ff3a', 18)}
+      ${avTico('tk', 260, 1600, 0.6, 'point')}${avDota('d', 790, 1600, 0.68, 'up')}`, true),
+    anim(tl, s, K, $) {
+      vaBase(tl, s, $); avSkyRun(tl, $, s, 0.6);
+      tl.fromTo($('#pp-spin'), { rotation: 0, svgOrigin: '0 0' }, { rotation: 3600, duration: K('glow') - s.t0 + 0.6, ease: 'none' }, s.t0);
+      tl.set($('#lift2'), { opacity: 0 }, s.t0);
+      tl.fromTo($('#glow'), { opacity: 0, scale: 0.3, svgOrigin: '540 1000' }, { keyframes: [{ opacity: 0.95, scale: 1, duration: 0.45, ease: 'power2.out' }, { opacity: 0, scale: 1.4, duration: 0.6, ease: 'power1.in' }] }, K('glow'));
+      tl.to($('#small'), { opacity: 0, duration: 0.2 }, K('glow') + 0.4);
+      tl.set($('#big'), { opacity: 1 }, K('glow') + 0.4);
+      vaMove(tl, $, '#bigM', [420, 1340, 0], [420, 1340, 0], s.t0, 0.05);
+      vaMove(tl, $, '#bigM', [420, 1340, 0], [600, 1300, -4], K('glow') + 0.4, K('wow') - K('glow') - 0.4, 'power1.in');
+      vaMove(tl, $, '#bigM', [600, 1300, -4], [1500, 700, -16], K('wow'), s.t1 - K('wow'), 'power1.in');
+      avHop(tl, $('#d'), K('wow') - 0.1, 3, 30);
+      vaTalk(tl, $, 'tk', s, 'tico'); vaTalk(tl, $, 'd', s, 'dota');
     },
   },
   rock: {

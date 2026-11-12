@@ -72,7 +72,7 @@ defineVisuals({
   promise: {
     bg: B3.night,
     build(w) {
-      const n = b3NightSet(w); const bar = w.add(b3BoxM(4.4, 0.12, 0.12, b3Mat('#2a2c35'), [-0.3, 1.2, 0])); const fill = w.add(b3Grp([-2.5, 1.2, 0], b3BoxM(4.4, 0.16, 0.16, b3Mat(B3.orange, 0.4, 0.4), [2.2, 0, 0])));
+      const n = b3NightSet(w); const bar = w.add(b3BoxM(3.6, 0.12, 0.12, b3Mat('#2a2c35'), [0.1, 1.2, 0])); const fill = w.add(b3Grp([-1.7, 1.2, 0], b3BoxM(3.6, 0.16, 0.16, b3Mat(B3.orange, 0.4, 0.4), [1.8, 0, 0])));
       const pin = w.add(b3Sph(0.28, b3Mat(B3.lime, 0.3, 0.6), [1.9, 1.2, 0])); const tk = w.add(b3Tico()); tk.setPose('point'); tk.position.set(-1.8, -2.5, 0.8);
       b3Html(w, 'AL FINAL', 'left:620px;top:820px;font:700 34px monospace;letter-spacing:4px;color:#d4ff3a');
       return (t) => { n.pose(t); b3Cam(w, [0.5, 0.8, 14], [0, 0.0, 0], t, 40, [w.K('bar')]); fill.scale.x = Math.max(0.01, p3Ramp(t, w.s.t0 + 0.2, w.s.t1 - 0.2)); pin.scale.setScalar(0.4 + 0.6 * p3Spring(t, w.K('bar'))); bar.visible = true; tk.live(t); };
@@ -81,12 +81,12 @@ defineVisuals({
   fuel: {
     bg: B3.night,
     build(w) {
-      const n = b3NightSet(w); const g = w.add(b3Gauge()); g.position.set(0, 2.6, 0); const card = w.add(b3Card('ARCHIVO · ███████', 'Un avión sin', 'combustible en pleno vuelo', '????')); card.position.set(0, -0.6, 0.5);
+      const n = b3NightSet(w); const g = w.add(b3Gauge()); g.position.set(0, 2.7, 0); g.scale.setScalar(0.85); const card = w.add(b3Card('ARCHIVO · ███████', 'Un avión sin', 'combustible en pleno vuelo', '????')); card.position.set(0, 1.6, 0.5); card.scale.setScalar(0.72);
       const tk = w.add(b3Tico());
       return (t) => {
         n.pose(t); b3Cam(w, [0, 1.6, 10.5], [0, 1.4, 0], t, 40, [w.K('gauge'), w.K('file')]);
         g.needle.rotation.z = p3Lerp(-1.0, 1.15, p3Ramp(t, w.K('gauge') - 0.6, w.K('gauge') + 0.6)) + (t > w.K('gauge') + 0.6 ? 0.06 * Math.sin(t * 20) : 0);
-        card.visible = t > w.K('file'); card.position.y = -0.6 - 2 * (1 - p3Spring(t, w.K('file'))); card.rotation.x = -0.15;
+        card.visible = t > w.K('file'); card.position.y = 1.6 - 2 * (1 - p3Spring(t, w.K('file'))); g.scale.setScalar(0.85 * (1 - p3Clamp((t - w.K('file') + 0.1) / 0.25)) + 0.001); card.rotation.x = -0.15;
         b3Corner(w, tk); tk.live(t);
       };
     },
@@ -151,7 +151,7 @@ defineVisuals({
       p3Lights(w); const wg = b3Wing(); w.add(wg.foil); w.add(wg.air); w.add(wg.lift);
       const d = w.add(b3Dota()), tk = w.add(b3Tico()); d.side(1); tk.side(-1);
       return (t) => {
-        b3Cam(w, [0, 0.8, 16], [0, 1.0, 0], t, 40, [w.K('fast'), w.K('still')]);
+        b3Cam(w, [0, 1.5, 16], [0, 1.7, 0], t, 40, [w.K('fast'), w.K('still')]);
         wg.foil.rotation.z = -0.16; const still = t > w.K('still');
         wg.air.pose(still ? w.K('still') : t, w.s.t0 - 4, t > w.K('fast') ? 9 : 4, 1.6); wg.air.visible = !still || t < w.K('still') + 0.1;
         wg.lift.grow(still ? 1 - p3Ramp(t, w.K('still'), w.K('still') + 0.4) : 1);
@@ -173,7 +173,7 @@ defineVisuals({
   },
   motor: {
     build(w) {
-      p3Lights(w); w.add(p3Ground()); const rw = w.add(p3Runway()); w.add(b3Forest(26, 6, -14, 70));
+      p3Lights(w); w.scene.fog = new THREE.Fog(P3_SKY, 30, 75); w.add(p3Ground()); w.add(p3Ground()).scale.setScalar(6); const rw = w.add(p3Runway()); w.add(b3Forest(26, 6, -14, 70));
       const p = w.add(b3Plane()); p.pose(1, { eng: 1 }); p.position.set(0, 1.0, 0);
       const air = w.add(p3Airflow(5, -0.6, 1.2, 0)); air.position.set(-6, 1.1, 0); air.scale.set(0.8, 0.7, 1);
       const d = w.add(b3Dota()); d.setPose('down'); d.position.set(-6.5, 0, 0.4); d.rotation.y = 0.9;
@@ -316,18 +316,18 @@ defineVisuals({
   },
   felicidades: {
     build(w) {
-      p3Lights(w); w.add(p3Ground()); w.add(p3Runway()); w.add(b3Forest(26, 8, -14, 70));
+      p3Lights(w); w.add(p3Ground()); w.add(p3Ground()).scale.setScalar(6); w.add(p3Runway()); w.add(b3Forest(26, 8, -14, 70));
       const p = w.add(b3Plane()); p.pose(5, B3_ALL); p.position.set(0, 1.0, 0); p.rotation.y = 0.35;
       const rays = w.add(b3Rays()); rays.position.set(0, 2.6, -6); const conf = w.add(b3Confetti()); const bow = w.add(b3Bow());
-      const tk = w.add(b3Tico()), d = w.add(b3Dota()); tk.setPose('point'); tk.position.set(-3.4, 0, 4); d.setPose('up'); d.position.set(3.2, 0, 4.4);
+      const tk = w.add(b3Tico()), d = w.add(b3Dota()); tk.setPose('point'); tk.position.set(-2.4, 0, 1.8); d.setPose('up'); d.position.set(3.4, 0, 1.6);
       return (t) => {
         const g0 = w.K('glow'), u = p3Ramp(t, g0 - 0.3, g0 + 0.6), back = p3Ramp(t, w.K('wow') - 0.2, w.K('wow') + 0.6);
         p.spin(t, 5); for (const k of ['eng', 'stab', 'elev', 'fin', 'rud', 'ail', 'flap'] as B3Part[]) p.glow(k, t > g0 - 0.4 && t < g0 + 1.2 ? 0.7 : 0);
         rays.visible = t > g0; rays.rotation.z = (t - g0) * 0.5; rays.scale.setScalar(p3Spring(t, g0) * 1.2);
-        conf.pose(t, g0 + 0.1); bow.visible = t > g0 + 0.25; bow.position.set(0.6, 1.95 + 5 * (1 - p3Clamp((t - g0 - 0.25) / 0.45)) ** 2, 0.3); bow.scale.setScalar(1.3); bow.rotation.y = 0.35;
+        conf.pose(t, g0 + 0.1); bow.visible = t > g0 + 0.25; bow.position.set(0.3, 3.25 + 5 * (1 - p3Clamp((t - g0 - 0.25) / 0.45)) ** 2, 0.3); bow.scale.setScalar(1.3); bow.rotation.y = 0.35;
         const zoom = u * (1 - back);
         b3Cam(w, [p3Lerp(5, 3.4, zoom), p3Lerp(4.4, 3.4, zoom), p3Lerp(22, 12.5, zoom)], [0.4, p3Lerp(3.4, 2.6, zoom), 0], t, 40, [g0, w.K('wow')]);
-        tk.live(t); d.live(t); d.position.y = t > w.K('wow') ? 0.3 * Math.abs(Math.sin((t - w.K('wow')) * 8)) : 0;
+        tk.position.x = p3Lerp(-2.4, -4.2, zoom); d.position.x = p3Lerp(3.4, 5.8, zoom); tk.live(t); d.live(t); d.position.y = t > w.K('wow') ? 0.3 * Math.abs(Math.sin((t - w.K('wow')) * 8)) : 0;
       };
     },
   },
@@ -361,11 +361,11 @@ defineVisuals({
     build(w) {
       const n = b3NightSet(w); const ba = w.add(b3Bar(C3.air)), bs = w.add(b3Bar(B3.lime)); ba.position.set(-0.5, -1.8, 0); bs.position.set(0.9, -1.8, 0);
       const p = w.add(b3Plane()); p.pose(5, B3_ALL); p.scale.setScalar(0.32); const lift = w.add(p3Arrow([0, 0, 0], [0, 1, 0], 1.3, B3.lime, 0.1));
-      b3Html(w, 'ALTURA', 'left:385px;top:1430px;font:700 30px monospace;color:#cfcdc4;letter-spacing:3px'); b3Html(w, 'VELOCIDAD', 'left:600px;top:1430px;font:700 30px monospace;color:#cfcdc4;letter-spacing:3px');
+      b3Html(w, 'ALTURA', 'left:385px;top:1478px;font:700 30px monospace;color:#cfcdc4;letter-spacing:3px'); b3Html(w, 'VELOCIDAD', 'left:600px;top:1478px;font:700 30px monospace;color:#cfcdc4;letter-spacing:3px');
       const tk = w.add(b3Tico());
       return (t) => {
         n.pose(t); ba.level(p3Lerp(0.95, 0.3, p3Ramp(t, w.K('alt') - 0.1, w.K('alt') + 1.6))); bs.level(p3Lerp(0.55, 0.85, p3Ramp(t, w.K('vel') - 0.1, w.K('vel') + 0.7)));
-        const u = p3Clamp((t - w.s.t0) / (w.s.t1 - w.s.t0)); p.position.set(2.6, 3.2 - u * 2.6, 0); p.rotation.z = -0.2; p.spin(t, 0.2); lift.position.set(2.6, 3.5 - u * 2.6, 0); lift.scale.setScalar(1 + (t > w.K('lift') ? 0.15 * Math.sin((t - w.K('lift')) * 9) : 0));
+        const u = p3Clamp((t - w.s.t0) / (w.s.t1 - w.s.t0)); p.position.set(2.1, 3.2 - u * 2.6, 0); p.rotation.z = -0.2; p.spin(t, 0.2); lift.position.set(2.1, 3.5 - u * 2.6, 0); lift.scale.setScalar(1 + (t > w.K('lift') ? 0.15 * Math.sin((t - w.K('lift')) * 9) : 0));
         b3Cam(w, [0.3, 1.4, 16], [0, 1.2, 0], t, 40, [w.K('alt'), w.K('vel')]);
         b3Corner(w, tk); tk.live(t);
       };

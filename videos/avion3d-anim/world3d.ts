@@ -89,7 +89,8 @@ function b3Wing() {
 function b3Table() { const w = b3Mat('#b97a4a', 0.75); return b3Grp([0, 0, 0], b3BoxM(4, 0.15, 1.6, w, [0, 1.0, 0]), ...[[-1.8, -0.65], [1.8, -0.65], [-1.8, 0.65], [1.8, 0.65]].map(([x, z]) => b3BoxM(0.14, 1.0, 0.14, w, [x, 0.5, z]))); }
 function b3Gauge() {
   const face = p3Paint(512, 512, (c) => { c.fillStyle = '#15161c'; c.beginPath(); c.arc(256, 256, 250, 0, 7); c.fill(); c.lineWidth = 28; c.strokeStyle = '#4a4c56'; c.beginPath(); c.arc(256, 300, 170, Math.PI * 1.15, Math.PI * 1.85); c.stroke(); c.strokeStyle = '#ff6a3d'; c.beginPath(); c.arc(256, 300, 170, Math.PI * 1.15, Math.PI * 1.35); c.stroke(); c.fillStyle = '#ff6a3d'; c.font = '900 60px monospace'; c.textAlign = 'center'; c.fillText('E', 110, 300); c.fillStyle = '#cfcdc4'; c.fillText('F', 402, 300); c.font = '700 34px monospace'; c.fillText('COMBUSTIBLE', 256, 430); });
-  const disc = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 0.2, 48), [b3Mat('#2a2c35', 0.4), new THREE.MeshStandardMaterial({ map: face, roughness: 0.5 }), b3Mat('#2a2c35', 0.4)] as unknown as THREE.Material); disc.rotation.x = Math.PI / 2;
+  const disc = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 0.2, 48), b3Mat('#2a2c35', 0.4)); disc.rotation.x = Math.PI / 2;
+  const dial = new THREE.Mesh(new THREE.CircleGeometry(1.4, 64), new THREE.MeshStandardMaterial({ map: face, roughness: 0.5 })); dial.position.y = 0.101; disc.add(dial); dial.rotation.x = -Math.PI / 2;
   const needle = b3Grp([0, -0.25, 0.14], b3BoxM(0.07, 1.0, 0.04, b3Mat(B3.lime, 0.3, 0.5), [0, 0.5, 0])), hub = b3Sph(0.12, b3Mat(B3.lime, 0.3, 0.5), [0, -0.25, 0.16]);
   return Object.assign(b3Grp([0, 0, 0], disc, needle, hub), { needle });
 }

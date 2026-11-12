@@ -54,7 +54,7 @@ defineVisuals({
         const off = t > w.K('off'); p.spin(t, off ? Math.max(0, 6 - (t - w.K('off')) * 6) : 6); puffs(t, w.K('off'));
         p.rotation.z = off ? -0.18 * p3Ramp(t, w.K('off'), w.K('off') + 1.5) : 0.03 * Math.sin(t * 2); p.position.y = 1.8 + 0.2 * Math.sin(t * 1.7);
         q.visible = t > w.K('cae') - 0.05; q.scale.setScalar(p3Spring(t, w.K('cae') - 0.05)); q.lookAt(w.camera.position); q.rotateY(0.12 * Math.sin(t * 2));   // the "?" always faces the camera
-        m3Corner(w, tk); tk.live(t);
+        const zz = p3Smoothstep(0, 1, p3Clamp((t - 7.42) / 0.7)), dd = p3Lerp(4.6, 10.5, zz); m3Corner(w, tk, -1, 0.36 * dd / 4.6, dd, 1.1 * dd / 4.6, 0.64 * dd / 4.6 * p3Lerp(1, 0.75, zz)); tk.live(t);   // Tico ends up behind the "?"
       };
     },
   },
@@ -276,7 +276,7 @@ defineVisuals({
         sky.pose(t, 1.2); p.spin(t); p.glow('ail', (t > w.K('name') && t < w.K('name') + 1.1) || (t > w.K('up') - 0.1 && t < w.K('bank') + 0.8) ? 0.7 : 0);
         const bk = w.K('bank'), dl = t < w.K('up') - 0.1 ? 0 : t < bk - 0.2 ? 0.6 * Math.sin((t - w.K('up') + 0.1) * 5.5) : 0.48; p.controls({ ailL: -dl, ailR: dl });
         p.rotation.x = 0.5 * p3Ramp(t, bk - 0.2, bk + 0.8); p.position.set(0, 1.8, 0);
-        m3Cam(w, [-6.2, 6.4, 10.5], [-0.4, 2.5, 2.7], t, 40, [w.K('up'), bk]);
+        m3Cam(w, [-9.5, 9.5, 14.5], [0, 2.4, 0.3], t, 40, [w.K('up'), bk]);
         m3Corner(w, tk); tk.live(t);
       };
     },

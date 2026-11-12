@@ -45,7 +45,12 @@ defineVisuals({
       const n = m3NightSet(w); const p = w.add(m3Plane()); p.pose(5, M3_ALL); p.position.set(0, 1.8, 0);
       const q = w.add(m3Question()); q.position.set(-0.5, 5.2, 0); const puffs = m3Puffs(w, [3.6, 1.9, 0.6]); const tk = w.add(m3Tico()); tk.setPose('point');
       return (t) => {
-        n.pose(t); const a = 0.75; m3Cam(w, [Math.cos(a) * 25, 5.0, Math.sin(a) * 25], [0.9, 3.2, 0], t, 40, [w.K('off'), w.K('cae')]);
+        n.pose(t); const a = 0.75, z = p3Smoothstep(0, 1, p3Clamp((t - 7.42) / 0.7)), qp: Vec3 = [-0.5, 5.2, 0];
+        const P0: Vec3 = [Math.cos(a) * 25, 5.0, Math.sin(a) * 25], T0: Vec3 = [0.9, 3.2, 0], d = Math.hypot(P0[0] - qp[0], P0[1] - qp[1], P0[2] - qp[2]);
+        const P1: Vec3 = [qp[0] + (P0[0] - qp[0]) / d * 7.2, qp[1] + 0.9 + (P0[1] - qp[1]) / d * 7.2, qp[2] + (P0[2] - qp[2]) / d * 7.2];
+        if (z <= 0) m3Cam(w, P0, T0, t, 40, [w.K('off'), w.K('cae')]);
+        else { const L = (i: number, A: Vec3, B: Vec3) => p3Lerp(A[i], B[i], z); w.look([L(0, P0, P1), L(1, P0, P1), L(2, P0, P1)], [L(0, T0, qp), L(1, T0, qp) + 0.75 * z, L(2, T0, qp)], 40 - 4 * z);
+          M3_FOCUS_OVR = p3Lerp(d, 7.3, z); M3_BOTH = z; }
         const off = t > w.K('off'); p.spin(t, off ? Math.max(0, 6 - (t - w.K('off')) * 6) : 6); puffs(t, w.K('off'));
         p.rotation.z = off ? -0.18 * p3Ramp(t, w.K('off'), w.K('off') + 1.5) : 0.03 * Math.sin(t * 2); p.position.y = 1.8 + 0.2 * Math.sin(t * 1.7);
         q.visible = t > w.K('cae') - 0.05; q.scale.setScalar(p3Spring(t, w.K('cae') - 0.05)); q.rotation.y = 0.3 * Math.sin(t * 2);
@@ -268,10 +273,10 @@ defineVisuals({
       const sky = m3SkySet(w); const p = w.add(m3Plane()); p.pose(5, { eng: 1, stab: 1, elev: 1, fin: 1, rud: 1, ail: 1 }); const tk = w.add(m3Tico()); tk.setPose('point');
       m3Tag(w, 'ALERONES', w.K('name'), 1.1);
       return (t) => {
-        sky.pose(t, 1.2); p.spin(t); p.glow('ail', t > w.K('name') && t < w.K('name') + 1.1 ? 0.8 : 0);
-        const dl = t > w.K('up') - 0.1 ? 0.45 : 0; p.controls({ ailL: -dl, ailR: dl });
-        p.rotation.x = 0.55 * p3Ramp(t, w.K('bank') - 0.2, w.K('bank') + 0.8); p.position.set(0, 1.8, 0);
-        m3Cam(w, [21, 3.8, 1.4], [0, 3.3, 0], t, 44, [w.K('up'), w.K('bank')]);
+        sky.pose(t, 1.2); p.spin(t); p.glow('ail', (t > w.K('name') && t < w.K('name') + 1.1) || (t > w.K('up') - 0.1 && t < w.K('bank') + 0.8) ? 0.7 : 0);
+        const bk = w.K('bank'), dl = t < w.K('up') - 0.1 ? 0 : t < bk - 0.2 ? 0.6 * Math.sin((t - w.K('up') + 0.1) * 5.5) : 0.48; p.controls({ ailL: -dl, ailR: dl });
+        p.rotation.x = 0.5 * p3Ramp(t, bk - 0.2, bk + 0.8); p.position.set(0, 1.8, 0);
+        m3Cam(w, [-6.2, 6.4, 10.5], [-0.4, 2.5, 2.7], t, 40, [w.K('up'), bk]);
         m3Corner(w, tk); tk.live(t);
       };
     },
@@ -295,7 +300,7 @@ defineVisuals({
       return (t) => {
         m3Cam(w, [0.4, 0.8, 16], [0.4, 1.2, 0], t, 40, [w.K('flap'), w.K('name')]);
         wg.foil.rotation.z = -0.12; wg.air.pose(t, w.s.t0 - 4, 3, p3Lerp(1.0, 1.9, p3Ramp(t, w.K('flap'), w.K('flap') + 0.7)));
-        const f = p3Spring(t, w.K('flap') - 0.1); wg.flap.visible = t > w.K('flap') - 0.1; wg.flap.rotation.z = -0.5 * f; wg.flap.position.x = 2.0 + 0.3 * f;
+        const f = p3Spring(t, w.K('flap') - 0.1); wg.flap.rotation.z = -0.55 * f; wg.flap.visible = wg.mount.visible = true;
         wg.flapMat.emissive.set(M3.lime); wg.flapMat.emissiveIntensity = t > w.K('name') && t < w.K('name') + 1.2 ? 0.6 : 0;
         wg.lift.grow(p3Lerp(0.45, 1, p3Spring(t, w.K('flap') + 0.4)));
         m3Corner(w, tk); tk.live(t);
@@ -454,12 +459,13 @@ for (const id of Object.keys(VISUALS)) { const V = VISUALS[id], b = V.build; V.b
     const h = o as THREE.HemisphereLight; if (h.isHemisphereLight) tint.copy(new THREE.Color('#ffffff').lerp(h.color, 0.35));
   });
   return (t) => {
-    P3_T.value = t; M3_KEYS = keys; if (q0) w.camera.quaternion.copy(q0); pose(t); q0 = w.camera.quaternion.clone();
+    P3_T.value = t; M3_KEYS = keys; M3_FOCUS_OVR = -1; M3_BOTH = 0; if (q0) w.camera.quaternion.copy(q0); pose(t); q0 = w.camera.quaternion.clone();
     // a hand-held camera: a slow, small drift so no shot is ever frozen
     const n = (a: number, b: number) => Math.sin(t * a + b); w.camera.rotateX(0.004 * (n(0.9, 1) + 0.6 * n(2.3, 4))); w.camera.rotateY(0.004 * (n(0.7, 2) + 0.6 * n(1.9, 5))); w.camera.rotateZ(0.0025 * n(0.5, 3)); w.camera.updateMatrixWorld(true);
     // depth of field focused on what the camera looks at; dust drifting in the light; trees swaying; character tint from the scene's light
     M3_FOCUS = w.camera.position.distanceTo(tgt); const wp = new THREE.Vector3();
     for (const s of M3_SPRITES) { let root: THREE.Object3D = s.g; while (root.parent) root = root.parent; if (root !== w.scene || !s.g.parent!.visible) continue; s.mesh.getWorldPosition(wp); M3_FOCUS = Math.max(M3_FOCUS, w.camera.position.distanceTo(wp)); }
+    if (M3_FOCUS_OVR > 0) M3_FOCUS = M3_FOCUS_OVR;
     dust.pose(t, tgt, Math.max(8, w.camera.position.distanceTo(tgt)));
     for (const tr of M3_TREES) if (tr.parent && tr.parent.parent === w.scene || tr.parent === w.scene) { tr.rotation.z = 0.025 * Math.sin(t * 1.1 + tr.position.x * 0.7); tr.rotation.x = 0.015 * Math.sin(t * 0.8 + tr.position.z); }
     for (const s of M3_SPRITES) (s.mesh.material as THREE.MeshBasicMaterial).color.copy(tint);

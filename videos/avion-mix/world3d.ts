@@ -79,10 +79,13 @@ const m3AddGlow = (t: number, t0: number) => (t < t0 ? 0 : t < t0 + 1.0 ? 1 : 1 
 // ---------------- the wing in cut (p3Airfoil) with a flap and the lift arrow; air with p3Airflow
 function m3Wing() {
   const foil = p3Airfoil(), flapMat = m3Mat('#ff7a3d', 0.5);
-  const flap = m3Grp([2.0, 0.05, 0], m3BoxM(1.1, 0.12, 2.9, flapMat, [0.55, 0, 0])); foil.add(flap); flap.visible = false;
+  const fp: number[][] = [[0, 0.075], [1.05, 0.006], [1.05, -0.012], [0, -0.075]]; for (let i = 1; i < 12; i++) { const a = -Math.PI / 2 - i / 12 * Math.PI; fp.push([Math.cos(a) * 0.075, Math.sin(a) * 0.075]); }
+  const flapM = new THREE.Mesh(p3Extruded(fp, 2.96), flapMat); flapM.castShadow = true;
+  const flap = m3Grp([1.93, 0.0, 0], flapM); foil.add(flap);   // hinged right at the trailing edge: it swings down, it never leaves the wing
+  const bracket = m3Mat('#3a3f4d', 0.5), mount = new THREE.Group(); for (const z of [-0.95, 0.95]) mount.add(m3BoxM(0.42, 0.1, 0.07, bracket, [1.82, -0.06, z])); foil.add(mount); flap.visible = mount.visible = false;   // only the flaps scene shows them
   const lift = p3Arrow([0, 0.6, 1.7], [0, 1, 0], 2.6, M3.lime, 0.28);
   const downs = [0.8, 1.9, 3.0].map((x) => p3Arrow([x, -0.6, 1.7], [0.25, -1, 0], 1.5, C3.air, 0.15));
-  return { foil, flap, flapMat, lift, downs, air: p3Airflow(7, -1.8, 2.1, 1.6) };
+  return { foil, flap, mount, flapMat, lift, downs, air: p3Airflow(7, -1.8, 2.1, 1.6) };
 }
 
 // ---------------- props
@@ -532,12 +535,12 @@ function m3Forest(n = 22, seed = 3, z0 = -14, width = 60) { const r = p3Rnd(seed
 // the image finish shared by every scene: studio reflections, ACES colour, a soft grade, vignette and a little grain
 // depth of field that only softens what is far behind the subject (the foreground and the characters stay sharp)
 const M3_DOF = {
-  uniforms: { tDiffuse: { value: null }, tDepth: { value: null }, uFocus: { value: 10 }, uNear: { value: 0.1 }, uFar: { value: 200 }, uMax: { value: 7 }, uRes: { value: new THREE.Vector2(1080, 1920) } },
+  uniforms: { tDiffuse: { value: null }, tDepth: { value: null }, uFocus: { value: 10 }, uNear: { value: 0.1 }, uFar: { value: 200 }, uMax: { value: 7 }, uBoth: { value: 0 }, uRes: { value: new THREE.Vector2(1080, 1920) } },
   vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
   fragmentShader: `#include <packing>
-    uniform sampler2D tDiffuse; uniform sampler2D tDepth; uniform float uFocus, uNear, uFar, uMax; uniform vec2 uRes; varying vec2 vUv;
+    uniform sampler2D tDiffuse; uniform sampler2D tDepth; uniform float uFocus, uNear, uFar, uMax, uBoth; uniform vec2 uRes; varying vec2 vUv;
     float dist(vec2 uv) { return -perspectiveDepthToViewZ(unpackRGBAToDepth(texture2D(tDepth, uv)), uNear, uFar); }
-    float coc(float d) { return smoothstep(uFocus * 1.35, uFocus * 3.2 + 6.0, d) * uMax; }
+    float coc(float d) { float far = smoothstep(uFocus * 1.35, uFocus * 3.2 + 6.0, d); float both = smoothstep(uFocus * 0.05, uFocus * 0.28, abs(d - uFocus)); return mix(far, both, uBoth) * uMax * (1.0 + uBoth * 0.6); }
     void main() {
       float c0 = coc(dist(vUv)); vec4 col = texture2D(tDiffuse, vUv); if (c0 < 0.3) { gl_FragColor = col; return; }
       vec4 acc = col; float wsum = 1.0;
@@ -582,8 +585,8 @@ function m3Finish(w: World) {
     const bg = w.scene.background, fog = w.scene.fog, cc = new THREE.Color(); r.getClearColor(cc); const ca = r.getClearAlpha();
     w.scene.background = null; w.scene.fog = null; r.setClearColor(0xffffff, 1); r.setRenderTarget(f.depthRT); r.clear(); r.render(w.scene, cam); r.setRenderTarget(null); r.setClearColor(cc, ca);
     w.scene.background = bg; w.scene.fog = fog; for (const [m, mt] of swap) m.material = mt; for (const o of hid) o.visible = true;
-    const u = f.dof.uniforms; u.tDepth.value = f.depthRT.texture; u.uNear.value = cam.near; u.uFar.value = cam.far; u.uFocus.value = M3_FOCUS;
+    const u = f.dof.uniforms; u.tDepth.value = f.depthRT.texture; u.uNear.value = cam.near; u.uFar.value = cam.far; u.uFocus.value = M3_FOCUS; u.uBoth.value = M3_BOTH;
     f.pass.scene = w.scene; f.pass.camera = cam; f.grade.uniforms.uT.value = Math.round(P3_T.value * 30); f.composer.render();
   };
 }
-let M3_FOCUS = 10;
+let M3_FOCUS = 10, M3_BOTH = 0, M3_FOCUS_OVR = -1;   // a scene can force the focus (and blur in front too) by setting M3_FOCUS_OVR / M3_BOTH in its pose

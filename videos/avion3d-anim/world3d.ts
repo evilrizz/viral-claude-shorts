@@ -217,17 +217,67 @@ function b3Eye(r: number, lidColor: string) {
   return Object.assign(g, { pupil, lid, pose(lookX: number, lookY: number, closed: number) { pupil.rotation.set(-lookY, lookX, 0); lid.rotation.x = p3Lerp(-1.15, Math.PI / 2 + 0.05, closed); } });
 }
 function b3Brow(w: number, mat: THREE.Material) { const m = new THREE.Mesh(new THREE.CapsuleGeometry(w * 0.14, w * 0.8, 6, 12), mat); m.rotation.z = Math.PI / 2; const g = new THREE.Group(); g.add(m); m.castShadow = true; return g; }
-// mouth: a dark inner shape and a tongue that scale per mouth shape (0 closed .. 4)
+// mouth: a dark inner shape and a tongue; set(width, open) every frame (lip sync from the words), shape(k) for fixed shapes
 function b3Mouth(w: number) {
   const inner = new THREE.Mesh(new THREE.SphereGeometry(w, 24, 16), new THREE.MeshStandardMaterial({ color: '#4a1212', roughness: 0.6 })), tongue = new THREE.Mesh(new THREE.SphereGeometry(w * 0.6, 16, 12), new THREE.MeshStandardMaterial({ color: '#ff7f95', roughness: 0.5 }));
   tongue.position.set(0, -w * 0.45, w * 0.2); const g = new THREE.Group(); g.add(inner, tongue); inner.scale.z = 0.4; tongue.scale.z = 0.4;
-  return Object.assign(g, { shape(k: number) { const S = [[0.9, 0.08], [1.0, 0.9], [0.62, 0.85], [1.25, 0.45], [0.6, 0.35]][k]; g.scale.set(S[0], S[1], 1); tongue.visible = k !== 0; } });
+  const set = (sx: number, sy: number) => { g.scale.set(sx, Math.max(0.05, sy), 1); tongue.visible = sy > 0.3; };
+  return Object.assign(g, { set, shape(k: number) { const S = [[0.9, 0.08], [1.0, 0.9], [0.62, 0.85], [1.25, 0.45], [0.6, 0.35]][k]; set(S[0], S[1]); } });
 }
 interface B3Spec { kind: 'tico' | 'dota'; fur: string; face: string; shirt: string; headY: number; R: number; sh: [number, number]; arm: [number, number]; armR: number; hip: [number, number]; legR: number; torso: [number, number, number]; hands: Record<string, [Vec3, Vec3]> }
 const B3_TICO: B3Spec = { kind: 'tico', fur: '#5a3a2b', face: '#f3d9b1', shirt: '#3270e6', headY: 1.76, R: 0.46, sh: [0.32, 1.24], arm: [0.42, 0.4], armR: 0.075, hip: [0.13, 0.56], legR: 0.09, torso: [0.36, 0.44, 0.3],
-  hands: { cross: [[0.22, 1.02, 0.36], [-0.22, 1.06, 0.34]], point: [[-0.42, 0.62, 0.12], [0.86, 1.86, 0.26]], palm: [[-0.42, 0.62, 0.12], [0.06, 2.0, 0.5]], hold: [[-0.15, 0.88, 0.42], [0.15, 0.88, 0.42]] } };
+  hands: { cross: [[0.22, 1.02, 0.36], [-0.22, 1.06, 0.34]], point: [[-0.42, 0.62, 0.12], [0.86, 1.86, 0.26]], palm: [[-0.42, 0.62, 0.12], [0.06, 2.0, 0.5]], hold: [[-0.15, 0.88, 0.42], [0.15, 0.88, 0.42]],
+    explain: [[-0.36, 1.02, 0.46], [0.36, 1.08, 0.48]], shrug: [[-0.66, 1.08, 0.22], [0.66, 1.08, 0.22]], count: [[-0.14, 0.98, 0.44], [0.44, 1.56, 0.42]], chin: [[-0.1, 0.98, 0.4], [0.08, 1.42, 0.5]],
+    glasses: [[-0.22, 1.0, 0.38], [0.06, 1.8, 0.58]], big: [[-0.74, 1.62, 0.2], [0.74, 1.62, 0.2]], hips: [[-0.44, 0.7, 0.05], [0.44, 0.7, 0.05]] } };
 const B3_DOTA: B3Spec = { kind: 'dota', fur: '#c97b3d', face: '#f2d2a6', shirt: '#ffc83d', headY: 1.12, R: 0.5, sh: [0.23, 0.72], arm: [0.29, 0.27], armR: 0.06, hip: [0.1, 0.33], legR: 0.07, torso: [0.27, 0.27, 0.24],
-  hands: { up: [[-0.5, 1.18, 0.08], [0.5, 1.18, 0.08]], down: [[-0.32, 0.3, 0.1], [0.32, 0.3, 0.1]], hug: [[-0.1, 0.5, 0.36], [0.1, 0.5, 0.36]], reach: [[-0.32, 0.3, 0.1], [0.8, 0.72, 0.2]] } };
+  hands: { up: [[-0.5, 1.18, 0.08], [0.5, 1.18, 0.08]], down: [[-0.32, 0.3, 0.1], [0.32, 0.3, 0.1]], hug: [[-0.1, 0.5, 0.36], [0.1, 0.5, 0.36]], reach: [[-0.32, 0.3, 0.1], [0.8, 0.72, 0.2]],
+    explain: [[-0.3, 0.78, 0.36], [0.3, 0.78, 0.36]], shrug: [[-0.52, 0.8, 0.12], [0.52, 0.8, 0.12]], cheer: [[-0.46, 1.2, 0.1], [0.46, 1.2, 0.1]], scratch: [[-0.32, 0.3, 0.1], [0.52, 1.08, 0.02]],
+    wave: [[-0.32, 0.3, 0.1], [0.6, 1.15, 0.2]], point: [[-0.32, 0.3, 0.1], [0.76, 0.95, 0.3]] } };
+
+// ---------------- acting from the voice: phrases, stressed words (beats) and lip sync, all from WORDS
+type B3Phrase = { t0: number; t1: number; q: boolean; ex: boolean; i: number };
+let B3_PH: B3Phrase[] | null = null; const B3_BEAT: number[] = [], B3_LET: string[] = [];
+let B3_KEYS: number[] = [];   // the key times of the scene being drawn (set by the wrapper at the end of visuals3d.ts)
+function b3Phrases() {
+  if (B3_PH) return B3_PH; B3_PH = []; const W = typeof WORDS !== 'undefined' ? WORDS : []; let cur: B3Phrase | null = null;
+  W.forEach((x, j) => {
+    B3_LET.push(x.w.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-zñ]/g, ''));
+    if (!cur) { cur = { t0: x.t0, t1: x.t1, q: false, ex: false, i: B3_PH!.length }; B3_BEAT.push(x.t0); }
+    else if (B3_LET[j].length >= 6) B3_BEAT.push(x.t0);
+    cur.t1 = x.t1; if (/[¿?]/.test(x.w)) cur.q = true; if (/[¡!]/.test(x.w)) cur.ex = true;
+    const nx = W[j + 1]; if (!nx || /[.,;:!?…]$/.test(x.w) || nx.t0 - x.t1 > 0.35) { B3_PH!.push(cur); cur = null; }
+  });
+  return B3_PH;
+}
+// index of the last item whose start (via get) is <= t, or -1
+function b3Find<T>(a: T[], t: number, get: (x: T) => number) { let lo = 0, hi = a.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (get(a[m]) <= t) { r = m; lo = m + 1; } else hi = m - 1; } return r; }
+const B3_VIS: Record<string, [number, number]> = { a: [1.15, 1], e: [1.2, 0.55], i: [1.25, 0.4], o: [0.75, 0.85], u: [0.6, 0.6], m: [0.9, 0.06], b: [0.9, 0.06], p: [0.9, 0.06], f: [0.95, 0.22], v: [0.95, 0.22] };
+// mouth [width, open] at t from the letters of the word being said, or null between words
+function b3Lip(t: number): [number, number] | null {
+  b3Phrases(); const W = typeof WORDS !== 'undefined' ? WORDS : [], j = b3Find(W, t, (x) => x.t0); if (j < 0) return null; const x = W[j]; if (t > x.t1 + 0.05) return null;
+  const L = B3_LET[j] || 'a', n = L.length, f = p3Clamp((t - x.t0) / Math.max(0.05, x.t1 - x.t0)) * n - 0.5, i0 = p3Clamp(Math.floor(f), 0, n - 1), i1 = Math.min(n - 1, i0 + 1), u = p3Smoothstep(0, 1, f - Math.floor(f));
+  const a = B3_VIS[L[i0]] || [1.0, 0.32], b = B3_VIS[L[i1]] || [1.0, 0.32], amp = p3Clamp(Math.min((t - x.t0) / 0.05, (x.t1 + 0.05 - t) / 0.07));
+  return [p3Lerp(a[0], b[0], u), p3Lerp(a[1], b[1], u) * amp];
+}
+const b3Imp = (dt: number) => (dt > 0 && dt < 0.9 ? dt * 9 * Math.exp(1 - dt * 9) : 0);   // a quick kick that peaks 0.11 s after dt = 0
+// the spring that every pose change goes through: rises in ~0.2 s, overshoots ~20 %, settles by 0.6 s
+const B3_KER = (() => { const k = [...Array(20)].map((_, j) => { const u = (j + 0.5) / 30; return Math.exp(-6.3 * u) * Math.sin(12.5 * u); }); const s = k.reduce((a, b) => a + b, 0); return k.map((x) => x / s); })();
+// what each gesture does besides the hands: [lean, curlL, curlR, palmUpL, palmUpR, brow, eyesWide, lookX, lookY, headYaw, pointR]
+const B3_GP: Record<string, number[]> = {
+  cross: [0, 1, 1, 0, 0, -0.1, 0, 0, 0, 0, 0], point: [0.05, 0.6, 1, 0, 0, 0.3, 0.15, 0.35, 0.2, 0.35, 1], palm: [-0.03, 0.6, 0, 0, 1, 0.4, 0.1, 0, 0.15, 0, 0], hold: [0.04, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+  explain: [0.08, 0.2, 0.2, 0.6, 0.6, 0.35, 0.05, 0, 0, 0, 0], shrug: [-0.06, 0, 0, 1, 1, 0.8, 0.15, 0, 0.1, 0, 0], count: [0.04, 0.8, 0.5, 0, 0, 0.4, 0, 0, 0, 0, 1], chin: [0.02, 0.8, 0.7, 0, 0, -0.3, -0.25, 0.25, 0.25, 0.15, 0],
+  glasses: [0, 0.8, 0.6, 0, 0, 0.2, -0.1, 0, 0, 0, 1], big: [-0.1, 0, 0, 0.5, 0.5, 1, 0.3, 0, 0.15, 0, 0], hips: [-0.03, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+  up: [-0.05, 0, 0, 0.4, 0.4, 0.5, 0.2, 0, 0.1, 0, 0], down: [0, 0.5, 0.5, 0, 0, 0, 0, 0, 0, 0, 0], hug: [0.03, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0], reach: [0.08, 0.5, 0.1, 0, 0, 0.3, 0.1, 0.3, 0, 0.2, 0],
+  cheer: [-0.08, 0, 0, 0.6, 0.6, 1, 0.35, 0, 0.2, 0, 0], scratch: [0.03, 0.5, 0.7, 0, 0, -0.4, -0.2, -0.3, 0.3, -0.2, 0], wave: [0, 0.5, 0, 0, 0, 0.5, 0.2, 0, 0, 0, 0],
+};
+
+// =====================================================================
+//  b3Char: an ACTOR, not a puppet. Every frame it works out what it would be doing at that moment (gesture of the phrase it
+//  is saying, listening to the other one, idle business like pushing up the glasses or scratching, reacting to the scene's
+//  beats) and gets there through a spring (anticipation, overshoot, settle). On top: a nod, a dip and a hand flick on every
+//  stressed word, lip sync from the letters of each word, a head that lags the body, knees that bend, fingers that curl.
+//  Same API as before: setPose(pose, at?, from?), live(t), head, bulb, bump, black, crazy(on), dizzy(t, on); plus side(s).
+// =====================================================================
 function b3Char(S: B3Spec) {
   const tico = S.kind === 'tico', skin = b3Skin(S.fur), faceM = b3Skin(S.face), dark = b3Gloss('#1d1410', 0.3);
   const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
@@ -235,12 +285,17 @@ function b3Char(S: B3Spec) {
   const [tw, th, td] = S.torso, torsoGeo = p3Blob((x, y, z) => [x * tw * (1 + 0.12 * (0.5 - y)), y * th, z * td * (1 + 0.1 * (0.5 - y))], undefined, 40, 30);
   const torso = new THREE.Mesh(torsoGeo, b3Cloth(S.shirt)); torso.position.y = S.sh[1] - th * 0.62; torso.castShadow = torso.receiveShadow = true; body.add(torso);
   const collar = new THREE.Mesh(new THREE.TorusGeometry(tw * 0.42, tw * 0.07, 10, 28), b3Cloth(new THREE.Color(S.shirt).multiplyScalar(0.8).getStyle())); collar.rotation.x = Math.PI / 2; collar.position.y = S.sh[1] + th * 0.28; body.add(collar);
-  // legs and feet
-  const legs = [b3Limb(skin, S.legR, S.legR * 0.85), b3Limb(skin, S.legR, S.legR * 0.85)]; body.add(...legs);
-  const feet = [-1, 1].map((sx) => { const f = new THREE.Mesh(p3Blob((x, y, z) => [x * S.legR * 1.7, y * S.legR * 0.8, z * S.legR * 2.4 + S.legR * 0.9]), faceM); f.position.set(sx * S.hip[0] * 1.1, S.legR * 0.7, 0); f.castShadow = true; body.add(f); return f; });
-  // arms and hands
+  // legs and feet stay on the ground (in g) while the body dips, leans and twists above them: the knees bend
+  const legs = [b3Limb(skin, S.legR, S.legR * 0.85), b3Limb(skin, S.legR, S.legR * 0.85)]; g.add(...legs);
+  const feet = [-1, 1].map(() => { const f = new THREE.Group(), m = new THREE.Mesh(p3Blob((x, y, z) => [x * S.legR * 1.7, y * S.legR * 0.8, z * S.legR * 2.4 + S.legR * 0.9]), faceM); m.castShadow = true; m.position.z = -S.legR * 0.6; f.add(m); g.add(f); return f; });
+  // arms and hands: a mitten palm, a thumb and three fingers that curl
   const arms = [b3Limb(skin, S.armR * 1.05, S.armR * 0.8), b3Limb(skin, S.armR * 1.05, S.armR * 0.8)]; body.add(...arms);
-  const hands = [0, 1].map(() => { const h = new THREE.Group(); const palm = new THREE.Mesh(p3Blob((x, y, z) => [x * S.armR * 1.5, y * S.armR * 1.25, z * S.armR * 1.1]), skin); const thumb = new THREE.Mesh(new THREE.CapsuleGeometry(S.armR * 0.38, S.armR * 0.7, 6, 10), skin); thumb.position.set(-S.armR * 0.9, S.armR * 0.6, S.armR * 0.4); thumb.rotation.z = 0.7; const finger = new THREE.Mesh(new THREE.CapsuleGeometry(S.armR * 0.33, S.armR * 1.4, 6, 10), skin); finger.position.set(0, S.armR * 1.6, 0.02); finger.visible = false; h.add(palm, thumb, finger); palm.castShadow = true; body.add(h); return Object.assign(h, { finger }); });
+  const hands = [0, 1].map(() => {
+    const h = new THREE.Group(); const palm = new THREE.Mesh(p3Blob((x, y, z) => [x * S.armR * 1.45, y * S.armR * 1.15, z * S.armR * 0.95]), skin); palm.castShadow = true;
+    const thumb = new THREE.Group(); thumb.position.set(-S.armR * 0.95, S.armR * 0.2, S.armR * 0.35); const tm = new THREE.Mesh(new THREE.CapsuleGeometry(S.armR * 0.36, S.armR * 0.75, 6, 10), skin); tm.position.y = S.armR * 0.5; thumb.add(tm); thumb.rotation.z = 0.8;
+    const fingers = [-0.6, 0, 0.6].map((fx, k) => { const p = new THREE.Group(); p.position.set(fx * S.armR, S.armR * 0.85, 0); p.rotation.z = -fx * 0.25; const len = S.armR * (k === 1 ? 1.15 : 1.0); const c = new THREE.Mesh(new THREE.CapsuleGeometry(S.armR * 0.32, len, 6, 10), skin); c.position.y = len / 2 + S.armR * 0.25; c.castShadow = true; p.add(c); h.add(p); return p; });
+    h.add(palm, thumb); body.add(h); return Object.assign(h, { fingers, thumb });
+  });
   // head
   const neck = new THREE.Group(); neck.position.y = S.headY - S.R * 0.85; body.add(neck);
   const head = new THREE.Group(); head.position.y = S.R * 0.85; neck.add(head);
@@ -254,7 +309,8 @@ function b3Char(S: B3Spec) {
   const eyes = [-1, 1].map((sx) => { const e = b3Eye(er, S.face); e.position.set(sx * ex, ey, S.R * 0.78); lag.add(e); return e; });
   if (tico) for (const sx of [-1, 1]) { const ring = new THREE.Mesh(new THREE.TorusGeometry(er * 1.32, er * 0.18, 16, 48), dark); ring.position.set(sx * ex, ey, S.R * 0.98); lag.add(ring); const lens = new THREE.Mesh(new THREE.CircleGeometry(er * 1.3, 40), new THREE.MeshPhysicalMaterial({ color: '#dfefff', transparent: true, opacity: 0.18, roughness: 0.05, clearcoat: 1 })); lens.position.set(sx * ex, ey, S.R * 0.97); lag.add(lens); }
   if (tico) { const bridge = p3Rod([-ex + er * 1.3, ey, S.R * 0.99], [ex - er * 1.3, ey, S.R * 0.99], er * 0.15, dark); lag.add(bridge, p3Rod([-ex - er * 1.3, ey, S.R * 0.96], [-S.R * 0.96, ey, S.R * 0.15], er * 0.12, dark), p3Rod([ex + er * 1.3, ey, S.R * 0.96], [S.R * 0.96, ey, S.R * 0.15], er * 0.12, dark)); }
-  const brows = [-1, 1].map((sx) => { const b = b3Brow(er * 1.4, dark); b.position.set(sx * ex, ey + er * (tico ? 1.75 : 1.55), S.R * 0.92); lag.add(b); return b; });
+  const browY = ey + er * (tico ? 1.75 : 1.55);
+  const brows = [-1, 1].map((sx) => { const b = b3Brow(er * 1.4, dark); b.position.set(sx * ex, browY, S.R * 0.92); lag.add(b); return b; });
   const mouth = b3Mouth(S.R * 0.13); mouth.position.set(0, -S.R * 0.56, S.R * 1.02); lag.add(mouth);
   // character extras
   const tufts: THREE.Object3D[] = [];
@@ -270,48 +326,108 @@ function b3Char(S: B3Spec) {
     const glow = b3Gloss('#ffd23d', 0.2); (glow as THREE.MeshPhysicalMaterial).emissive = new THREE.Color('#ffb800'); (glow as THREE.MeshPhysicalMaterial).emissiveIntensity = 0.6;
     bulb.add(new THREE.Mesh(new THREE.SphereGeometry(0.16, 24, 16), glow)); const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.12, 16), b3Gloss('#c9ced8', 0.3)); cap.position.y = -0.17; bulb.add(cap); bulb.position.y = S.R * 1.85; lag.add(bulb); bulb.visible = false;
   }
-  // pose state
-  let pose = tico ? 'cross' : 'up', from = pose, at = -99, crazyOn = false;
-  const V = (a: number[]) => new THREE.Vector3(a[0], a[1], a[2]);
+
+  // ---------------- the acting
+  const mine = tico ? B3_TICO_T : B3_DOTA_T, theirs = tico ? B3_DOTA_T : B3_TICO_T, seed = tico ? 0 : 1.3;
+  const inR = (R: [number, number][], s: number) => R.some(([a, b]) => s > a && s < b);
+  const LOCK = new Set(['hold', 'hug']), N = 28;
+  let pose = tico ? 'cross' : 'up', from = pose, at = -99, crazyOn = false, other = tico ? 1 : -1;
+  const myPhrase = (s: number) => { const P = b3Phrases(), j = b3Find(P, s + 0.15, (x) => x.t0); for (let k = j; k >= Math.max(0, j - 1); k--) { const p = P[k]; if (s < p.t1 + 0.45 && inR(mine, (p.t0 + p.t1) / 2)) return p; } return null; };
+  const lastKey = (s: number) => { let b = -99; for (const k of B3_KEYS) if (k <= s && k > b) b = k; return b; };
+  // what the character would be doing at s (no smoothing): P = [hands x6, lean, twist, roll, shift, yaw, tilt, pitch, lookX, lookY, curlL, curlR, palmL, palmR, brow, wide, pointR, crouch, shrug, wave, scratch, free, oh]
+  const raw = (s: number) => {
+    const P = new Array(N).fill(0), base = s < at ? from : pose, talk = inR(mine, s), recent = at > -90 && s > at - 0.2 && s < at + 1.6;
+    const locked = LOCK.has(base) || recent || crazyOn, ph = myPhrase(s), h = b3Hash;
+    let gs = base;
+    if (!locked && ph) {
+      const list = tico ? ['explain', 'point', 'palm', 'count', 'explain', 'chin', 'shrug'] : ['explain', 'point', 'cheer', 'shrug'];
+      gs = ph.q ? 'shrug' : ph.ex ? (tico ? 'big' : 'cheer') : list[Math.floor(h(ph.i * 1.7 + 0.3) * list.length)];
+    } else if (!locked && !talk) {   // idle business
+      const Wd = tico ? 4.2 : 3.0, q = s + seed * 7, n = Math.floor(q / Wd), u = q - n * Wd, r = h(n * 9.1 + seed);
+      if (tico && (base === 'cross' || base === 'point')) { if (r > 0.35 && r < 0.6 && u < 1.0) gs = 'glasses'; else if (r >= 0.6 && r < 0.8 && u < 1.8) gs = 'chin'; }
+      if (!tico && (base === 'up' || base === 'down')) { if (r > 0.3 && r < 0.55 && u < 1.5) gs = 'scratch'; else if (r >= 0.55 && r < 0.75 && u < 1.2) gs = 'wave'; }
+    }
+    const kd = s - lastKey(s);
+    if (!locked && kd >= 0) { if (tico && base === 'point' && kd < 1.3) gs = 'point'; if (!tico && !ph && kd < 0.9) { gs = 'cheer'; P[27] = 1; } }
+    const hs = S.hands[gs] || S.hands[base] || S.hands[tico ? 'cross' : 'up'], gp = B3_GP[gs] || B3_GP.cross;
+    P.splice(0, 6, ...hs[0], ...hs[1]);
+    [P[6], P[15], P[16], P[17], P[18], P[19], P[20], P[13], P[14], P[10], P[21]] = gp;
+    P[23] = gs === 'shrug' ? 1 : 0; P[24] = gs === 'wave' ? 1 : 0; P[25] = gs === 'scratch' ? 1 : 0; P[26] = locked ? 0 : 1;
+    if (ph) {
+      P[9] = (h(ph.i * 3.1) - 0.5) * 0.12; P[11] += (h(ph.i + 3.7) - 0.5) * 0.3 + (ph.q ? 0.2 : 0); P[7] += (h(ph.i + 5.3) - 0.5) * 0.3; P[12] = ph.ex ? -0.06 : 0.03;
+      if (!locked) for (let i = 0; i < 6; i++) P[i] += (h(ph.i * 7 + i) - 0.5) * 0.08;
+    }
+    if (!talk && inR(theirs, s)) { P[10] += 0.38 * other; P[13] += 0.35 * other; P[7] += 0.15 * other; P[11] += 0.1 * other; }
+    return P;
+  };
+  const smooth = (t: number) => {
+    const A = new Array(N).fill(0);
+    for (let j = 0; j < B3_KER.length; j++) { const r = raw(t - j / 30), w = B3_KER[j]; for (let i = 0; i < N; i++) A[i] += w * r[i]; }
+    const f = raw(t + 0.13), n = raw(t); for (let i = 0; i < 13; i++) A[i] -= 0.22 * (f[i] - n[i]);   // anticipation: pull back before a move
+    return A;
+  };
+  const V = new THREE.Vector3(), Y = new THREE.Vector3(0, 1, 0);
   return Object.assign(g, {
     head, bulb, bump, black,
     setPose(p: string, when = -99, prev?: string) { pose = p; at = when; from = prev ?? p; },
     crazy(on: boolean) { crazyOn = on; },
     dizzy(t: number, on: boolean) { stars.visible = on; stars.rotation.y = t * 3; },
-    live(t: number, seed = tico ? 0 : 1.3) {
-      const talking = (tico ? B3_TICO_T : B3_DOTA_T).some(([a, b]) => t > a && t < b), syl = Math.floor(t * 8), sylU = (t * 8) % 1;
-      const u = (t - at) / 0.36, k = at < -90 ? 1 : b3Back(u), antic = at < -90 ? 0 : (u > 0 && u < 0.25 ? -0.14 * Math.sin(u / 0.25 * Math.PI) : 0);
-      const change = at > -90 && t > at ? 0.06 * Math.exp(-(t - at) * 7) * Math.sin((t - at) * 20) : 0;
-      // squash & stretch, breathing, lean
-      const sq = 0.012 * Math.sin(t * (tico ? 2.8 : 4.4) + seed) + (talking ? 0.02 * Math.abs(Math.sin(t * 7.5)) : 0) + change;
+    side(s: number) { other = s; },
+    live(t: number) {
+      const P = smooth(t), Pl = smooth(t - 0.1), talking = inR(mine, t);
+      // beats: stressed words of my lines kick a nod, a dip and a hand flick
+      b3Phrases(); let beat = 0; const bj = b3Find(B3_BEAT, t, (x) => x); for (let k = bj; k >= Math.max(0, bj - 3); k--) if (inR(mine, B3_BEAT[k])) beat += b3Imp(t - B3_BEAT[k] + 0.04);
+      beat = Math.min(1.2, beat);
+      // hops (Dota): when something happens in the scene and he is free, and now and then on his own
+      let hop = 0, hsq = 0;
+      if (!tico && !crazyOn && !LOCK.has(pose)) {
+        const evs = [lastKey(t + 0.1)]; const Wd = 3.0, q = t + seed * 7, n = Math.floor(q / Wd); if (b3Hash(n * 9.1 + seed) > 0.85) evs.push(n * Wd - seed * 7 + 0.3);
+        for (const e of evs) { const dt = t - e; if (dt > -0.12 && dt < 0) hsq -= 0.1 * Math.sin((dt + 0.12) / 0.12 * Math.PI); else if (dt >= 0 && dt < 0.42) { const u = dt / 0.42; hop += 4 * u * (1 - u) * 0.22; hsq += 0.08 * Math.cos(u * Math.PI); } else if (dt >= 0.42 && dt < 0.6) hsq -= 0.12 * Math.sin((dt - 0.42) / 0.18 * Math.PI); }
+      }
+      // body: breathing, squash & stretch, dip on beats, lean, twist, weight shift
+      const br = Math.sin(t * (tico ? 2.6 : 3.6) + seed), sq = 0.012 * br + 0.025 * beat + hsq + (talking ? 0.012 * Math.abs(Math.sin(t * 7.5)) : 0);
       body.scale.set(1 - sq * 0.5, 1 + sq, 1 - sq * 0.5);
-      const lean = (tico ? 0.035 : 0.06) * Math.sin(t * 1.3 + seed) + (talking ? 0.03 * Math.sin(t * 3.1) : 0), leanLag = (tico ? 0.035 : 0.06) * Math.sin((t - 0.14) * 1.3 + seed);
-      body.rotation.z = lean * 0.4;
-      neck.rotation.z = (leanLag - lean) * 1.2; neck.rotation.x = talking ? 0.05 * Math.sin(t * 7.5) : 0.02 * Math.sin(t * 1.1 + seed);
-      lag.rotation.z = (leanLag - lean) * 0.8;
-      const sw = (lean - leanLag) * 6 + (talking ? 0.06 * Math.sin(t * 7.5 - 0.6) : 0);
-      ears.forEach((e, i) => { e.rotation.z = (i ? 1 : -1) * sw; e.rotation.y = 0.05 * Math.sin(t * 2 + i); });
-      tufts.forEach((tf, i) => { tf.rotation.z = (tico ? 0 : [0.45, 0, -0.45][i]) + sw * (1.8 + i * 0.3); });
-      // eyes
-      const bt = (t + seed) % 3.3, dbl = b3Hash(Math.floor((t + seed) / 3.3)) > 0.6, closed = bt < 0.1 || (dbl && bt > 0.2 && bt < 0.3) ? 1 : 0;
-      const sac = Math.floor((t + seed) / 1.4), lx = (b3Hash(sac) - 0.5) * 0.35 + (pose === 'point' ? 0.25 : 0), ly = (b3Hash(sac + 7) - 0.5) * 0.25 + (pose === 'point' ? 0.2 : 0);
-      eyes.forEach((e, i) => e.pose(crazyOn ? (i ? 0.45 : -0.35) + 0.15 * Math.sin(t * 9 + i) : lx, crazyOn ? (i ? 0.3 : -0.2) + 0.15 * Math.cos(t * 9 + i) : ly, closed ? 1 : (tico ? 0.3 : 0.2)));
-      // brows and mouth
-      const lift = talking ? 0.03 * Math.max(0, Math.sin(t * 2.3)) : 0;
-      brows.forEach((b, i) => { b.position.y = ey + er * (tico ? 1.75 : 1.55) + lift * (tico && i ? 1.6 : 1); b.rotation.z = tico ? (i ? -0.18 : 0.1) : (i ? 0.22 : -0.22) * (crazyOn ? -1 : 1); });
-      const seq = [1, 3, 2, 1, 0, 3, 1, 2, 4, 1]; mouth.shape(talking ? (sylU > 0.8 ? 0 : seq[Math.floor(b3Hash(syl) * 10)]) : (tico ? 0 : 4));
-      // legs: hips to feet with a soft knee
-      [-1, 1].forEach((sx, i) => { const hp = new THREE.Vector3(sx * S.hip[0], S.hip[1], 0), ft = new THREE.Vector3(sx * S.hip[0] * 1.1, S.legR * 0.9, 0.02), r = b3IK(hp, ft, (S.hip[1] - S.legR) * 0.55, (S.hip[1] - S.legR) * 0.55, new THREE.Vector3(sx * 0.3, 0, 1)); legs[i].set(hp, r.e, r.h); feet[i].position.set(ft.x, S.legR * 0.7, 0); });
-      // arms: to the pose targets with anticipation / overshoot, gesturing while talking
+      body.position.set(P[9], -0.04 * beat - Math.max(0, -hsq) * 0.3 + hop, 0);
+      body.rotation.set(P[6] + 0.05 * beat, P[7] + 0.03 * Math.sin(t * 0.9 + seed), -P[9] * 1.2 + 0.025 * Math.sin(t * 1.3 + seed));
+      // head: yaw, tilt, a nod per beat; the inner head lags behind and the ears and tufts follow through
+      neck.position.y = S.headY - S.R * 0.85 - 0.04 * P[23];
+      const tk = talking ? 1 : 0;
+      neck.rotation.set(P[12] - P[6] * 0.5 + 0.13 * beat + 0.02 * Math.sin(t * 1.1 + seed) + tk * 0.04 * Math.sin(t * 3.3), P[10] + 0.04 * Math.sin(t * 0.7 + seed) + tk * 0.09 * Math.sin(t * 1.7 + seed), P[11] + tk * 0.07 * Math.sin(t * 2.1 + 1));
+      const lx = (Pl[12] - P[12]) * 0.8, ly = (Pl[10] - P[10]) * 0.6, lz = (Pl[11] - P[11]) * 0.9 + (Pl[9] - P[9]) * 2.5;
+      lag.rotation.set(lx, ly, lz);
+      const sw = lz * 3 + ly * 1.5 + 0.12 * beat + 0.04 * Math.sin(t * 2.3 + seed);
+      ears.forEach((e, i) => { e.rotation.z = (i ? 1 : -1) * sw; e.rotation.y = 0.05 * Math.sin(t * 2 + i) + (i ? -1 : 1) * 0.2 * hop; });
+      tufts.forEach((tf, i) => { tf.rotation.z = (tico ? 0 : [0.45, 0, -0.45][i]) + sw * (1.8 + i * 0.3); tf.rotation.x = -hop * 2 - beat * 0.2; });
+      // mouth: lip sync from the words while I talk; a little "oh" when surprised; my resting face otherwise
+      const lip = talking ? b3Lip(t) : null, rest: [number, number] = tico ? [0.8, 0.08] : [0.6, 0.35];
+      const mo: [number, number] = lip ? [lip[0], Math.max(0.05, lip[1])] : P[27] > 0.2 ? [p3Lerp(rest[0], 0.7, P[27]), p3Lerp(rest[1], 0.8, P[27])] : rest;
+      mouth.set(mo[0], mo[1]); lag.scale.set(1 - mo[1] * 0.02, 1 + (lip ? mo[1] * 0.04 : 0) + hsq * 0.5, 1);
+      // eyes: blinks (also at the start of each phrase and on big head turns), wider on surprise, a squint on stressed words
+      const bt = (t + seed) % 3.3, dbl = b3Hash(Math.floor((t + seed) / 3.3)) > 0.6, ph = myPhrase(t);
+      const closed = bt < 0.1 || (dbl && bt > 0.2 && bt < 0.3) || (ph && t - ph.t0 > -0.05 && t - ph.t0 < 0.05) || Math.abs(Pl[10] - P[10]) > 0.12;
+      const lidRest = (tico ? 0.3 : 0.2) - P[20] * 0.35 + 0.12 * beat;
+      const sac = Math.floor((t + seed) / 1.4), sx = (b3Hash(sac) - 0.5) * 0.2, sy = (b3Hash(sac + 7) - 0.5) * 0.15;
+      eyes.forEach((e, i) => e.pose(crazyOn ? (i ? 0.45 : -0.35) + 0.15 * Math.sin(t * 9 + i) : (P[13] + sx) * (tico ? 1 : 0.35), crazyOn ? (i ? 0.3 : -0.2) + 0.15 * Math.cos(t * 9 + i) : (P[14] + sy) * (tico ? 1 : 0.35), closed ? 1 : p3Clamp(lidRest, -0.15, 0.6)));
+      // brows: up with the gesture, on stressed words and in questions; Tico keeps his "told you so" tilt
+      brows.forEach((b, i) => { b.position.y = browY + er * (0.35 * P[19] + 0.3 * beat); b.rotation.z = tico ? (i ? -0.18 : 0.1) * (1 - 0.6 * Math.max(0, P[19])) : (i ? 0.22 : -0.22) * (crazyOn ? -1 : 1) * (1 - 0.5 * Math.max(0, P[19])); });
+      // legs: from the hips (wherever the body went) down to feet planted on the ground, knees bend forward
+      body.updateMatrix(); const tap = tico && !talking ? 0.35 * Math.max(0, Math.sin(t * 8)) * (b3Hash(Math.floor(t / 2.5)) > 0.5 ? 1 : 0) : 0;
+      [-1, 1].forEach((s, i) => {
+        const hp = new THREE.Vector3(s * S.hip[0], S.hip[1], 0).applyMatrix4(body.matrix), ft = new THREE.Vector3(s * S.hip[0] * 1.1 + P[9] * 0.3, S.legR * 0.9 + hop * 0.9, 0.02);
+        const r = b3IK(hp, ft, (S.hip[1] - S.legR) * 0.56, (S.hip[1] - S.legR) * 0.56, new THREE.Vector3(s * 0.3, 0, 1)); legs[i].set(hp, r.e, r.h);
+        feet[i].position.set(ft.x, S.legR * 0.7 + hop * 0.9, S.legR * 0.6); feet[i].rotation.set(i === 1 ? -tap : 0, 0, 0); feet[i].rotation.x += hop * 1.2;
+      });
+      // arms: spring-smoothed targets + a flick on stressed words + waving / scratching; hands turn palm-up and fingers curl
       [0, 1].forEach((i) => {
-        const a = V(S.hands[from]?.[i] || S.hands[pose][i]), b = V(S.hands[pose][i]), tg = a.clone().lerp(b, k).sub(b.clone().sub(a).multiplyScalar(antic));
-        const gest = talking && pose !== 'cross' && pose !== 'hug' && pose !== 'hold' ? (i === 1 ? 1 : 0.4) : 0;
-        tg.x += gest * 0.04 * Math.sin(t * 5 + i); tg.y += gest * 0.06 * Math.sin(t * 7.5 + i) + 0.012 * Math.sin(t * 2.8);
-        const sx = i ? 1 : -1, sh = new THREE.Vector3(sx * S.sh[0], S.sh[1] + 0.01 * Math.sin(t * 2.8), 0);
-        const r = b3IK(sh, tg, S.arm[0], S.arm[1], new THREE.Vector3(sx * 0.8, -0.6, -0.5));
-        arms[i].set(sh, r.e, r.h);
-        hands[i].position.copy(r.h); hands[i].lookAt(r.h.clone().add(r.h.clone().sub(r.e))); hands[i].rotateX(Math.PI / 2);
-        hands[i].finger.visible = tico && i === 1 && pose === 'point';
+        const s = i ? 1 : -1, tg = new THREE.Vector3(P[i * 3], P[i * 3 + 1], P[i * 3 + 2]);
+        const fl = P[26] * (talking ? 1 : 0) * (i === 1 ? 1 : 0.5) * beat; tg.y -= 0.07 * fl; tg.z += 0.05 * fl;
+        tg.y += 0.012 * br; const gw = P[26] * tk * (i === 1 ? 1 : 0.6); tg.x += gw * 0.05 * Math.sin(t * 3.1 + i * 2); tg.y += gw * 0.05 * Math.sin(t * 2.3 + i); tg.z += gw * 0.03 * Math.sin(t * 2.7 + i); if (i === 1) { tg.x += P[24] * 0.07 * Math.sin(t * 14); tg.y += P[25] * 0.04 * Math.sin(t * 18); tg.z += P[25] * 0.03 * Math.cos(t * 18); }
+        const sh = new THREE.Vector3(s * S.sh[0], S.sh[1] + 0.01 * br + 0.06 * P[23], 0);
+        const r = b3IK(sh, tg, S.arm[0], S.arm[1], new THREE.Vector3(s * 0.8, -0.6, -0.5)); arms[i].set(sh, r.e, r.h);
+        const hd = hands[i]; hd.position.copy(r.h); hd.quaternion.setFromUnitVectors(Y, V.copy(r.h).sub(r.e).normalize()); hd.rotateY(s * (P[17 + i] * 1.4 - 0.2));
+        const curl = p3Clamp(P[15 + i]), pt = i === 1 ? p3Clamp(P[21]) : 0;
+        hd.fingers.forEach((f, k) => { f.rotation.x = 1.5 * curl * (k === 1 ? 1 - pt : 1) + (P[24] && i === 1 ? 0.15 * Math.sin(t * 14 + k) : 0); });
+        hd.thumb.rotation.x = 0.9 * curl;
       });
     },
   });

@@ -149,7 +149,7 @@ defineVisuals({
     bg: '#1c336f',
     build(w) {
       p3Lights(w); const wg = b3Wing(); w.add(wg.foil); w.add(wg.air); w.add(wg.lift);
-      const d = w.add(b3Dota()), tk = w.add(b3Tico());
+      const d = w.add(b3Dota()), tk = w.add(b3Tico()); d.side(1); tk.side(-1);
       return (t) => {
         b3Cam(w, [0, 0.8, 16], [0, 1.0, 0], t, 40, [w.K('fast'), w.K('still')]);
         wg.foil.rotation.z = -0.16; const still = t > w.K('still');
@@ -445,4 +445,11 @@ defineVisuals({
 });
 
 // every scene of this video gets the finish (reflections, grade, vignette) and the fur clock
-for (const id of Object.keys(VISUALS)) { const V = VISUALS[id], b = V.build; V.build = (w) => { b3Finish(w); const pose = b(w); return (t) => { P3_T.value = t; pose(t); }; }; }
+for (const id of Object.keys(VISUALS)) { const V = VISUALS[id], b = V.build; V.build = (w) => {
+  b3Finish(w); const pose = b(w), keys = (w.s.keys || []).map((k) => w.K(k.id)); let q0: THREE.Quaternion | null = null;
+  return (t) => {
+    P3_T.value = t; B3_KEYS = keys; if (q0) w.camera.quaternion.copy(q0); pose(t); q0 = w.camera.quaternion.clone();
+    // a hand-held camera: a slow, small drift so no shot is ever frozen
+    const n = (a: number, b: number) => Math.sin(t * a + b); w.camera.rotateX(0.004 * (n(0.9, 1) + 0.6 * n(2.3, 4))); w.camera.rotateY(0.004 * (n(0.7, 2) + 0.6 * n(1.9, 5))); w.camera.rotateZ(0.0025 * n(0.5, 3)); w.camera.updateMatrixWorld(true);
+  };
+}; }

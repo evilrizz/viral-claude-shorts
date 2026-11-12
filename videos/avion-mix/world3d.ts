@@ -158,6 +158,8 @@ function m3NightSet(w: World) {
   const key = new THREE.DirectionalLight('#ffffff', 1.5); key.position.set(6, 10, 8); key.castShadow = true; key.shadow.mapSize.set(2048, 2048); Object.assign(key.shadow.camera, { left: -15, right: 15, top: 15, bottom: -15 }); w.add(key);
   const rim = new THREE.DirectionalLight(M3.orange, 0.6); rim.position.set(-8, 4, -6); w.add(rim);
   w.add(p3Ground('#1b1d26', -2.5));
+  // a warm stage spot: a pool of light on the floor where the characters stand, with their shadows in it
+  const spot = new THREE.SpotLight('#ffe2b8', 150, 40, 0.42, 0.85, 1.6); spot.position.set(1.5, 9, 7); spot.target.position.set(0, -2.5, 0); spot.castShadow = true; spot.shadow.mapSize.set(2048, 2048); spot.shadow.bias = -0.0004; spot.shadow.radius = 5; w.add(spot); w.add(spot.target);
   const sp = w.add(m3Specks());
   return { pose(t: number) { sp.pose(t); } };
 }
@@ -337,9 +339,9 @@ function m3Char(S: M3Spec) {
   const tico = S.kind === 'tico', K = M3_K[S.kind], H2 = M3_H2[S.kind];
   const g = new THREE.Group();
   const cv = document.createElement('canvas'); cv.width = M3_W * M3_PX; cv.height = M3_H * M3_PX; const c = cv.getContext('2d')!;
-  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.generateMipmaps = false; tex.minFilter = THREE.LinearFilter;
   const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.04, toneMapped: false, side: THREE.DoubleSide, fog: false });
-  const card = new THREE.Mesh(new THREE.PlaneGeometry(M3_W * M3_U, M3_H * M3_U), mat); card.position.y = -(M3_Y0 + M3_H / 2) * M3_U;
+  const card = new THREE.Mesh(new THREE.PlaneGeometry(M3_W * M3_U, M3_H * M3_U), mat); card.castShadow = true; card.customDepthMaterial = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, map: tex, alphaTest: 0.5, side: THREE.DoubleSide }); card.position.y = -(M3_Y0 + M3_H / 2) * M3_U;
   const pivot = new THREE.Group(); g.add(pivot); pivot.add(card); M3_SPRITES.push({ mesh: card, g: pivot });
   const shadow = new THREE.Mesh(new THREE.CircleGeometry(tico ? 0.5 : 0.4, 32), new THREE.MeshBasicMaterial({ color: '#000', transparent: true, opacity: 0.22, depthWrite: false })); shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.012; shadow.scale.y = 0.5; g.add(shadow);
   // things the scenes switch on and off or turn (read back when drawing)
@@ -504,6 +506,8 @@ function m3Char(S: M3Spec) {
       else if (curl < 0.45) for (const a of [-0.55, 0, 0.55]) { c.save(); c.rotate(a); const f = new Path2D(); f.roundRect(r * 0.6, -7, r * 0.95, 14, 7); fs(f, K.skin, 6); c.restore(); }
       fs(ell(0, 0, r * 1.12, r), K.skin, 7); c.fillStyle = 'rgba(255,255,255,0.18)'; c.fill(ell(-r * 0.35, -r * 0.3, r * 0.4, r * 0.25)); c.restore();
     }
+    // light on the paper: brighter from the upper left, a soft shade towards the lower right and the feet (the volume of the world's light)
+    c.setTransform(1, 0, 0, 1, 0, 0); c.globalCompositeOperation = 'source-atop'; const gr = c.createLinearGradient(cv.width * 0.2, cv.height * 0.1, cv.width * 0.8, cv.height); gr.addColorStop(0, 'rgba(255,248,230,0.10)'); gr.addColorStop(0.55, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(20,10,40,0.22)'); c.fillStyle = gr; c.fillRect(0, 0, cv.width, cv.height); c.globalCompositeOperation = 'source-over';
     tex.needsUpdate = true;
     shadow.visible = Math.abs(g.rotation.z) < 0.1 && Math.abs(g.rotation.x) < 0.1; shadow.scale.set(1 - hop * 0.004, 0.5 - hop * 0.002, 1);
   };
@@ -523,17 +527,63 @@ function m3Dota() { const c = m3Char(M3_DOTA); c.setPose('up'); return c; }
 
 // ---------------- soft, smooth scenery (no faceted low-poly): puffy clouds and round trees
 function m3Cloud(p: Vec3, s = 1) { const m = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 1, sheen: 1, sheenColor: new THREE.Color('#dfefff'), emissive: '#ffffff', emissiveIntensity: 0.18 }); const g = new THREE.Group(); for (const [x, y, z, r] of [[0, 0, 0, 1.4], [1.4, -0.2, 0.2, 1.0], [-1.3, -0.3, 0, 1.0], [0.5, 0.6, -0.3, 0.95], [-0.6, 0.4, 0.3, 0.8]]) { const b = new THREE.Mesh(new THREE.SphereGeometry(r, 32, 24), m); b.position.set(x, y, z); g.add(b); } g.position.set(...p); g.scale.setScalar(s); return g; }
-function m3Tree(p: Vec3, s = 1, seed = 1) { const r = p3Rnd(seed), trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.2, 1.4, 16), m3Mat('#8a5a3b', 0.9)); trunk.position.y = 0.7; const g = new THREE.Group(); g.add(trunk); const leaf = new THREE.MeshPhysicalMaterial({ color: '#4caf50', roughness: 0.85, sheen: 0.6, sheenColor: new THREE.Color('#bff5a0') }); for (let i = 0; i < 4; i++) { const b = new THREE.Mesh(p3Blob((x, y, z) => { const n = p3Fbm3(x * 2 + seed, y * 2, z * 2) * 0.35; return [x * (0.9 + n), y * (0.85 + n), z * (0.9 + n)]; }, undefined, 32, 24), leaf); b.position.set((r() - 0.5) * 0.8, 1.9 + r() * 0.8, (r() - 0.5) * 0.6); b.scale.setScalar(0.7 + r() * 0.4); b.castShadow = true; g.add(b); } g.position.set(...p); g.scale.setScalar(s); return g; }
+function m3Tree(p: Vec3, s = 1, seed = 1) { const r = p3Rnd(seed), trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.2, 1.4, 16), m3Mat('#8a5a3b', 0.9)); trunk.position.y = 0.7; const g = new THREE.Group(); g.add(trunk); const leaf = new THREE.MeshPhysicalMaterial({ color: '#4caf50', roughness: 0.85, sheen: 0.6, sheenColor: new THREE.Color('#bff5a0') }); for (let i = 0; i < 4; i++) { const b = new THREE.Mesh(p3Blob((x, y, z) => { const n = p3Fbm3(x * 2 + seed, y * 2, z * 2) * 0.35; return [x * (0.9 + n), y * (0.85 + n), z * (0.9 + n)]; }, undefined, 32, 24), leaf); b.position.set((r() - 0.5) * 0.8, 1.9 + r() * 0.8, (r() - 0.5) * 0.6); b.scale.setScalar(0.7 + r() * 0.4); b.castShadow = true; g.add(b); } g.position.set(...p); g.scale.setScalar(s); M3_TREES.push(g); return g; }
 function m3Forest(n = 22, seed = 3, z0 = -14, width = 60) { const r = p3Rnd(seed), g = new THREE.Group(); for (let i = 0; i < n; i++) g.add(m3Tree([p3Lerp(-width / 2, width / 2, r()), 0, z0 - r() * 18], 0.8 + r() * 0.7, i + seed)); return g; }
 // the image finish shared by every scene: studio reflections, ACES colour, a soft grade, vignette and a little grain
-let M3_FIN: { composer: THREE.EffectComposer; pass: THREE.RenderPass; grade: THREE.ShaderPass } | null = null;
+// depth of field that only softens what is far behind the subject (the foreground and the characters stay sharp)
+const M3_DOF = {
+  uniforms: { tDiffuse: { value: null }, tDepth: { value: null }, uFocus: { value: 10 }, uNear: { value: 0.1 }, uFar: { value: 200 }, uMax: { value: 7 }, uRes: { value: new THREE.Vector2(1080, 1920) } },
+  vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+  fragmentShader: `#include <packing>
+    uniform sampler2D tDiffuse; uniform sampler2D tDepth; uniform float uFocus, uNear, uFar, uMax; uniform vec2 uRes; varying vec2 vUv;
+    float dist(vec2 uv) { return -perspectiveDepthToViewZ(unpackRGBAToDepth(texture2D(tDepth, uv)), uNear, uFar); }
+    float coc(float d) { return smoothstep(uFocus * 1.35, uFocus * 3.2 + 6.0, d) * uMax; }
+    void main() {
+      float c0 = coc(dist(vUv)); vec4 col = texture2D(tDiffuse, vUv); if (c0 < 0.3) { gl_FragColor = col; return; }
+      vec4 acc = col; float wsum = 1.0;
+      for (int i = 0; i < 16; i++) {
+        float a = float(i) * 2.39996, r = sqrt((float(i) + 0.5) / 16.0) * c0; vec2 uv = vUv + vec2(cos(a), sin(a)) * r / uRes;
+        float w = step(0.3, coc(dist(uv))); acc += texture2D(tDiffuse, uv) * w; wsum += w;
+      }
+      gl_FragColor = acc / wsum;
+    }`,
+};
+let M3_FIN: { composer: THREE.EffectComposer; pass: THREE.RenderPass; dof: THREE.ShaderPass; grade: THREE.ShaderPass; depthRT: THREE.WebGLRenderTarget; depthM: THREE.MeshDepthMaterial } | null = null;
+// floating dust in the light: tiny warm specks drifting through the shot (parallax = depth)
+function m3Dust(n = 170) {
+  const r = p3Rnd(77), base = new Float32Array(n * 3), pos = new Float32Array(n * 3); for (let i = 0; i < n * 3; i++) base[i] = r();
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const dot = p3Paint(64, 64, (c) => { const gr = c.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, 64, 64); });
+  const pts = new THREE.Points(g, new THREE.PointsMaterial({ size: 0.095, map: dot, color: '#fff3d6', transparent: true, opacity: 0.65, depthWrite: false, sizeAttenuation: true, fog: false }));
+  return Object.assign(pts, { pose(t: number, c: THREE.Vector3, span = 9) {
+    for (let i = 0; i < n; i++) { const bx = base[i * 3], by = base[i * 3 + 1], bz = base[i * 3 + 2];
+      pos[i * 3] = c.x + (((bx * span + t * 0.12 + 0.3 * Math.sin(t * 0.7 + i)) % span + span) % span - span / 2);
+      pos[i * 3 + 1] = c.y + (((by * span * 0.7 + t * 0.06 + 0.2 * Math.sin(t * 0.9 + i * 1.7)) % (span * 0.7)) - span * 0.35);
+      pos[i * 3 + 2] = c.z + bz * span - span / 2; }
+    g.attributes.position.needsUpdate = true; } });
+}
+// the trees of the page, swayed by the wrapper
+const M3_TREES: THREE.Object3D[] = [];
 function m3Finish(w: World) {
-  const r = w.renderer; w.scene.environment = p3Env(r); (w.scene as THREE.Scene & { environmentIntensity: number }).environmentIntensity = 0.3; r.toneMappingExposure = 0.95;
+  const r = w.renderer; w.scene.environment = p3Env(r); (w.scene as THREE.Scene & { environmentIntensity: number }).environmentIntensity = 0.35; r.toneMappingExposure = 1.0;
   if (!M3_FIN) {
     const composer = new THREE.EffectComposer(r, new THREE.WebGLRenderTarget(1080, 1920, { type: THREE.HalfFloatType, samples: 4 })); composer.setSize(1080, 1920);
-    const pass = new THREE.RenderPass(w.scene, w.camera); composer.addPass(pass); composer.addPass(new THREE.OutputPass());
-    const grade = new THREE.ShaderPass({ ...P3_GRADE, uniforms: { tDiffuse: { value: null }, uT: { value: 0 }, uSat: { value: 1.1 }, uCurve: { value: 0.4 }, uVig: { value: 0.55 }, uGrain: { value: 0.01 }, uRed: { value: 0 }, uGray: { value: 0 } } }); composer.addPass(grade);
-    M3_FIN = { composer, pass, grade };
+    const pass = new THREE.RenderPass(w.scene, w.camera); composer.addPass(pass);
+    const dof = new THREE.ShaderPass(M3_DOF); composer.addPass(dof); composer.addPass(new THREE.OutputPass());
+    const grade = new THREE.ShaderPass({ ...P3_GRADE, uniforms: { tDiffuse: { value: null }, uT: { value: 0 }, uSat: { value: 1.12 }, uCurve: { value: 0.45 }, uVig: { value: 0.7 }, uGrain: { value: 0.012 }, uRed: { value: 0 }, uGray: { value: 0 } } }); composer.addPass(grade);
+    const depthRT = new THREE.WebGLRenderTarget(540, 960), depthM = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking });
+    M3_FIN = { composer, pass, dof, grade, depthRT, depthM };
   }
-  w.present = () => { const f = M3_FIN!; f.pass.scene = w.scene; f.pass.camera = w.camera; f.grade.uniforms.uT.value = Math.round(P3_T.value * 30); f.composer.render(); };
+  w.present = () => {
+    const f = M3_FIN!, cam = w.camera, swap: [THREE.Mesh, THREE.Material | THREE.Material[]][] = [], hid: THREE.Object3D[] = [];
+    // depth pass (alpha-tested for the paper cut-outs) for the depth of field
+    w.scene.traverse((o) => { if (!o.visible) return; const m = o as THREE.Mesh; if ((o as THREE.Points).isPoints || (o as THREE.Line).isLine) { hid.push(o); o.visible = false; return; }
+      if (m.isMesh) { const mt = m.material as THREE.Material; if (mt.transparent && !(m.customDepthMaterial)) { if ((mt as THREE.MeshBasicMaterial).opacity < 0.5) { hid.push(o); o.visible = false; return; } } swap.push([m, m.material]); m.material = m.customDepthMaterial || f.depthM; } });
+    const bg = w.scene.background, fog = w.scene.fog, cc = new THREE.Color(); r.getClearColor(cc); const ca = r.getClearAlpha();
+    w.scene.background = null; w.scene.fog = null; r.setClearColor(0xffffff, 1); r.setRenderTarget(f.depthRT); r.clear(); r.render(w.scene, cam); r.setRenderTarget(null); r.setClearColor(cc, ca);
+    w.scene.background = bg; w.scene.fog = fog; for (const [m, mt] of swap) m.material = mt; for (const o of hid) o.visible = true;
+    const u = f.dof.uniforms; u.tDepth.value = f.depthRT.texture; u.uNear.value = cam.near; u.uFar.value = cam.far; u.uFocus.value = M3_FOCUS;
+    f.pass.scene = w.scene; f.pass.camera = cam; f.grade.uniforms.uT.value = Math.round(P3_T.value * 30); f.composer.render();
+  };
 }
+let M3_FOCUS = 10;

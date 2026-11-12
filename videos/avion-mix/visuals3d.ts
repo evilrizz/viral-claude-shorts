@@ -446,11 +446,23 @@ defineVisuals({
 
 // every scene of this video gets the finish (reflections, grade, vignette) and the fur clock
 for (const id of Object.keys(VISUALS)) { const V = VISUALS[id], b = V.build; V.build = (w) => {
-  m3Finish(w); const pose = b(w), keys = (w.s.keys || []).map((k) => w.K(k.id)); let q0: THREE.Quaternion | null = null;
+  m3Finish(w); let tgt = new THREE.Vector3(0, 1, 0); const look0 = w.look.bind(w); w.look = (p, q, f) => { tgt = new THREE.Vector3(...q); look0(p, q, f); };
+  const pose = b(w), keys = (w.s.keys || []).map((k) => w.K(k.id)); let q0: THREE.Quaternion | null = null;
+  const dust = m3Dust(); w.scene.add(dust); const tint = new THREE.Color('#ffffff');
+  w.scene.traverse((o) => {   // softer, warmer key light with cleaner shadows; the characters take a little of the sky colour
+    const l = o as THREE.DirectionalLight; if (l.isDirectionalLight && l.castShadow) { l.shadow.bias = -0.0004; l.shadow.normalBias = 0.03; l.shadow.mapSize.set(2048, 2048); l.shadow.radius = 4; l.intensity *= 1.15; if (w.s.id !== 'belt' && w.s.id !== 'turb2') l.color.lerp(new THREE.Color('#ffe9c9'), 0.5); }
+    const h = o as THREE.HemisphereLight; if (h.isHemisphereLight) tint.copy(new THREE.Color('#ffffff').lerp(h.color, 0.35));
+  });
   return (t) => {
     P3_T.value = t; M3_KEYS = keys; if (q0) w.camera.quaternion.copy(q0); pose(t); q0 = w.camera.quaternion.clone();
     // a hand-held camera: a slow, small drift so no shot is ever frozen
     const n = (a: number, b: number) => Math.sin(t * a + b); w.camera.rotateX(0.004 * (n(0.9, 1) + 0.6 * n(2.3, 4))); w.camera.rotateY(0.004 * (n(0.7, 2) + 0.6 * n(1.9, 5))); w.camera.rotateZ(0.0025 * n(0.5, 3)); w.camera.updateMatrixWorld(true);
+    // depth of field focused on what the camera looks at; dust drifting in the light; trees swaying; character tint from the scene's light
+    M3_FOCUS = w.camera.position.distanceTo(tgt); const wp = new THREE.Vector3();
+    for (const s of M3_SPRITES) { let root: THREE.Object3D = s.g; while (root.parent) root = root.parent; if (root !== w.scene || !s.g.parent!.visible) continue; s.mesh.getWorldPosition(wp); M3_FOCUS = Math.max(M3_FOCUS, w.camera.position.distanceTo(wp)); }
+    dust.pose(t, tgt, Math.max(8, w.camera.position.distanceTo(tgt)));
+    for (const tr of M3_TREES) if (tr.parent && tr.parent.parent === w.scene || tr.parent === w.scene) { tr.rotation.z = 0.025 * Math.sin(t * 1.1 + tr.position.x * 0.7); tr.rotation.x = 0.015 * Math.sin(t * 0.8 + tr.position.z); }
+    for (const s of M3_SPRITES) (s.mesh.material as THREE.MeshBasicMaterial).color.copy(tint);
     // the 2D characters are paper cut-outs: turn each one of this scene to face the camera (keeping its own roll)
     const qc = w.camera.quaternion, qg = new THREE.Quaternion(), rz = new THREE.Quaternion(), Z = new THREE.Vector3(0, 0, 1);
     for (const s of M3_SPRITES) {

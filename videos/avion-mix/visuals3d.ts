@@ -53,7 +53,7 @@ defineVisuals({
           M3_FOCUS_OVR = p3Lerp(d, 7.3, z); M3_BOTH = z; }
         const off = t > w.K('off'); p.spin(t, off ? Math.max(0, 6 - (t - w.K('off')) * 6) : 6); puffs(t, w.K('off'));
         p.rotation.z = off ? -0.18 * p3Ramp(t, w.K('off'), w.K('off') + 1.5) : 0.03 * Math.sin(t * 2); p.position.y = 1.8 + 0.2 * Math.sin(t * 1.7);
-        q.visible = t > w.K('cae') - 0.05; q.scale.setScalar(p3Spring(t, w.K('cae') - 0.05)); q.rotation.y = 0.3 * Math.sin(t * 2);
+        q.visible = t > w.K('cae') - 0.05; q.scale.setScalar(p3Spring(t, w.K('cae') - 0.05)); q.lookAt(w.camera.position); q.rotateY(0.12 * Math.sin(t * 2));   // the "?" always faces the camera
         m3Corner(w, tk); tk.live(t);
       };
     },

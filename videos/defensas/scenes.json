@@ -1,0 +1,985 @@
+{
+ "style": "3d",
+ "fps": 30,
+ "format": "9:16",
+ "music": {
+  "bpm": 108,
+  "key": "F"
+ },
+ "notes": "Mixed style (3D world, Tico and Dota drawn in 2D): how the body fights viruses and bacteria. Two places: the room and the microscopic world inside Dota's finger.",
+ "scenes": [
+  {
+   "id": "hook",
+   "from": 0,
+   "type": "question",
+   "label": "Idio-two",
+   "title": "Tu cuerpo mata bacterias",
+   "highlight": "bacterias",
+   "visual": "room: Tico talking, Dota with chickenpox spots scratching; a cartoon bacterium pops in and gets zapped",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "bac",
+     "at": 6,
+     "sfx": "pop",
+     "t": 2.66
+    }
+   ],
+   "transition": "cut",
+   "t0": 0,
+   "t1": 4.727
+  },
+  {
+   "id": "varicela",
+   "from": 12,
+   "type": "question",
+   "label": "Pregunta",
+   "title": "¿Varicela 2 veces?",
+   "highlight": "varicela",
+   "visual": "room: the padlock with a ? lands next to them; Dota scratching",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "var",
+     "at": 16,
+     "sfx": "pop",
+     "t": 6.078
+    },
+    {
+     "id": "dos",
+     "at": 21,
+     "sfx": "tick",
+     "t": 7.701
+    }
+   ],
+   "transition": "cut",
+   "t0": 4.727,
+   "t1": 8.579
+  },
+  {
+   "id": "flojera",
+   "from": 23,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Porque le da flojera!",
+   "highlight": "flojera",
+   "visual": "room: Dota sure of himself, arms up; Tico arms crossed",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 23,
+     "sfx": "pop",
+     "t": 8.829
+    }
+   ],
+   "transition": "cut",
+   "t0": 8.579,
+   "t1": 11.444
+  },
+  {
+   "id": "idiota",
+   "from": 28,
+   "type": "object",
+   "label": "Idio-two",
+   "title": "Ay, Dota, qué idiota",
+   "highlight": "idiota",
+   "visual": "room: Tico palm, Dota crazy eyes",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "palm",
+     "at": 31,
+     "sfx": "hit",
+     "t": 13.036
+    }
+   ],
+   "transition": "cut",
+   "t0": 11.444,
+   "t1": 14.449
+  },
+  {
+   "id": "promesa",
+   "from": 33,
+   "type": "object",
+   "label": "La promesa",
+   "title": "Al final te digo",
+   "highlight": "final",
+   "visual": "room: the padlock glows; Tico points at it",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "lock",
+     "at": 34,
+     "sfx": "shimmer",
+     "t": 14.758
+    }
+   ],
+   "transition": "cut",
+   "t0": 14.449,
+   "t1": 17.475
+  },
+  {
+   "id": "adentro",
+   "from": 39,
+   "type": "process",
+   "label": "El plan",
+   "title": "¿Qué pasa adentro?",
+   "highlight": "adentro",
+   "visual": "room: Tico points at Dota, Dota with a sheet of paper",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "mira",
+     "at": 45,
+     "t": 19.402
+    },
+    {
+     "id": "corta",
+     "at": 51,
+     "sfx": "whoosh",
+     "t": 21.213
+    }
+   ],
+   "transition": "cut",
+   "t0": 17.475,
+   "t1": 21.939
+  },
+  {
+   "id": "auch",
+   "from": 52,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Auch, una hoja de papel!",
+   "highlight": "hoja",
+   "visual": "room: Dota cuts his finger, red; camera pushes into the finger",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "cut",
+     "at": 52,
+     "sfx": "hit",
+     "t": 22.189
+    },
+    {
+     "id": "zoom",
+     "at": 54,
+     "sfx": "whoosh",
+     "t": 23.056
+    }
+   ],
+   "transition": "cut",
+   "t0": 21.939,
+   "t1": 24.941
+  },
+  {
+   "id": "piel",
+   "from": 57,
+   "type": "process",
+   "label": "Barrera 1",
+   "title": "Piel y moco: la muralla",
+   "highlight": "piel",
+   "visual": "micro: skin wall with mucus, bacteria bounce off",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "piel",
+     "at": 58,
+     "t": 25.404
+    },
+    {
+     "id": "moco",
+     "at": 61,
+     "sfx": "pop",
+     "t": 26.043
+    },
+    {
+     "id": "bichos",
+     "at": 65,
+     "sfx": "thump",
+     "t": 27.843
+    }
+   ],
+   "transition": "cut",
+   "t0": 24.941,
+   "t1": 29.169
+  },
+  {
+   "id": "puerta",
+   "from": 69,
+   "type": "process",
+   "label": "Barrera 1",
+   "title": "Una herida abre la puerta",
+   "highlight": "puerta",
+   "visual": "micro: the wall cracks open, bacteria march in",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "crack",
+     "at": 72,
+     "sfx": "impact",
+     "t": 30.171
+    },
+    {
+     "id": "entran",
+     "at": 79,
+     "sfx": "whoosh",
+     "t": 32.468
+    }
+   ],
+   "transition": "cut",
+   "t0": 29.169,
+   "t1": 34.605
+  },
+  {
+   "id": "alarma",
+   "from": 84,
+   "type": "process",
+   "label": "La alarma",
+   "title": "¡Las células dan la alarma!",
+   "highlight": "alarma",
+   "visual": "micro: a body cell with a siren",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "alarm",
+     "at": 91,
+     "sfx": "riser",
+     "t": 36.893
+    }
+   ],
+   "transition": "cut",
+   "t0": 34.605,
+   "t1": 37.902
+  },
+  {
+   "id": "vasos",
+   "from": 94,
+   "type": "process",
+   "label": "Refuerzos",
+   "title": "Los vasos se abren",
+   "highlight": "vasos",
+   "visual": "micro: blood vessel widens, red cells rush",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "open",
+     "at": 100,
+     "sfx": "whoosh",
+     "t": 39.632
+    },
+    {
+     "id": "ref",
+     "at": 103,
+     "sfx": "pop",
+     "t": 40.518
+    }
+   ],
+   "transition": "cut",
+   "t0": 37.902,
+   "t1": 41.374
+  },
+  {
+   "id": "roja",
+   "from": 105,
+   "type": "object",
+   "label": "Afuera",
+   "title": "Roja, caliente, hinchada",
+   "highlight": "roja",
+   "visual": "room: Dota's finger red and swollen",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "roja",
+     "at": 112,
+     "sfx": "pop",
+     "t": 43.324
+    },
+    {
+     "id": "caliente",
+     "at": 113,
+     "t": 43.669
+    },
+    {
+     "id": "hinchada",
+     "at": 115,
+     "sfx": "pop",
+     "t": 44.357
+    }
+   ],
+   "transition": "cut",
+   "t0": 41.374,
+   "t1": 45.091
+  },
+  {
+   "id": "inflam",
+   "from": 116,
+   "type": "object",
+   "label": "Inflamación",
+   "title": "Eso es inflamación",
+   "highlight": "inflamación",
+   "visual": "room: tag INFLAMACIÓN, finger throbbing",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "name",
+     "at": 121,
+     "sfx": "shimmer",
+     "t": 46.468
+    }
+   ],
+   "transition": "cut",
+   "t0": 45.091,
+   "t1": 47.404
+  },
+  {
+   "id": "comelones",
+   "from": 122,
+   "type": "process",
+   "label": "Defensas",
+   "title": "Los glóbulos blancos comen",
+   "highlight": "blancos",
+   "visual": "micro: macrophage chases and swallows bacteria",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "mac",
+     "at": 128,
+     "sfx": "pop",
+     "t": 49.333
+    },
+    {
+     "id": "eat",
+     "at": 132,
+     "sfx": "hit",
+     "t": 50.499
+    },
+    {
+     "id": "pop",
+     "at": 140,
+     "sfx": "pop",
+     "t": 53.109
+    }
+   ],
+   "transition": "cut",
+   "t0": 47.404,
+   "t1": 53.952
+  },
+  {
+   "id": "macro",
+   "from": 141,
+   "type": "object",
+   "label": "Defensas",
+   "title": "Se llaman macrófagos",
+   "highlight": "macrófagos",
+   "visual": "micro: tag MACRÓFAGO",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "name",
+     "at": 143,
+     "sfx": "shimmer",
+     "t": 54.899
+    }
+   ],
+   "transition": "cut",
+   "t0": 53.952,
+   "t1": 56.076
+  },
+  {
+   "id": "provecho",
+   "from": 144,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Provecho!",
+   "highlight": "Provecho",
+   "visual": "micro: macrophage burps; Dota corner",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 144,
+     "sfx": "pop",
+     "t": 56.326
+    }
+   ],
+   "transition": "cut",
+   "t0": 56.076,
+   "t1": 58.638
+  },
+  {
+   "id": "virus",
+   "from": 145,
+   "type": "question",
+   "label": "El tramposo",
+   "title": "Con un virus es diferente",
+   "highlight": "virus",
+   "visual": "room: Tico sneezes, a virus flies into Dota's nose",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "sneeze",
+     "at": 148,
+     "sfx": "impact",
+     "t": 59.556
+    }
+   ],
+   "transition": "cut",
+   "t0": 58.638,
+   "t1": 60.819
+  },
+  {
+   "id": "fabrica",
+   "from": 152,
+   "type": "process",
+   "label": "El tramposo",
+   "title": "Usa tu célula de fábrica",
+   "highlight": "fábrica",
+   "visual": "micro: the virus enters a cell, the cell fills with copies",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "in",
+     "at": 155,
+     "sfx": "whoosh",
+     "t": 61.749
+    },
+    {
+     "id": "fab",
+     "at": 164,
+     "sfx": "tick",
+     "t": 64.283
+    },
+    {
+     "id": "more",
+     "at": 166,
+     "sfx": "pop",
+     "t": 65.079
+    }
+   ],
+   "transition": "cut",
+   "t0": 60.819,
+   "t1": 66.112
+  },
+  {
+   "id": "escondido",
+   "from": 169,
+   "type": "process",
+   "label": "El tramposo",
+   "title": "El macrófago no lo ve",
+   "highlight": "ve",
+   "visual": "micro: macrophage passes by the cell, looks around, doesn't see",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "pass",
+     "at": 171,
+     "t": 67.327
+    },
+    {
+     "id": "nolove",
+     "at": 173,
+     "sfx": "fail",
+     "t": 68.086
+    }
+   ],
+   "transition": "cut",
+   "t0": 66.112,
+   "t1": 68.977
+  },
+  {
+   "id": "bandera",
+   "from": 176,
+   "type": "process",
+   "label": "Defensas",
+   "title": "La célula saca una bandera",
+   "highlight": "bandera",
+   "visual": "micro: infected cell raises a red flag",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "flag",
+     "at": 187,
+     "sfx": "pop",
+     "t": 73.327
+    }
+   ],
+   "transition": "cut",
+   "t0": 68.977,
+   "t1": 74.251
+  },
+  {
+   "id": "asesinos",
+   "from": 189,
+   "type": "process",
+   "label": "Defensas",
+   "title": "Glóbulos blancos asesinos",
+   "highlight": "asesinos",
+   "visual": "micro: T cell with helmet punches the cell, it bursts",
+   "mood": "epic",
+   "keys": [
+    {
+     "id": "tcell",
+     "at": 193,
+     "sfx": "whoosh",
+     "t": 75.721
+    },
+    {
+     "id": "boom",
+     "at": 195,
+     "sfx": "impact",
+     "t": 76.624
+    }
+   ],
+   "transition": "cut",
+   "t0": 74.251,
+   "t1": 78.319
+  },
+  {
+   "id": "linfo",
+   "from": 200,
+   "type": "object",
+   "label": "Defensas",
+   "title": "Son los linfocitos T",
+   "highlight": "linfocitos",
+   "visual": "micro: tag LINFOCITO T",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "name",
+     "at": 202,
+     "sfx": "shimmer",
+     "t": 78.993
+    }
+   ],
+   "transition": "cut",
+   "t0": 78.319,
+   "t1": 80.175
+  },
+  {
+   "id": "anticuerpos",
+   "from": 204,
+   "type": "process",
+   "label": "Defensas",
+   "title": "Otras fabrican anticuerpos",
+   "highlight": "anticuerpos",
+   "visual": "micro: B cell fires Y antibodies",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "fire",
+     "at": 213,
+     "sfx": "pop",
+     "t": 83.026
+    }
+   ],
+   "transition": "cut",
+   "t0": 80.175,
+   "t1": 84.324
+  },
+  {
+   "id": "pinzas",
+   "from": 215,
+   "type": "process",
+   "label": "Defensas",
+   "title": "Pinzas que se les pegan",
+   "highlight": "pinzas",
+   "visual": "micro: Ys stick to viruses, viruses bounce off a cell",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "stick",
+     "at": 219,
+     "sfx": "pop",
+     "t": 85.463
+    },
+    {
+     "id": "bounce",
+     "at": 224,
+     "sfx": "thump",
+     "t": 86.679
+    }
+   ],
+   "transition": "cut",
+   "t0": 84.324,
+   "t1": 88.355
+  },
+  {
+   "id": "pobre",
+   "from": 228,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Pobre celulita!",
+   "highlight": "celulita",
+   "visual": "micro: Dota sad in the corner, pieces of the cell",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 228,
+     "t": 88.605
+    }
+   ],
+   "transition": "cut",
+   "t0": 88.355,
+   "t1": 90.766
+  },
+  {
+   "id": "ella",
+   "from": 230,
+   "type": "object",
+   "label": "Tico",
+   "title": "Era ella o tú",
+   "highlight": "tú",
+   "visual": "room: Tico pats Dota",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "tu",
+     "at": 233,
+     "sfx": "pop",
+     "t": 92.181
+    }
+   ],
+   "transition": "cut",
+   "t0": 90.766,
+   "t1": 93.632
+  },
+  {
+   "id": "fiebre",
+   "from": 235,
+   "type": "process",
+   "label": "La fiebre",
+   "title": "Sube la temperatura",
+   "highlight": "temperatura",
+   "visual": "room: Dota in bed with a thermometer, Tico",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "temp",
+     "at": 243,
+     "sfx": "riser",
+     "t": 95.958
+    }
+   ],
+   "transition": "cut",
+   "t0": 93.632,
+   "t1": 96.885
+  },
+  {
+   "id": "noesvirus",
+   "from": 244,
+   "type": "object",
+   "label": "La fiebre",
+   "title": "La fiebre no es el virus",
+   "highlight": "fiebre",
+   "visual": "room: big thermometer rising",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "no",
+     "at": 246,
+     "sfx": "fail",
+     "t": 97.724
+    }
+   ],
+   "transition": "cut",
+   "t0": 96.885,
+   "t1": 98.88
+  },
+  {
+   "id": "calor",
+   "from": 250,
+   "type": "process",
+   "label": "La fiebre",
+   "title": "Calentando la batalla",
+   "highlight": "Calentando",
+   "visual": "micro: the world turns hot",
+   "mood": "epic",
+   "keys": [
+    {
+     "id": "hot",
+     "at": 253,
+     "sfx": "whoosh",
+     "t": 99.806
+    }
+   ],
+   "transition": "cut",
+   "t0": 98.88,
+   "t1": 102.295
+  },
+  {
+   "id": "sudan",
+   "from": 260,
+   "type": "process",
+   "label": "La fiebre",
+   "title": "Los bichos sufren con calor",
+   "highlight": "bichos",
+   "visual": "micro: bacteria sweat and slow down, defenders run fast",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "bichos",
+     "at": 263,
+     "sfx": "pop",
+     "t": 103.34
+    },
+    {
+     "id": "apuran",
+     "at": 273,
+     "sfx": "whoosh",
+     "t": 106.282
+    }
+   ],
+   "transition": "cut",
+   "t0": 102.295,
+   "t1": 107.452
+  },
+  {
+   "id": "prometi",
+   "from": 275,
+   "type": "object",
+   "label": "La respuesta",
+   "title": "Lo que te prometí",
+   "highlight": "prometí",
+   "visual": "room: the padlock opens",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "open",
+     "at": 280,
+     "sfx": "shimmer",
+     "t": 108.824
+    }
+   ],
+   "transition": "cut",
+   "t0": 107.452,
+   "t1": 109.688
+  },
+  {
+   "id": "foto",
+   "from": 282,
+   "type": "process",
+   "label": "La respuesta",
+   "title": "Guardan la foto del bicho",
+   "highlight": "foto",
+   "visual": "micro: memory cells keep an album of photos",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "album",
+     "at": 286,
+     "sfx": "pop",
+     "t": 111.286
+    },
+    {
+     "id": "foto",
+     "at": 295,
+     "sfx": "pop",
+     "t": 114.017
+    }
+   ],
+   "transition": "cut",
+   "t0": 109.688,
+   "t1": 115.12
+  },
+  {
+   "id": "memoria",
+   "from": 298,
+   "type": "object",
+   "label": "La respuesta",
+   "title": "Células de memoria",
+   "highlight": "memoria",
+   "visual": "micro: tag CÉLULAS DE MEMORIA",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "name",
+     "at": 300,
+     "sfx": "shimmer",
+     "t": 115.735
+    }
+   ],
+   "transition": "cut",
+   "t0": 115.12,
+   "t1": 117.057
+  },
+  {
+   "id": "regresa",
+   "from": 303,
+   "type": "process",
+   "label": "La respuesta",
+   "title": "La reconocen y la sacan",
+   "highlight": "reconocen",
+   "visual": "micro: chickenpox virus comes back, recognized from the photo, kicked out",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "back",
+     "at": 306,
+     "sfx": "whoosh",
+     "t": 118.325
+    },
+    {
+     "id": "know",
+     "at": 308,
+     "sfx": "tick",
+     "t": 119.004
+    },
+    {
+     "id": "out",
+     "at": 311,
+     "sfx": "impact",
+     "t": 120.022
+    }
+   ],
+   "transition": "cut",
+   "t0": 117.057,
+   "t1": 121.79
+  },
+  {
+   "id": "dosveces",
+   "from": 317,
+   "type": "stat",
+   "label": "La respuesta",
+   "title": "Casi nunca da 2 veces",
+   "highlight": "veces",
+   "visual": "room: Dota without spots, happy",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "dos",
+     "at": 322,
+     "sfx": "hit",
+     "t": 123.178
+    }
+   ],
+   "transition": "cut",
+   "t0": 121.79,
+   "t1": 123.901
+  },
+  {
+   "id": "vacuna",
+   "from": 324,
+   "type": "process",
+   "label": "Extra",
+   "title": "La vacuna enseña la foto",
+   "highlight": "vacuna",
+   "visual": "micro: a syringe with the photo",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "vac",
+     "at": 326,
+     "sfx": "pop",
+     "t": 124.53
+    },
+    {
+     "id": "foto",
+     "at": 333,
+     "sfx": "shimmer",
+     "t": 126.696
+    }
+   ],
+   "transition": "cut",
+   "t0": 123.901,
+   "t1": 129.032
+  },
+  {
+   "id": "antibio",
+   "from": 341,
+   "type": "object",
+   "label": "Consejo",
+   "title": "Antibióticos: no a virus",
+   "highlight": "virus",
+   "visual": "micro: an antibiotic pill chases a virus that dodges and laughs",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "pill",
+     "at": 344,
+     "sfx": "whoosh",
+     "t": 129.99
+    },
+    {
+     "id": "virus",
+     "at": 345,
+     "sfx": "fail",
+     "t": 130.924
+    }
+   ],
+   "transition": "cut",
+   "t0": 129.032,
+   "t1": 132.587
+  },
+  {
+   "id": "receta",
+   "from": 349,
+   "type": "object",
+   "label": "Consejo",
+   "title": "Solo si lo receta un médico",
+   "highlight": "médico",
+   "visual": "room: a prescription card",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "gripa",
+     "at": 351,
+     "t": 133.388
+    },
+    {
+     "id": "rx",
+     "at": 361,
+     "sfx": "pop",
+     "t": 136.64
+    }
+   ],
+   "transition": "cut",
+   "t0": 132.587,
+   "t1": 137.402
+  },
+  {
+   "id": "guerras",
+   "from": 362,
+   "type": "closing",
+   "label": "Idio-two",
+   "title": "Tu cuerpo gana guerras",
+   "highlight": "guerras",
+   "visual": "micro: the defenders cheer",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "win",
+     "at": 366,
+     "sfx": "pop",
+     "t": 138.79
+    }
+   ],
+   "transition": "cut",
+   "t0": 137.402,
+   "t1": 141.917
+  },
+  {
+   "id": "sub",
+   "from": 375,
+   "type": "closing",
+   "label": "Idio-two",
+   "title": "¡Suscríbanse!",
+   "highlight": "Suscríbanse",
+   "visual": "banner: SUSCRÍBANSE over Idio-two; Dota about to sneeze, Tico pinches his nose",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "achoo",
+     "at": 378,
+     "sfx": "impact",
+     "t": 144.23
+    }
+   ],
+   "transition": "cut",
+   "t0": 141.917,
+   "t1": 145.789
+  }
+ ],
+ "duration": 145.789
+}

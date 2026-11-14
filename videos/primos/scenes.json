@@ -1,0 +1,893 @@
+{
+ "style": "3d",
+ "fps": 30,
+ "format": "9:16",
+ "music": {
+  "bpm": 100,
+  "key": "D"
+ },
+ "notes": "Mixed style (3D world, 2D characters): we are not the chimp's children but its cousins. Visual references from the user's clips (stairs, cousin, family frame, two branches, DNA, letter grid, chromosomes with caps, Darwin and the magazine, the skull in the desert).",
+ "scenes": [
+  {
+   "id": "hook",
+   "from": 0,
+   "type": "question",
+   "label": "Idio-two",
+   "title": "¿Venimos del chango?",
+   "highlight": "chango",
+   "visual": "stairs CHANGO/GORILA/HUMANO: Dota on the first step, gorilla, human; Tico",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "ch",
+     "at": 3,
+     "sfx": "pop",
+     "t": 1.307
+    },
+    {
+     "id": "dota",
+     "at": 6,
+     "sfx": "pop",
+     "t": 2.426
+    }
+   ],
+   "transition": "cut",
+   "t0": 0,
+   "t1": 4.336
+  },
+  {
+   "id": "guapo",
+   "from": 10,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Soy el más guapo!",
+   "highlight": "guapo",
+   "visual": "Dota poses on the step",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "pose",
+     "at": 14,
+     "sfx": "pop",
+     "t": 6.027
+    }
+   ],
+   "transition": "cut",
+   "t0": 4.336,
+   "t1": 7.58
+  },
+  {
+   "id": "idiota",
+   "from": 16,
+   "type": "object",
+   "label": "Idio-two",
+   "title": "Ay, Dota, qué idiota",
+   "highlight": "idiota",
+   "visual": "Tico palm, Dota crazy eyes",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "palm",
+     "at": 19,
+     "sfx": "hit",
+     "t": 9.008
+    }
+   ],
+   "transition": "cut",
+   "t0": 7.58,
+   "t1": 10.308
+  },
+  {
+   "id": "nunca",
+   "from": 21,
+   "type": "process",
+   "label": "Idio-two",
+   "title": "Nunca venimos del chango",
+   "highlight": "Nunca",
+   "visual": "the stairs break and fall",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "break",
+     "at": 23,
+     "sfx": "impact",
+     "t": 11.119
+    }
+   ],
+   "transition": "cut",
+   "t0": 10.308,
+   "t1": 13.415
+  },
+  {
+   "id": "promesa",
+   "from": 27,
+   "type": "object",
+   "label": "La promesa",
+   "title": "La cara del abuelo",
+   "highlight": "abuelo",
+   "visual": "a portrait frame with a ? (the grandpa's face, a mystery)",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "cara",
+     "at": 35,
+     "sfx": "shimmer",
+     "t": 15.66
+    }
+   ],
+   "transition": "cut",
+   "t0": 13.415,
+   "t1": 17.483
+  },
+  {
+   "id": "primo",
+   "from": 40,
+   "type": "comparison",
+   "label": "El primo",
+   "title": "Piensa en tu primo",
+   "highlight": "primo",
+   "visual": "you and your cousin; an arrow from him to you, crossed",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "primo",
+     "at": 43,
+     "sfx": "pop",
+     "t": 18.284
+    },
+    {
+     "id": "no",
+     "at": 45,
+     "sfx": "fail",
+     "t": 19.147
+    }
+   ],
+   "transition": "cut",
+   "t0": 17.483,
+   "t1": 20.005
+  },
+  {
+   "id": "mismo",
+   "from": 49,
+   "type": "comparison",
+   "label": "El primo",
+   "title": "Tienen el mismo abuelo",
+   "highlight": "abuelo",
+   "visual": "grandpa in a frame above, family lines down to both",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "ab",
+     "at": 52,
+     "sfx": "pop",
+     "t": 20.956
+    }
+   ],
+   "transition": "cut",
+   "t0": 20.005,
+   "t1": 21.896
+  },
+  {
+   "id": "igual",
+   "from": 54,
+   "type": "comparison",
+   "label": "El primo",
+   "title": "Con el chimpancé, igual",
+   "highlight": "chimpancé",
+   "visual": "the cousin becomes a chimp",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "ch",
+     "at": 56,
+     "sfx": "whoosh",
+     "t": 22.527
+    }
+   ],
+   "transition": "cut",
+   "t0": 21.896,
+   "t1": 24.028
+  },
+  {
+   "id": "hace",
+   "from": 59,
+   "type": "stat",
+   "label": "El abuelo",
+   "title": "Hace 7 millones de años",
+   "highlight": "millones",
+   "visual": "counter of years back; ÁFRICA tag; the ancestor appears in the frame",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "siete",
+     "at": 61,
+     "sfx": "tick",
+     "t": 25.217
+    },
+    {
+     "id": "africa",
+     "at": 66,
+     "sfx": "pop",
+     "t": 27.272
+    },
+    {
+     "id": "ab",
+     "at": 73,
+     "sfx": "pop",
+     "t": 28.839
+    }
+   ],
+   "transition": "cut",
+   "t0": 24.028,
+   "t1": 30.039
+  },
+  {
+   "id": "ramas",
+   "from": 77,
+   "type": "process",
+   "label": "Dos ramas",
+   "title": "Su familia se partió en 2",
+   "highlight": "2",
+   "visual": "ancestor standing; two branches grow (blue and red)",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "split",
+     "at": 82,
+     "sfx": "whoosh",
+     "t": 31.748
+    }
+   ],
+   "transition": "cut",
+   "t0": 30.039,
+   "t1": 32.537
+  },
+  {
+   "id": "una",
+   "from": 84,
+   "type": "process",
+   "label": "Dos ramas",
+   "title": "Una terminó en el chimpancé",
+   "highlight": "chimpancé",
+   "visual": "the chimp on the blue tip",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "ch",
+     "at": 86,
+     "sfx": "pop",
+     "t": 33.521
+    }
+   ],
+   "transition": "cut",
+   "t0": 32.537,
+   "t1": 34.434
+  },
+  {
+   "id": "otra",
+   "from": 89,
+   "type": "process",
+   "label": "Dos ramas",
+   "title": "Otra terminó en ti",
+   "highlight": "ti",
+   "visual": "generations counter; you on the red tip",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "gen",
+     "at": 98,
+     "sfx": "tick",
+     "t": 37.209
+    },
+    {
+     "id": "ti",
+     "at": 99,
+     "sfx": "pop",
+     "t": 38.28
+    }
+   ],
+   "transition": "cut",
+   "t0": 34.434,
+   "t1": 39.425
+  },
+  {
+   "id": "otraesp",
+   "from": 102,
+   "type": "object",
+   "label": "El abuelo",
+   "title": "Era otra especie",
+   "highlight": "especie",
+   "visual": "ancestor big between chimp and human, both crossed; OTRA ESPECIE",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "x",
+     "at": 106,
+     "sfx": "fail",
+     "t": 40.86
+    },
+    {
+     "id": "esp",
+     "at": 110,
+     "sfx": "hit",
+     "t": 42.57
+    }
+   ],
+   "transition": "cut",
+   "t0": 39.425,
+   "t1": 43.394
+  },
+  {
+   "id": "existe",
+   "from": 112,
+   "type": "object",
+   "label": "El abuelo",
+   "title": "Ya no existe",
+   "highlight": "existe",
+   "visual": "the ancestor fades to a dashed ghost",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "fade",
+     "at": 115,
+     "t": 44.125
+    }
+   ],
+   "transition": "cut",
+   "t0": 43.394,
+   "t1": 44.995
+  },
+  {
+   "id": "esperando",
+   "from": 116,
+   "type": "question",
+   "label": "Dota",
+   "title": "¿Se quedó esperando?",
+   "highlight": "quedó",
+   "visual": "Dota sitting on the chimp branch with a clock",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 118,
+     "sfx": "tick",
+     "t": 45.678
+    }
+   ],
+   "transition": "cut",
+   "t0": 44.995,
+   "t1": 47.91
+  },
+  {
+   "id": "tampoco",
+   "from": 122,
+   "type": "process",
+   "label": "Tico",
+   "title": "Lleva 7 millones cambiando",
+   "highlight": "cambiando",
+   "visual": "both branches keep growing with 7.000.000 AÑOS each",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "siete",
+     "at": 126,
+     "sfx": "tick",
+     "t": 50.266
+    }
+   ],
+   "transition": "cut",
+   "t0": 47.91,
+   "t1": 53.596
+  },
+  {
+   "id": "prueba",
+   "from": 134,
+   "type": "object",
+   "label": "La prueba",
+   "title": "La prueba: el ADN",
+   "highlight": "ADN",
+   "visual": "a DNA helix turning",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "adn",
+     "at": 137,
+     "sfx": "shimmer",
+     "t": 55.312
+    }
+   ],
+   "transition": "cut",
+   "t0": 53.596,
+   "t1": 56.347
+  },
+  {
+   "id": "genoma",
+   "from": 140,
+   "type": "object",
+   "label": "La prueba",
+   "title": "2005: leen el ADN",
+   "highlight": "2005",
+   "visual": "card Genoma del chimpancé · 2005; letter strips",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "year",
+     "at": 141,
+     "sfx": "pop",
+     "t": 56.746
+    },
+    {
+     "id": "strip",
+     "at": 149,
+     "sfx": "tick",
+     "t": 58.817
+    }
+   ],
+   "transition": "cut",
+   "t0": 56.347,
+   "t1": 60.578
+  },
+  {
+   "id": "letras",
+   "from": 157,
+   "type": "comparison",
+   "label": "La prueba",
+   "title": "Al comparar letra a letra",
+   "highlight": "comparar",
+   "visual": "two strips of letters, one different, highlighted",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "diff",
+     "at": 163,
+     "sfx": "pop",
+     "t": 61.595
+    }
+   ],
+   "transition": "cut",
+   "t0": 60.578,
+   "t1": 62.586
+  },
+  {
+   "id": "cien",
+   "from": 167,
+   "type": "stat",
+   "label": "La prueba",
+   "title": "1 de cada 100",
+   "highlight": "100",
+   "visual": "10x10 grid of letters, 1 red",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "uno",
+     "at": 171,
+     "sfx": "hit",
+     "t": 65.472
+    },
+    {
+     "id": "cien",
+     "at": 174,
+     "sfx": "pop",
+     "t": 67.271
+    }
+   ],
+   "transition": "cut",
+   "t0": 62.586,
+   "t1": 68.179
+  },
+  {
+   "id": "gemelos",
+   "from": 175,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Casi gemelos!",
+   "highlight": "gemelos",
+   "visual": "Dota next to the chimp, cheering",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 177,
+     "sfx": "pop",
+     "t": 68.704
+    }
+   ],
+   "transition": "cut",
+   "t0": 68.179,
+   "t1": 71.206
+  },
+  {
+   "id": "raro",
+   "from": 179,
+   "type": "comparison",
+   "label": "Cromosomas",
+   "title": "24 pares contra 23",
+   "highlight": "pares",
+   "visual": "rows of chromosomes: chimp 24 blue, you 23 red with a gap",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "v24",
+     "at": 186,
+     "sfx": "pop",
+     "t": 74.027
+    },
+    {
+     "id": "v23",
+     "at": 192,
+     "sfx": "pop",
+     "t": 76.511
+    }
+   ],
+   "transition": "cut",
+   "t0": 71.206,
+   "t1": 77.567
+  },
+  {
+   "id": "falta",
+   "from": 193,
+   "type": "question",
+   "label": "Cromosomas",
+   "title": "¿Dónde quedó el par?",
+   "highlight": "par",
+   "visual": "the gap with a ? pulses",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "q",
+     "at": 196,
+     "sfx": "fail",
+     "t": 78.487
+    }
+   ],
+   "transition": "cut",
+   "t0": 77.567,
+   "t1": 79.293
+  },
+  {
+   "id": "dentro",
+   "from": 199,
+   "type": "object",
+   "label": "Cromosomas",
+   "title": "Dentro de tu cromosoma 2",
+   "highlight": "cromosoma",
+   "visual": "a ring around your chromosome 2",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "c2",
+     "at": 201,
+     "sfx": "whoosh",
+     "t": 80.092
+    }
+   ],
+   "transition": "cut",
+   "t0": 79.293,
+   "t1": 81.357
+  },
+  {
+   "id": "tapita",
+   "from": 204,
+   "type": "object",
+   "label": "Cromosomas",
+   "title": "Una tapita en cada punta",
+   "highlight": "tapita",
+   "visual": "one chromosome with yellow caps next to a shoelace",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "tap",
+     "at": 208,
+     "sfx": "pop",
+     "t": 82.956
+    },
+    {
+     "id": "lace",
+     "at": 214,
+     "sfx": "pop",
+     "t": 84.788
+    }
+   ],
+   "transition": "cut",
+   "t0": 81.357,
+   "t1": 86.228
+  },
+  {
+   "id": "mitad",
+   "from": 218,
+   "type": "process",
+   "label": "Cromosomas",
+   "title": "2 tapitas pegadas",
+   "highlight": "pegadas",
+   "visual": "magnifier on the middle of chromosome 2: two caps stuck",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "mid",
+     "at": 222,
+     "sfx": "whoosh",
+     "t": 87.083
+    },
+    {
+     "id": "peg",
+     "at": 230,
+     "sfx": "pop",
+     "t": 89.378
+    }
+   ],
+   "transition": "cut",
+   "t0": 86.228,
+   "t1": 90.923
+  },
+  {
+   "id": "fundieron",
+   "from": 234,
+   "type": "process",
+   "label": "Cromosomas",
+   "title": "Se fundieron en uno",
+   "highlight": "fundieron",
+   "visual": "two grandpa chromosomes join with a flash",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "fuse",
+     "at": 242,
+     "sfx": "impact",
+     "t": 93.237
+    }
+   ],
+   "transition": "cut",
+   "t0": 90.923,
+   "t1": 95.874
+  },
+  {
+   "id": "darwin",
+   "from": 246,
+   "type": "object",
+   "label": "Darwin",
+   "title": "Darwin ya lo dijo en 1871",
+   "highlight": "Darwin",
+   "visual": "paper set: Darwin with his book 1871",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "yr",
+     "at": 252,
+     "sfx": "pop",
+     "t": 97.644
+    }
+   ],
+   "transition": "cut",
+   "t0": 95.874,
+   "t1": 99.312
+  },
+  {
+   "id": "ningun",
+   "from": 253,
+   "type": "comparison",
+   "label": "Darwin",
+   "title": "No era ningún chango",
+   "highlight": "chango",
+   "visual": "ancestor ≠ gorilla ≠ chimp portraits",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "ne",
+     "at": 259,
+     "sfx": "fail",
+     "t": 101.323
+    }
+   ],
+   "transition": "cut",
+   "t0": 99.312,
+   "t1": 102.732
+  },
+  {
+   "id": "revista",
+   "from": 263,
+   "type": "object",
+   "label": "La revista",
+   "title": "Una revista lo dibujó",
+   "highlight": "revista",
+   "visual": "magazine cover with Darwin's head on a chimp's body",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "mag",
+     "at": 265,
+     "sfx": "pop",
+     "t": 103.54
+    }
+   ],
+   "transition": "cut",
+   "t0": 102.732,
+   "t1": 105.776
+  },
+  {
+   "id": "hoy",
+   "from": 274,
+   "type": "process",
+   "label": "La revista",
+   "title": "Esa idea se quedó",
+   "highlight": "idea",
+   "visual": "covers multiply, year counter 1871 → 2026",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "copies",
+     "at": 276,
+     "sfx": "whoosh",
+     "t": 106.523
+    },
+    {
+     "id": "hoy",
+     "at": 280,
+     "sfx": "tick",
+     "t": 107.652
+    }
+   ],
+   "transition": "cut",
+   "t0": 105.776,
+   "t1": 108.361
+  },
+  {
+   "id": "pobre",
+   "from": 281,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Pobre Darwin!",
+   "highlight": "Darwin",
+   "visual": "Dota sad next to Darwin",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 281,
+     "t": 108.611
+    }
+   ],
+   "transition": "cut",
+   "t0": 108.361,
+   "t1": 110.453
+  },
+  {
+   "id": "prometi",
+   "from": 283,
+   "type": "object",
+   "label": "La respuesta",
+   "title": "Lo que te prometí",
+   "highlight": "prometí",
+   "visual": "the portrait frame with the ? again",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "p",
+     "at": 287,
+     "sfx": "shimmer",
+     "t": 111.437
+    }
+   ],
+   "transition": "cut",
+   "t0": 110.453,
+   "t1": 112.759
+  },
+  {
+   "id": "cara",
+   "from": 290,
+   "type": "object",
+   "label": "La respuesta",
+   "title": "La cara del abuelo",
+   "highlight": "cara",
+   "visual": "desert at sunset; a skull rises from the sand",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "skull",
+     "at": 295,
+     "sfx": "riser",
+     "t": 114.215
+    }
+   ],
+   "transition": "cut",
+   "t0": 112.759,
+   "t1": 115.311
+  },
+  {
+   "id": "toumai",
+   "from": 298,
+   "type": "object",
+   "label": "La respuesta",
+   "title": "Se llama Toumaï",
+   "highlight": "Toumaï",
+   "visual": "label Toumaï · Chad · 2001",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "name",
+     "at": 299,
+     "sfx": "pop",
+     "t": 115.777
+    }
+   ],
+   "transition": "cut",
+   "t0": 115.311,
+   "t1": 116.949
+  },
+  {
+   "id": "craneo",
+   "from": 301,
+   "type": "stat",
+   "label": "La respuesta",
+   "title": "Casi 7 millones de años",
+   "highlight": "millones",
+   "visual": "counter to ~7.000.000; Chad",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "siete",
+     "at": 305,
+     "sfx": "tick",
+     "t": 118.225
+    },
+    {
+     "id": "chad",
+     "at": 312,
+     "sfx": "pop",
+     "t": 120.506
+    }
+   ],
+   "transition": "cut",
+   "t0": 116.949,
+   "t1": 121.814
+  },
+  {
+   "id": "primos",
+   "from": 315,
+   "type": "closing",
+   "label": "Idio-two",
+   "title": "Somos sus primos",
+   "highlight": "primos",
+   "visual": "chimp and human, the arrow crossed, PRIMOS bracket above",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "x",
+     "at": 317,
+     "sfx": "fail",
+     "t": 122.656
+    },
+    {
+     "id": "pr",
+     "at": 324,
+     "sfx": "pop",
+     "t": 125.52
+    }
+   ],
+   "transition": "cut",
+   "t0": 121.814,
+   "t1": 126.329
+  },
+  {
+   "id": "sub",
+   "from": 325,
+   "type": "closing",
+   "label": "Idio-two",
+   "title": "¡Suscríbanse!",
+   "highlight": "Suscríbanse",
+   "visual": "banner; Dota hugs the human who looks uneasy; Tico covers his face",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "hug",
+     "at": 330,
+     "sfx": "pop",
+     "t": 129.005
+    }
+   ],
+   "transition": "cut",
+   "t0": 126.329,
+   "t1": 131.239
+  }
+ ],
+ "duration": 131.239
+}

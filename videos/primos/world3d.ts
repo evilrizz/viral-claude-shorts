@@ -932,7 +932,7 @@ function q3Arrow(L = 1.4, col = QC.blue) { const m = q3Gloss(col, 0.25), g = new
 // the evolution stairs: three white blocks with labels; .fall(u) knocks them over
 function q3Stairs(labels = ['CHANGO', 'GORILA', 'HUMANO']) {
   const g = new THREE.Group(), m = q3Mat('#f2efe8', 0.6), blocks = labels.map((l, i) => {
-    const h = 0.8 + i * 0.8, ph = Math.round(256 * h / 1.5); const tex = p3Paint(256, ph, (c) => { c.fillStyle = '#f2efe8'; c.fillRect(0, 0, 256, ph); c.fillStyle = '#6b6a63'; c.font = '700 26px monospace'; c.fillText(l, 16, 40); });
+    const h = 0.8 + i * 0.8, ph = Math.round(256 * h / 1.5); const tex = p3Paint(256, ph, (c) => { c.fillStyle = '#f2efe8'; c.fillRect(0, 0, 256, ph); c.fillStyle = '#ff3b2b'; c.fillRect(0, 0, 256, 62); c.fillStyle = '#ffffff'; c.font = '900 40px Inter, Arial'; c.fillText(l, 16, 46); });
     const b = new THREE.Mesh(new THREE.BoxGeometry(1.5, h, 1.4), [m, m, m, m, new THREE.MeshStandardMaterial({ map: tex, roughness: 0.6 }), m] as unknown as THREE.Material); b.castShadow = b.receiveShadow = true; b.position.set(-1.5 + i * 1.5, h / 2, 0); g.add(b); return { b, h, i };
   });
   return Object.assign(g, { tops: blocks.map(({ b, h }) => new THREE.Vector3(b.position.x, h, 0)), fall(u: number) { blocks.forEach(({ b, h, i }) => { const v = p3Clamp(u * 1.4 - i * 0.2); b.rotation.z = -v * (1.2 + i * 0.2); b.position.set(-1.5 + i * 1.5 + v * (0.8 + i * 0.3), h / 2 - v * v * h * 0.4, 0); }); } });
@@ -956,7 +956,7 @@ function q3Helix(h = 3.2, r = 0.55, turns = 2.2) {
 }
 // a white card with a title and two lines (a label for a fact)
 function q3Fact(title: string, l1: string, l2 = '', w = 2.2, h = 0.8, accent = '#ff3b2b') {
-  const tex = p3Paint(560, 200, (c) => { c.fillStyle = '#fbf8f0'; c.fillRect(0, 0, 560, 200); c.fillStyle = accent; c.fillRect(0, 0, 14, 200); c.fillStyle = '#14161d'; c.font = '900 44px Inter, Arial'; c.fillText(title, 36, 64); c.fillStyle = '#5a5a63'; c.font = '600 28px monospace'; c.fillText(l1, 36, 120); c.fillText(l2, 36, 162); });
+  const tex = p3Paint(560, 200, (c) => { c.fillStyle = '#fbf8f0'; c.fillRect(0, 0, 560, 200); c.fillStyle = accent; c.fillRect(0, 0, 14, 200); c.fillStyle = '#14161d'; c.font = '900 50px Inter, Arial'; c.fillText(title, 36, 66); c.fillStyle = '#3a3a44'; c.font = '800 32px Inter, Arial'; c.fillText(l1, 36, 122); c.fillText(l2, 36, 166); });
   const fr = q3Mat('#fbf8f0', 0.6); const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.04), [fr, fr, fr, fr, new THREE.MeshStandardMaterial({ map: tex, roughness: 0.6 }), fr] as unknown as THREE.Material); m.castShadow = true; return m;
 }
 // a letter tile (A C G T) — the textures are shared
@@ -1011,12 +1011,15 @@ function q3Studio(w: World, floor = '#ece6d6', back = '#15161d') {
   const key = new THREE.DirectionalLight('#ffe9c9', 1.6); key.position.set(-5, 9, 8); key.castShadow = true; key.shadow.mapSize.set(2048, 2048); Object.assign(key.shadow.camera, { left: -10, right: 10, top: 10, bottom: -10 }); w.add(key);
   const rim = new THREE.DirectionalLight('#8fa8ff', 0.7); rim.position.set(6, 4, -6); w.add(rim);
   const prof = [...Array(24)].map((_, i) => { const a = i / 23 * Math.PI / 2; return new THREE.Vector2(0, 0).set(-4 + Math.cos(Math.PI / 2 - a) * 0, 0); });
-  void prof; const cyc = new THREE.Mesh(new THREE.PlaneGeometry(60, 30, 1, 1), q3Mat(floor, 0.9)); cyc.rotation.x = -Math.PI / 2; cyc.position.z = 6; cyc.receiveShadow = true; w.add(cyc);
+  void prof; const fl = p3Paint(256, 256, (c) => { const g = c.createRadialGradient(128, 110, 10, 128, 128, 150); g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#c9c1ae'); c.fillStyle = g; c.fillRect(0, 0, 256, 256); }); const cyc = new THREE.Mesh(new THREE.PlaneGeometry(60, 30, 1, 1), new THREE.MeshStandardMaterial({ color: floor, map: fl, roughness: 0.9 })); cyc.rotation.x = -Math.PI / 2; cyc.position.z = 6; cyc.receiveShadow = true; w.add(cyc);
   const backM = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), new THREE.MeshBasicMaterial({ map: p3Paint(64, 256, (c) => { const g = c.createLinearGradient(0, 0, 0, 256); g.addColorStop(0, '#0d0e14'); g.addColorStop(0.6, back); g.addColorStop(1, '#2a2b36'); c.fillStyle = g; c.fillRect(0, 0, 64, 256); }), fog: false, toneMapped: false })); backM.position.set(0, 12, -9); w.add(backM);
   w.scene.fog = new THREE.Fog(back, 18, 40);
   // a soft hill line where floor meets the dark (the reference look), with a halo behind the subject
   const halo = new THREE.Mesh(new THREE.CircleGeometry(4, 48), new THREE.MeshBasicMaterial({ map: p3Paint(128, 128, (c) => { const g = c.createRadialGradient(64, 64, 0, 64, 64, 64); g.addColorStop(0, 'rgba(90,100,200,0.35)'); g.addColorStop(1, 'rgba(90,100,200,0)'); c.fillStyle = g; c.fillRect(0, 0, 128, 128); }), transparent: true, depthWrite: false, fog: false })); halo.position.set(0, 3.2, -8.5); w.add(halo);
-  return { pose(_t: number) {} };
+  const pool = new THREE.SpotLight('#ffe6c0', 120, 30, 0.5, 0.9, 1.4); pool.position.set(0.5, 10, 6); pool.target.position.set(0.3, 0, -0.5); w.add(pool); w.add(pool.target);
+  const r = p3Rnd(31), cols = ['#d4ff3a', '#3a6bff', '#ff3b2b', '#8f7dff', '#ffb02e'];
+  const bok = [...Array(16)].map((_, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.25 + r() * 0.55, 20, 14), new THREE.MeshBasicMaterial({ color: cols[i % 5], transparent: true, opacity: 0.38, fog: false, toneMapped: false, depthWrite: false })); m.position.set((r() - 0.5) * 16, 1 + r() * 8, -5 - r() * 3); w.add(m); return { m, x: m.position.x, y: m.position.y, p: r() * 6 }; });
+  return { pose(t: number) { bok.forEach(({ m, x, y, p }) => { m.position.x = x + 0.6 * Math.sin(t * 0.25 + p); m.position.y = y + 0.4 * Math.sin(t * 0.35 + p * 2); }); } };
 }
 // the desert at sunset: dunes, a warm low sun, purple sky
 function q3Desert(w: World) {

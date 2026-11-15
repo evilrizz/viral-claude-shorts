@@ -25,10 +25,31 @@ const q3Puffs = (w: World, p: Vec3, n = 4) => { const m = new THREE.MeshStandard
 const qCam = (w: World, t: number, pos: Vec3, tg: Vec3, punches: number[] = [], fov = 40) => { const u = p3Clamp((t - w.s.t0) / Math.max(0.5, w.s.t1 - w.s.t0)) - 0.5, d = 1 - 0.08 * (u + 0.5); q3Cam(w, [tg[0] + (pos[0] - tg[0]) * d + u * 0.9, tg[1] + (pos[1] - tg[1]) * d + 0.15 * Math.sin(t * 0.6), tg[2] + (pos[2] - tg[2]) * d], [tg[0] + u * 0.3, tg[1], tg[2]], t, fov, punches); };
 const qTico = (w: World, tk: ReturnType<typeof q3Tico>, t: number, side = -1, s = 0.31) => { q3Corner(w, tk, side, s, 4.6, 1.22, 0.72); tk.live(t); };
 const qdots = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-// a big lime number with a small caption under it (counters); set .set(text) every frame
-const qNum = (w: World, x: number, y: number, cap: string) => { const e = q3Html(w, `<div class="n" style="font:900 86px var(--font);color:#d4ff3a;-webkit-text-stroke:8px #14161d;paint-order:stroke fill;text-shadow:0 8px 0 rgba(0,0,0,.35);letter-spacing:-2px">0</div>` + (cap ? `<div style="display:inline-block;margin-top:4px;font:900 36px var(--font);color:#14161d;background:#d4ff3a;padding:2px 16px;border:4px solid #14161d">${cap}</div>` : ''), `left:${x}px;top:${y}px;transform:translateX(-50%);text-align:center;white-space:nowrap;opacity:0`); return Object.assign(e, { set(txt: string, op = 1) { (e.querySelector('.n') as HTMLElement).textContent = txt; e.style.opacity = String(op); } }); };
-// a lime chip label (like ÁFRICA, OTRA ESPECIE) that pops at t
-const qChip = (w: World, text: string, t: number, x: number, y: number, d = 99) => { const e = q3Html(w, text, `left:${x}px;top:${y}px;transform:translateX(-50%);background:#d4ff3a;color:#14161d;font:900 44px var(--font);padding:6px 22px;border:5px solid #14161d;white-space:nowrap;opacity:0`); w.tl.fromTo(e, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2.5)' }, t); if (d < 99) w.tl.to(e, { opacity: 0, duration: 0.25 }, t + d); return e; };
+// screen labels drawn INSIDE the WebGL frame (HTML labels that change every frame left black ghost boxes in the capture):
+// a canvas on a plane held in front of the camera at screen pixel (x, y); the wrapper places them after each pose
+const QHUD: { w: World; place: (t: number) => void }[] = [];
+function qHud(w: World, wpx: number, hpx: number, x: number, y: number, paint: (c: CanvasRenderingContext2D, txt: string) => void, pop = -1) {
+  const cv = document.createElement('canvas'); cv.width = wpx; cv.height = hpx; const c = cv.getContext('2d')!; const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.generateMipmaps = false; tex.minFilter = THREE.LinearFilter;
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: tex, transparent: true, toneMapped: false, fog: false, depthTest: false, depthWrite: false })); m.renderOrder = 999; m.visible = false; w.scene.add(m);
+  const st = { txt: '\u0000', op: pop >= 0 ? 1 : 0, s: 1 }; let last = '';
+  QHUD.push({ w, place(t: number) {
+    const sc = pop >= 0 ? p3Spring(t, pop) : 1, op = pop >= 0 ? (t > pop - 0.02 ? 1 : 0) : st.op; m.visible = op > 0.01 && sc > 0.01; if (!m.visible) return;
+    if (st.txt !== last) { c.clearRect(0, 0, wpx, hpx); paint(c, st.txt); tex.needsUpdate = true; last = st.txt; }
+    const cam = w.camera, D = 2, H = 2 * D * Math.tan(cam.fov * Math.PI / 360), W = H * 1080 / 1920, f = new THREE.Vector3(), r = new THREE.Vector3(1, 0, 0).applyQuaternion(cam.quaternion), u = new THREE.Vector3(0, 1, 0).applyQuaternion(cam.quaternion); cam.getWorldDirection(f);
+    m.position.copy(cam.position).addScaledVector(f, D).addScaledVector(r, (x - 540) / 1080 * W).addScaledVector(u, -(y + hpx / 2 - 960) / 1920 * H); m.quaternion.copy(cam.quaternion); m.scale.set(wpx / 1080 * W * sc * st.s, hpx / 1920 * H * sc * st.s, 1); (m.material as THREE.MeshBasicMaterial).opacity = op;
+  } });
+  return { set(txt: string, op = 1, s = 1) { st.txt = txt; st.op = op; st.s = s; } };
+}
+const qFont = (c: CanvasRenderingContext2D, px: number) => { c.font = `900 ${px}px Inter, Arial, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; };
+// a big lime number with a lime caption pill under it (counters); .set(text, opacity)
+const qNum = (w: World, x: number, y: number, cap: string) => qHud(w, 600, 190, x, y, (c, txt) => {
+  qFont(c, 86); c.lineWidth = 16; c.strokeStyle = '#14161d'; c.strokeText(txt, 300, 56); c.fillStyle = '#d4ff3a'; c.fillText(txt, 300, 56);
+  if (cap) { qFont(c, 36); const wd = c.measureText(cap).width + 40; c.fillStyle = '#14161d'; c.fillRect(300 - wd / 2 - 4, 118, wd + 8, 58); c.fillStyle = '#d4ff3a'; c.fillRect(300 - wd / 2, 122, wd, 50); c.fillStyle = '#14161d'; c.fillText(cap, 300, 148); }
+});
+// a lime chip label (ÁFRICA, OTRA ESPECIE) that pops at t
+const qChip = (w: World, text: string, t: number, x: number, y: number, _d = 99) => { const h = qHud(w, 560, 90, x, y, (c) => { qFont(c, 46); const wd = c.measureText(text).width + 48; c.fillStyle = '#14161d'; c.fillRect(280 - wd / 2 - 6, 4, wd + 12, 82); c.fillStyle = '#d4ff3a'; c.fillRect(280 - wd / 2, 10, wd, 70); c.fillStyle = '#14161d'; c.fillText(text, 280, 47); }, t); h.set(text); return h; };
+// a red box with a big white number (the year)
+const qYear = (w: World, x: number, y: number) => qHud(w, 340, 150, x, y, (c, txt) => { c.fillStyle = '#14161d'; c.fillRect(10, 10, 320, 130); c.fillStyle = '#ff3b2b'; c.fillRect(18, 18, 304, 114); qFont(c, 96); c.fillStyle = '#fff'; c.fillText(txt, 170, 78); });
 // a small caption under a figure (TÚ, TU PRIMO, CHIMPANCÉ)
 const qCap = (w: World, text: string, x: number, y: number, t = 0) => { const e = q3Html(w, text, `left:${x}px;top:${y}px;transform:translateX(-50%);font:900 42px var(--font);color:#fff;background:#14161d;padding:4px 18px;border-radius:12px;white-space:nowrap;opacity:0`); w.tl.to(e, { opacity: 1, duration: 0.3 }, Math.max(0, t)); return e; };
 // a frame with a portrait (the head of a figure) at p
@@ -256,8 +277,8 @@ defineVisuals({
   hoy: {
     bg: '#efe9dc',
     build(w) {
-      q3PaperSet(w); const ms = [...Array(7)].map((_, i) => { const m = w.add(q3Magazine(String(1871 + i * 25))); m.position.set(0.3, 2.4, 0.2 - i * 0.02); return m; }); const yr = q3Html(w, '1871', 'left:560px;top:1400px;transform:translateX(-50%);background:#ff3b2b;color:#fff;font:900 96px var(--font);padding:4px 30px;border:6px solid #14161d;opacity:1'); const tk = w.add(q3Tico()); tk.setPose('point');
-      return (t) => { const c = w.K('copies'), h = w.K('hoy'); qCam(w, t, [0.3, 2.4, 8.2], [0.3, 2.3, 0], [h]); ms.forEach((m, i) => { const u = p3Clamp((t - c - i * 0.08) / 0.4); m.position.x = 0.3 + (i - 3) * 0.32 * u; m.rotation.z = (i - 3) * 0.12 * u; m.position.z = 0.2 + (i === 0 ? 0.05 : -i * 0.02); }); yr.textContent = String(Math.round(1871 + (2026 - 1871) * p3Smoothstep(0, 1, p3Clamp((t - c) / (h + 0.4 - c))))); qTico(w, tk, t); };
+      q3PaperSet(w); const ms = [...Array(7)].map((_, i) => { const m = w.add(q3Magazine(String(1871 + i * 25))); m.position.set(0.3, 2.4, 0.2 - i * 0.02); return m; }); const yr = qYear(w, 560, 1400); const tk = w.add(q3Tico()); tk.setPose('point');
+      return (t) => { const c = w.K('copies'), h = w.K('hoy'); qCam(w, t, [0.3, 2.4, 8.2], [0.3, 2.3, 0], [h]); ms.forEach((m, i) => { const u = p3Clamp((t - c - i * 0.08) / 0.4); m.position.x = 0.3 + (i - 3) * 0.32 * u; m.rotation.z = (i - 3) * 0.12 * u; m.position.z = 0.2 + (i === 0 ? 0.05 : -i * 0.02); }); yr.set(String(Math.round(1871 + (2026 - 1871) * p3Smoothstep(0, 1, p3Clamp((t - c) / (h + 0.4 - c)))))); qTico(w, tk, t); };
     },
   },
   pobre: {
@@ -281,7 +302,7 @@ defineVisuals({
   craneo: {
     bg: '#1e1838',
     build(w) {
-      q3Desert(w); const sk = w.add(q3Skull()); sk.position.set(0.3, 0.75, 0); sk.rotation.y = 0.15; const card = w.add(q3Fact('Toumaï', 'Sahelanthropus tchadensis', 'Desierto del Chad · 2001', 2.4, 0.9)); card.position.set(0.5, 2.25, 0.9); card.scale.setScalar(0.75); const num = qNum(w, 640, 1330, 'AÑOS, CASI'); qChip(w, 'CHAD', w.K('chad'), 300, 620); const tk = w.add(q3Tico()); tk.setPose('point');
+      q3Desert(w); const sk = w.add(q3Skull()); sk.position.set(0.3, 0.75, 0); sk.rotation.y = 0.15; const card = w.add(q3Fact('Toumaï', 'Sahelanthropus tchadensis', 'Desierto del Chad · 2001', 2.4, 0.9)); card.position.set(0.5, 2.25, 0.9); card.scale.setScalar(0.75); const num = qNum(w, 640, 1330, 'AÑOS, CASI'); qChip(w, 'CHAD', w.K('chad'), 760, 900); const tk = w.add(q3Tico()); tk.setPose('point');
       return (t) => { const k = w.K('siete'); qCam(w, t, [1.2, 2.4, 8.2], [0.35, 1.45, 0], [k]); card.rotation.y = 0.12 * Math.sin(t); num.set(qdots(7000000 * p3Smoothstep(0, 1, p3Clamp((t - w.s.t0) / (k + 0.8 - w.s.t0)))), 1); qTico(w, tk, t); };
     },
   },
@@ -325,6 +346,7 @@ for (const id of Object.keys(VISUALS)) { const V = VISUALS[id], b = V.build; V.b
     // depth of field focused on what the camera looks at; dust drifting in the light; trees swaying; character tint from the scene's light
     Q3_FOCUS = w.camera.position.distanceTo(tgt); const wp = new THREE.Vector3();
     for (const s of Q3_SPRITES) { let root: THREE.Object3D = s.g; while (root.parent) root = root.parent; if (root !== w.scene || !s.g.parent!.visible) continue; s.mesh.getWorldPosition(wp); Q3_FOCUS = Math.max(Q3_FOCUS, w.camera.position.distanceTo(wp)); }
+    for (const h of QHUD) if (h.w === w) h.place(t);
     if (Q3_FOCUS_OVR > 0) Q3_FOCUS = Q3_FOCUS_OVR;
     { let kb = -99; for (const k of bursts) if (k <= t && k > kb) kb = k; const u = (t - kb) / 0.5; const dir = new THREE.Vector3().subVectors(tgt, w.camera.position).normalize();
       rings.forEach((m, i) => { const ui = u - i * 0.12; const on = ui > 0 && ui < 1; m.visible = on; if (!on) return; m.position.copy(tgt).addScaledVector(dir, 1.2); m.quaternion.copy(w.camera.quaternion); m.scale.setScalar(0.4 + ui * (i ? 2.6 : 3.4)); (m.material as THREE.MeshBasicMaterial).opacity = (1 - ui) * (i ? 0.5 : 0.85); }); }

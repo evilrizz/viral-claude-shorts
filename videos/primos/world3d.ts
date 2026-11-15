@@ -938,7 +938,7 @@ function q3Stairs(labels = ['CHANGO', 'GORILA', 'HUMANO']) {
   return Object.assign(g, { tops: blocks.map(({ b, h }) => new THREE.Vector3(b.position.x, h, 0)), fall(u: number) { blocks.forEach(({ b, h, i }) => { const v = p3Clamp(u * 1.4 - i * 0.2); b.rotation.z = -v * (1.2 + i * 0.2); b.position.set(-1.5 + i * 1.5 + v * (0.8 + i * 0.3), h / 2 - v * v * h * 0.4, 0); }); } });
 }
 // a round portrait frame (lime ring with a dark disc) and the lines that hang from it to two people below (family tree)
-function q3Frame(r = 0.75) { const g = new THREE.Group(); const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.07, 16, 64), q3Gloss(QC.lime, 0.3)); const disc = new THREE.Mesh(new THREE.CircleGeometry(r, 48), new THREE.MeshStandardMaterial({ color: '#23263a', roughness: 0.9 })); disc.position.z = -0.02; g.add(disc, ring); return g; }
+function q3Frame(r = 0.75) { const g = new THREE.Group(); const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.07, 16, 64), q3Gloss(QC.lime, 0.3)); const disc = new THREE.Mesh(new THREE.CircleGeometry(r, 48), new THREE.MeshStandardMaterial({ color: '#23263a', roughness: 0.9 })); disc.position.z = -0.45; g.add(disc, ring); return g; }
 function q3FamLines(w = 2.4, drop = 1.0) { const m = q3Mat(QC.lime, 0.4), g = new THREE.Group(); g.add(q3BoxM(0.06, drop * 0.5, 0.06, m, [0, -drop * 0.25, 0]), q3BoxM(w, 0.06, 0.06, m, [0, -drop * 0.5, 0]), q3BoxM(0.06, drop * 0.5, 0.06, m, [-w / 2, -drop * 0.75, 0]), q3BoxM(0.06, drop * 0.5, 0.06, m, [w / 2, -drop * 0.75, 0])); return g; }
 // a growing branch (a tube from a to b) in a colour; .grow(u)
 function q3Branch(a: Vec3, b: Vec3, col: string, r = 0.11) {

@@ -42,11 +42,11 @@ function zHud(w: World, wpx: number, hpx: number, x: number, y: number, paint: (
 const zFont = (c: CanvasRenderingContext2D, px: number) => { c.font = `900 ${px}px Inter, Arial, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; };
 // a big lime number with its caption pill (counters)
 const zNum = (w: World, x: number, y: number, cap: string) => zHud(w, 900, 250, x, y, (c, txt) => {
-  zFont(c, 124); c.lineWidth = 20; c.strokeStyle = '#14161d'; c.strokeText(txt, 450, 76); c.fillStyle = '#d4ff3a'; c.fillText(txt, 450, 76);
-  if (cap) { zFont(c, 46); const wd = c.measureText(cap).width + 44; c.fillStyle = '#14161d'; c.fillRect(450 - wd / 2 - 5, 160, wd + 10, 72); c.fillStyle = '#d4ff3a'; c.fillRect(450 - wd / 2, 165, wd, 62); c.fillStyle = '#14161d'; c.fillText(cap, 450, 197); }
+  zFont(c, 124); c.lineWidth = 20; c.strokeStyle = '#0b1330'; c.strokeText(txt, 450, 76); c.fillStyle = '#ffc83d'; c.fillText(txt, 450, 76);
+  if (cap) { zFont(c, 46); const wd = c.measureText(cap).width + 44; c.fillStyle = '#0b1330'; c.fillRect(450 - wd / 2 - 5, 160, wd + 10, 72); c.fillStyle = '#f4efe4'; c.fillRect(450 - wd / 2, 165, wd, 62); c.fillStyle = '#14161d'; c.fillText(cap, 450, 197); }
 });
 // a chip label (a name) that pops at t; colour lime by default
-const zChip = (w: World, text: string, t: number, x: number, y: number, bg = '#d4ff3a', fg = '#14161d', until = 1e9) => { const mc = document.createElement('canvas').getContext('2d')!; zFont(mc, 58); const CW = Math.ceil(mc.measureText(text).width + 90); const h = zHud(w, CW, 112, x, y, (c) => { zFont(c, 58); const wd = CW - 20; c.fillStyle = '#14161d'; c.fillRect(4, 4, wd + 12, 104); c.fillStyle = bg; c.fillRect(10, 10, wd, 92); c.fillStyle = fg; c.fillText(text, CW / 2, 58); }, t, until); h.set(text); return h; };
+const zChip = (w: World, text: string, t: number, x: number, y: number, bg = '#f4efe4', fg = '#14161d', until = 1e9) => { const mc = document.createElement('canvas').getContext('2d')!; zFont(mc, 58); const CW = Math.ceil(mc.measureText(text).width + 110); const bar = bg === '#ffffff' ? '#ffb02e' : '#3a5cff'; const h = zHud(w, CW, 124, x, y, (c) => { zFont(c, 58); c.fillStyle = 'rgba(0,0,0,0.35)'; c.beginPath(); c.roundRect(10, 16, CW - 16, 104, 14); c.fill(); c.fillStyle = bg === '#d4ff3a' || bg === '#ffffff' ? '#f4efe4' : bg; c.beginPath(); c.roundRect(4, 6, CW - 16, 104, 14); c.fill(); c.fillStyle = bar; c.beginPath(); c.roundRect(18, 22, 12, 72, 6); c.fill(); c.fillStyle = fg; c.fillText(text, CW / 2 + 12, 60); }, t, until); h.set(text); return h; };
 // a rubber stamp (INVENTADO, SE CREE, SE DISCUTE): a tilted framed word that slams in
 const zStamp = (w: World, text: string, t: number, x: number, y: number, col = '#ff3b2b') => { const h = zHud(w, 760, 200, x, y, (c) => { c.strokeStyle = col; c.lineWidth = 14; c.strokeRect(12, 12, 736, 176); c.lineWidth = 5; c.strokeRect(28, 28, 704, 144); zFont(c, 92); c.fillStyle = col; c.fillText(text, 380, 104); }, t); h.set(text, 1, 1, -0.12); return h; };
 // a big green check / red X drawn flat (HUD)
@@ -58,12 +58,14 @@ const zPuffs = (w: World, p: Vec3, n = 5, col = '#d8cfc0') => { const m = new TH
 // a whole shake of the camera for a stomp at k
 const zShake = (w: World, t: number, k: number, a = 0.06) => { if (t < k || t > k + 0.7) return; const e = Math.exp(-(t - k) * 6) * a; w.camera.position.x += Math.sin(t * 61) * e; w.camera.position.y += Math.cos(t * 53) * e; };
 
+// soft shafts of light falling from above (the reference's deep-blue look)
+const zShafts = (w: World) => { const tex = z3Paint(64, 256, (c) => { const g = c.createLinearGradient(0, 0, 0, 256); g.addColorStop(0, 'rgba(160,190,255,0.5)'); g.addColorStop(1, 'rgba(160,190,255,0)'); c.fillStyle = g; c.fillRect(0, 0, 64, 256); }); for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.2 + (i % 3) * 0.8, 16), new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.22, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false, fog: false, side: THREE.DoubleSide })); m.position.set(-8 + i * 3.2, 7, -6 - (i % 2) * 2); m.rotation.z = 0.35; w.add(m); } };
 // ---------------- stagings
 // the room: Tico (left) and Dota (right), camera on both
 const zRoom = (w: World) => { const room = z3Room(w); const tk = w.add(z3Tico()), d = w.add(z3Dota()); tk.position.set(-1.0, 0, 0.2); d.position.set(0.9, 0, 0.45); d.setPose('down'); tk.side(1); d.side(-1); return { room, tk, d }; };
 const zRoomCam = (w: World, t: number, punches: number[] = [], dx = 0, z = 6.4) => z3Cam(w, t, [0.1 + dx, 1.65, z], [dx, 1.3, 0], punches);
 // the studio (dark backdrop, cream floor, coloured lights) with Tico presenting
-const zStudio = (w: World, back = '#15161d') => { const STU = z3Studio(w, '#ece6d6', back); const tk = w.add(z3Tico()); tk.setPose('point'); return { STU, tk }; };
+const zStudio = (w: World, back = '#0b1330') => { const STU = z3Studio(w, '#1a2552', back); zShafts(w); const tk = w.add(z3Tico()); tk.setPose('point'); return { STU, tk }; };
 // the prehistoric land with Tico presenting
 const zPre = (w: World, dense = 1, seed = 3) => { const P = z3Prehist(w, { dense, seed }); const tk = w.add(z3Tico()); tk.setPose('point'); return { P, tk }; };
 // a dino that walks in place and turns slowly, sized by a camera framing its length
@@ -104,9 +106,9 @@ defineVisuals({
   },
   pavo: {
     build(w) {
-      const { STU, tk } = zStudio(w); const big = w.add(z3Sp('raptorMovie')), small = w.add(z3Sp('raptor')), tur = w.add(z3Bird('turkey')), d = w.add(z3Dota()); d.position.set(-1.1, 0, 0.2); d.scale.setScalar(0.6); d.setPose('down'); const puff = zPuffs(w, [0.4, 0.3, 0.3], 4, '#f2efe6');
+      const { STU, tk } = zStudio(w); const big = w.add(z3Sp('raptorMovie')), small = w.add(z3Sp('raptor')), tur = w.add(z3Bird('turkey')), d = w.add(z3Dota()); d.position.set(-1.1, 0, 0.2); d.scale.setScalar(0.6); d.setPose('down');
       return (t) => {
-        STU.pose(t); const sh = w.K('shrink'), pv = w.K('pavo'); z3Cam(w, t, [0.3, 1.1, 5.0], [0.15, 0.62, 0], [sh, pv]); void puff;
+        STU.pose(t); const sh = w.K('shrink'), pv = w.K('pavo'); z3Cam(w, t, [0.3, 1.1, 5.0], [0.15, 0.62, 0], [sh, pv]);
         const u = p3Smoothstep(0, 1, p3Clamp((t - sh) / 0.35)); big.visible = u < 0.5; small.visible = !big.visible; big.scale.setScalar(1 - u * 0.6); big.position.set(0.3, 0, 0.2); big.live(t, {}); small.position.set(0.25, 0, 0.3); small.rotation.y = 0.2; small.scale.setScalar(Math.max(0.001, zsp(t, sh + 0.17))); small.live(t, { jaw: 0.2 * Math.max(0, Math.sin(t * 4)) });
         tur.position.set(1.25, 0, 0.2); tur.rotation.y = -0.4; zPop(tur, t, pv - 0.3); tur.live(t, { look: -0.5 }); d.live(t); zTicoP(w, tk, t);
       };
@@ -229,8 +231,8 @@ defineVisuals({
   },
   // ===== 2:25 colours
   colores: {
-    build(w) { const { STU, tk } = zStudio(w); const g = w.add(z3Sp('gray')); g.position.set(0, 0, 0); g.rotation.y = 0.3; const br = w.add(z3Brush('#4caf50')); const mats: THREE.MeshPhysicalMaterial[] = []; g.traverse((o) => { const m = (o as THREE.Mesh).material as THREE.MeshPhysicalMaterial; if (m && m.color && !mats.includes(m)) mats.push(m); });
-      return (t) => { STU.pose(t); const k = w.K('paint'), u = p3Clamp((t - k + 0.4) / 1.6); g.live(t, { jaw: 0.1 }); mats.forEach((m, i) => m.color.set('#ffffff').lerp(new THREE.Color(i % 3 ? '#7ac25a' : '#a8784a'), u)); br.position.set(p3Lerp(-0.8, 1.6, u), 1.3 + 0.2 * Math.sin(t * 9), 0.55); br.rotation.z = 0.5 + 0.3 * Math.sin(t * 9); br.visible = t > k - 0.6; z3Cam(w, t, [0.6, 1.4, 5.6], [0.4, 1.0, 0], [k]); zTicoP(w, tk, t); }; },
+    build(w) { const { STU, tk } = zStudio(w); const g = w.add(z3Sp('gray')); g.position.set(0, 0, 0); g.rotation.y = 0.3; const br = w.add(z3Brush('#4caf50')); const mats: THREE.MeshToonMaterial[] = [];
+      return (t) => { STU.pose(t); const k = w.K('paint'), u = p3Clamp((t - k + 0.4) / 1.6); g.live(t, { jaw: 0.1 }); if (!mats.length) g.traverse((o) => { const m = (o as THREE.Mesh).material as THREE.MeshToonMaterial; if (m && m.isMeshToonMaterial && !mats.includes(m)) mats.push(m); }); mats.forEach((m, i) => m.color.set('#ffffff').lerp(new THREE.Color(i % 3 ? '#7ac25a' : '#a8784a'), u)); br.position.set(p3Lerp(-0.8, 1.6, u), 1.3 + 0.2 * Math.sin(t * 9), 0.55); br.rotation.z = 0.5 + 0.3 * Math.sin(t * 9); br.visible = t > k - 0.6; z3Cam(w, t, [0.6, 1.4, 5.6], [0.4, 1.0, 0], [k]); zTicoP(w, tk, t); }; },
   },
   bolsitas: {
     build(w) { const { STU, tk } = zStudio(w); const m = w.add(z3Microscope()); m.position.set(0.3, 1.6, 0); zChip(w, 'BOLSITAS DE COLOR', w.K('micro'), 1060, 880);
@@ -435,7 +437,7 @@ defineVisuals({
 // every scene: the finish (depth of field, grade), dust in the light, swaying plants, key bursts, 2D cut-outs facing the camera
 for (const id of Object.keys(VISUALS)) { const V = VISUALS[id], b = V.build; V.build = (w) => {
   z3Finish(w); let tgt = new THREE.Vector3(0, 1, 0); const look0 = w.look.bind(w); w.look = (p, q, f) => { tgt = new THREE.Vector3(...q); look0(p, q, f); };
-  const pose = b(w), keys = (w.s.keys || []).map((k) => w.K(k.id)); let q0: THREE.Quaternion | null = null;
+  const pose = b(w), keys = (w.s.keys || []).map((k) => w.K(k.id)); let q0: THREE.Quaternion | null = null, inked = false;
   const dust = z3Dust(); w.scene.add(dust);
   const bursts = (w.s.keys || []).filter((k) => k.sfx && /pop|hit|impact|shimmer/.test(k.sfx)).map((k) => w.K(k.id));
   const rings = [0, 1].map((i) => { const m = new THREE.Mesh(new THREE.RingGeometry(0.9, 1.0, 64), new THREE.MeshBasicMaterial({ color: i ? '#ffffff' : '#d4ff3a', transparent: true, opacity: 0, depthWrite: false, toneMapped: false, fog: false, side: THREE.DoubleSide })); w.scene.add(m); return m; }); const tint = new THREE.Color('#ffffff');
@@ -444,7 +446,7 @@ for (const id of Object.keys(VISUALS)) { const V = VISUALS[id], b = V.build; V.b
     const h = o as THREE.HemisphereLight; if (h.isHemisphereLight) tint.copy(new THREE.Color('#ffffff').lerp(h.color, 0.3));
   });
   return (t) => {
-    P3_T.value = t; Z3_KEYS = keys; Z3_FOCUS_OVR = -1; Z3_BOTH = 0; Z3_HEAT = 0; if (q0) w.camera.quaternion.copy(q0); pose(t); q0 = w.camera.quaternion.clone();
+    P3_T.value = t; Z3_KEYS = keys; Z3_FOCUS_OVR = -1; Z3_BOTH = 0; Z3_HEAT = 0; if (q0) w.camera.quaternion.copy(q0); pose(t); q0 = w.camera.quaternion.clone(); if (!inked) { z3Ink(w.scene); inked = true; }
     const n = (a: number, c: number) => Math.sin(t * a + c); w.camera.rotateX(0.004 * (n(0.9, 1) + 0.6 * n(2.3, 4))); w.camera.rotateY(0.004 * (n(0.7, 2) + 0.6 * n(1.9, 5))); w.camera.rotateZ(0.0025 * n(0.5, 3)); w.camera.updateMatrixWorld(true);
     Z3_FOCUS = w.camera.position.distanceTo(tgt); const wp = new THREE.Vector3();
     for (const s of Z3_SPRITES) { let root: THREE.Object3D = s.g; while (root.parent) root = root.parent; if (root !== w.scene || !s.g.parent!.visible) continue; s.mesh.getWorldPosition(wp); Z3_FOCUS = Math.max(Z3_FOCUS, w.camera.position.distanceTo(wp)); }

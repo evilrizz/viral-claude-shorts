@@ -227,7 +227,7 @@ function z3Limb(mat: THREE.Material, r0: number, r1: number) {
     const c = e.clone().multiplyScalar(2).sub(s.clone().add(h).multiplyScalar(0.5)), curve = new THREE.QuadraticBezierCurve3(s, c, h);
     const g = new THREE.TubeGeometry(curve, 18, 1, 14, false), pos = g.attributes.position, nrm = g.attributes.normal;
     for (let i = 0; i <= 18; i++) { const u = i / 18, r = r0 + (r1 - r0) * u, p = curve.getPoint(u); for (let j = 0; j <= 14; j++) { const k = i * 15 + j; pos.setXYZ(k, p.x + nrm.getX(k) * r, p.y + nrm.getY(k) * r, p.z + nrm.getZ(k) * r); } }
-    pos.needsUpdate = true; m.geometry.dispose(); m.geometry = g;
+    pos.needsUpdate = true; m.geometry.dispose(); m.geometry = g; for (const ch of m.children) (ch as THREE.Mesh).geometry = g;
   } });
 }
 // a head: an organic skull with a face mask painted in, covered by short fur
@@ -1037,8 +1037,8 @@ function z3Studio(w: World, floor = '#ece6d6', back = '#15161d') {
   // a soft hill line where floor meets the dark (the reference look), with a halo behind the subject
   const halo = new THREE.Mesh(new THREE.CircleGeometry(4, 48), new THREE.MeshBasicMaterial({ map: z3Paint(128, 128, (c) => { const g = c.createRadialGradient(64, 64, 0, 64, 64, 64); g.addColorStop(0, 'rgba(90,100,200,0.35)'); g.addColorStop(1, 'rgba(90,100,200,0)'); c.fillStyle = g; c.fillRect(0, 0, 128, 128); }), transparent: true, depthWrite: false, fog: false })); halo.position.set(0, 3.2, -8.5); w.add(halo);
   const pool = new THREE.SpotLight('#ffe6c0', 120, 30, 0.5, 0.9, 1.4); pool.position.set(0.5, 10, 6); pool.target.position.set(0.3, 0, -0.5); w.add(pool); w.add(pool.target);
-  const r = p3Rnd(31), cols = ['#d4ff3a', '#3a6bff', '#ff3b2b', '#8f7dff', '#ffb02e'];
-  const bok = [...Array(16)].map((_, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.25 + r() * 0.55, 20, 14), new THREE.MeshBasicMaterial({ color: cols[i % 5], transparent: true, opacity: 0.38, fog: false, toneMapped: false, depthWrite: false })); m.position.set((r() - 0.5) * 16, 1 + r() * 8, -5 - r() * 3); w.add(m); return { m, x: m.position.x, y: m.position.y, p: r() * 6 }; });
+  const r = p3Rnd(31), cols = ['#3a5cff', '#ffc83d', '#2a3a8a', '#6a7cff', '#ffb02e'];
+  const bok = [...Array(16)].map((_, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.25 + r() * 0.55, 20, 14), new THREE.MeshBasicMaterial({ color: cols[i % 5], transparent: true, opacity: 0.2, fog: false, toneMapped: false, depthWrite: false })); m.scale.setScalar(0.7); m.position.set((r() - 0.5) * 16, 1 + r() * 8, -5 - r() * 3); w.add(m); return { m, x: m.position.x, y: m.position.y, p: r() * 6 }; });
   return { pose(t: number) { bok.forEach(({ m, x, y, p }) => { m.position.x = x + 0.6 * Math.sin(t * 0.25 + p); m.position.y = y + 0.4 * Math.sin(t * 0.35 + p * 2); }); } };
 }
 // the desert at sunset: dunes, a warm low sun, purple sky
@@ -1077,7 +1077,7 @@ interface Z3DinoSpec {
   tail: [number, number]; tailUp?: number;   // length, radius at the base; how much it rises
   feathers?: number; featherCol?: string; armFeathers?: boolean; stripes?: string;
   crests?: boolean; frill?: 'fake' | 'trike'; horns?: boolean; plates?: boolean; sail?: number; thumbSpike?: boolean; spikes?: boolean;
-  mane?: string; spots?: string;
+  mane?: string; spots?: string; bands?: string; nb?: number;
 }
 type Z3DinoPose = { walk?: number; jaw?: number; yaw?: number; pitch?: number; tail?: number; upright?: number; frill?: number; blink?: boolean; sniff?: number; shake?: number; red?: boolean };
 // a tube along points, tapering from r0 to r1, rebuilt with set(points)
@@ -1086,29 +1086,32 @@ function z3Tube(mat: THREE.Material, r0: number, r1: number, seg = 24, rad = 14)
   return Object.assign(m, { set(pts: THREE.Vector3[]) {
     const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal'), g = new THREE.TubeGeometry(curve, seg, 1, rad, false), pos = g.attributes.position, nrm = g.attributes.normal;
     for (let i = 0; i <= seg; i++) { const u = i / seg, r = r0 + (r1 - r0) * Math.pow(u, 0.9), p = curve.getPoint(u); for (let j = 0; j <= rad; j++) { const k = i * (rad + 1) + j; pos.setXYZ(k, p.x + nrm.getX(k) * r, p.y + nrm.getY(k) * r, p.z + nrm.getZ(k) * r); } }
-    pos.needsUpdate = true; g.computeVertexNormals(); m.geometry.dispose(); m.geometry = g; return curve;
+    pos.needsUpdate = true; g.computeVertexNormals(); m.geometry.dispose(); m.geometry = g; for (const ch of m.children) (ch as THREE.Mesh).geometry = g; return curve;
   } });
 }
 // a scaly skin texture (little rounded cells) tinted by the material colour
-const Z3_SCALES = (() => { let t: THREE.Texture | null = null; return () => { if (t) return t; t = z3Paint(256, 256, (c) => { c.fillStyle = '#ffffff'; c.fillRect(0, 0, 256, 256); const r = p3Rnd(5); for (let i = 0; i < 900; i++) { const x = r() * 256, y = r() * 256, s = 3 + r() * 5; c.fillStyle = `rgba(0,0,0,${0.06 + r() * 0.12})`; c.beginPath(); c.arc(x, y, s, 0, 7); c.fill(); } }); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(4, 4); return t; }; })();
+// feathers as an illustration: overlapping scallops (light edges), tinted by the material colour
+const Z3_FEATHERS = (() => { let t: THREE.Texture | null = null; return () => { if (t) return t; t = z3Paint(256, 256, (c) => { c.fillStyle = '#ffffff'; c.fillRect(0, 0, 256, 256); for (let y = -16; y < 272; y += 22) for (let x = -16; x < 272; x += 28) { const ox = (Math.round(y / 22) % 2) * 14; c.fillStyle = 'rgba(0,0,0,0.16)'; c.beginPath(); c.arc(x + ox, y, 15, 0, Math.PI); c.fill(); c.strokeStyle = 'rgba(255,255,255,0.55)'; c.lineWidth = 3; c.beginPath(); c.arc(x + ox, y, 14, 0.15, Math.PI - 0.15); c.stroke(); } }); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 3); return t; }; })();
+const z3FSkin = (c: string) => new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.8, map: Z3_FEATHERS() });
+const Z3_SCALES = (() => { let t: THREE.Texture | null = null; return () => { if (t) return t; t = z3Paint(256, 256, (c) => { c.fillStyle = '#ffffff'; c.fillRect(0, 0, 256, 256); const r = p3Rnd(5); for (let i = 0; i < 900; i++) { const x = r() * 256, y = r() * 256, s = 3 + r() * 5; c.fillStyle = `rgba(0,0,0,${0.02 + r() * 0.05})`; c.beginPath(); c.arc(x, y, s, 0, 7); c.fill(); } }); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(4, 4); return t; }; })();
 const z3DSkin = (c: string, rough = 0.62) => new THREE.MeshPhysicalMaterial({ color: c, roughness: rough, map: Z3_SCALES(), sheen: 0.4, sheenColor: new THREE.Color('#ffffff'), sheenRoughness: 0.6, clearcoat: 0.25, clearcoatRoughness: 0.5 });
 function z3Dino(S: Z3DinoSpec) {
-  const g = new THREE.Group(), hips = new THREE.Group(); g.add(hips); hips.position.y = S.hip;
+  const g = new THREE.Group(), hips = new THREE.Group(); g.add(hips); g.userData.ink = true; hips.position.y = S.hip;
   const hx = (h: string) => new THREE.Color(parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255);
   const C = hx(S.col), B = hx(S.belly), D = hx(S.dark || S.col).multiplyScalar(S.dark ? 1 : 0.7), skin = z3DSkin(S.col), bellyM = z3DSkin(S.belly), dark = z3Gloss('#1d1410', 0.3);
   const [bx, by, bz] = S.body;
   // torso: an egg, deeper at the chest, belly painted lighter, a darker back, spots
   const tr = S.tail[1] / Math.max(by, bz);
   const torsoGeo = p3Blob((x, y, z) => { const f = x >= 0 ? 1 - 0.08 * x : 1 + (1 - Math.max(tr * 1.15, 0.35)) * x; return [x * bx * (x < 0 ? 1.25 : 1) + bx * 0.35, y * by * f * (y < 0 ? 1.06 : 0.94) + (x < 0 ? x * by * 0.12 : 0), z * bz * f]; },
-    (x, y, z) => { const n = p3Fbm3(x * 3, y * 3, z * 3) - 0.5; const bel = p3Smoothstep(0.1, -0.5, y / by), back = p3Smoothstep(0.4, 0.95, y / by); let c = C.clone().lerp(B, bel).lerp(D, back * 0.6); if (S.spots && n > 0.12) c = c.lerp(hx(S.spots), 0.5); return [c.r + n * 0.08, c.g + n * 0.08, c.b + n * 0.06]; }, 48, 36);
+    (x, y, z) => { const n = p3Fbm3(x * 3, y * 3, z * 3) - 0.5; const bel = p3Smoothstep(0.1, -0.5, y / by), back = p3Smoothstep(0.4, 0.95, y / by); let c = C.clone().lerp(B, p3Smoothstep(0.35, 0.65, bel)).lerp(D, p3Smoothstep(0.4, 0.6, back) * 0.6); if (S.spots && n > 0.12) c = c.lerp(hx(S.spots), 0.5); if (S.bands && bel < 0.5 && Math.sin((x / bx) * (S.nb ?? 7) * Math.PI + y * 2) > 0.35) c = hx(S.bands).lerp(c, bel); return [c.r + n * 0.02, c.g + n * 0.02, c.b + n * 0.015]; }, 48, 36);
   const torso = new THREE.Mesh(torsoGeo, new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.62, map: Z3_SCALES(), sheen: 0.4, sheenRoughness: 0.6, clearcoat: 0.2 })); torso.castShadow = torso.receiveShadow = true;
   const chest = new THREE.Group(); chest.add(torso); hips.add(chest);
-  if (S.feathers) { const fur = p3Fur(torsoGeo, { ...P3_HAIR, layers: 8, len: 0.06 * S.feathers * Math.max(bx, 0.4), den: 70, droop: [-0.6, -0.3, 0], shade: [0.7, 1.2] }); chest.add(fur); }
+  if (S.feathers) (torso.material as THREE.MeshPhysicalMaterial).map = Z3_FEATHERS();
   // neck, head and tail: tubes
-  const neckM = S.feathers && S.featherCol ? z3DSkin(S.featherCol, 0.8) : skin, tailM = S.stripes ? new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.8, map: z3Paint(512, 64, (c) => { for (let i = 0; i < 16; i++) { c.fillStyle = i % 2 ? S.stripes! : S.col; c.fillRect(i * 32, 0, 32, 64); } }) }) : (S.feathers && S.featherCol ? z3DSkin(S.featherCol, 0.8) : skin);
+  const neckM = S.feathers && S.featherCol ? z3FSkin(S.featherCol) : skin, tailM = S.bands ? new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.6, map: z3Paint(512, 64, (c) => { for (let i = 0; i < 12; i++) { c.fillStyle = i % 2 ? S.bands! : S.col; c.fillRect(i * 43, 0, 43, 64); } }) }) : S.stripes ? new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.8, map: z3Paint(512, 64, (c) => { for (let i = 0; i < 16; i++) { c.fillStyle = i % 2 ? S.stripes! : S.col; c.fillRect(i * 32, 0, 32, 64); } }) }) : (S.feathers && S.featherCol ? z3FSkin(S.featherCol) : skin);
   const neck = z3Tube(neckM, S.neck[1], S.neck[1] * 0.7), tail = z3Tube(tailM, S.tail[1], S.tail[1] * 0.08, 28); hips.add(neck, tail);
-  const tuft: THREE.Mesh[] = []; const furT = S.feathers && !S.stripes ? p3Fur(new THREE.BufferGeometry(), { ...P3_HAIR, layers: 8, len: 0.09 * S.tail[1] * S.feathers + 0.01, den: 60, droop: [-0.6, -0.4, 0], colors: [S.featherCol || S.col, new THREE.Color(S.featherCol || S.col).lerp(new THREE.Color('#ffffff'), 0.25).getStyle()] }) : null; if (furT) hips.add(furT);
-  const furN = S.feathers ? p3Fur(new THREE.BufferGeometry(), { ...P3_HAIR, layers: 8, len: 0.1 * S.neck[1] * S.feathers + 0.008, den: 70, droop: [-0.4, -0.5, 0], colors: [S.featherCol || S.col, new THREE.Color(S.featherCol || S.col).lerp(new THREE.Color('#ffffff'), 0.2).getStyle()] }) : null; if (furN) hips.add(furN);
+  const tuft: THREE.Mesh[] = []; const furT = false && S.feathers && !S.stripes ? p3Fur(new THREE.BufferGeometry(), { ...P3_HAIR, layers: 8, len: 0.09 * S.tail[1] * (S.feathers ?? 0) + 0.01, den: 60, droop: [-0.6, -0.4, 0], colors: [S.featherCol || S.col, new THREE.Color(S.featherCol || S.col).lerp(new THREE.Color('#ffffff'), 0.25).getStyle()] }) : null; if (furT) hips.add(furT);
+  const furN = false && S.feathers ? p3Fur(new THREE.BufferGeometry(), { ...P3_HAIR, layers: 8, len: 0.1 * S.neck[1] * (S.feathers ?? 0) + 0.008, den: 70, droop: [-0.4, -0.5, 0], colors: [S.featherCol || S.col, new THREE.Color(S.featherCol || S.col).lerp(new THREE.Color('#ffffff'), 0.2).getStyle()] }) : null; if (furN) hips.add(furN);
   const head = new THREE.Group(); hips.add(head);
   const [hx0, hy0, hz0] = S.head;
   const skull = new THREE.Mesh(p3Blob((x, y, z) => { const sn = x > 0 ? 1 - 0.35 * x : 1; return [x * hx0 + hx0 * 0.45, y * hy0 * sn + (x > 0 && y > 0 ? -x * hy0 * 0.2 : 0), z * hz0 * sn]; },
@@ -1179,22 +1182,22 @@ function z3Dino(S: Z3DinoSpec) {
 }
 // the species (proportions in meters; spots and colours chosen for the series look, not as fact)
 const Z3_SP: Record<string, Z3DinoSpec> = {
-  raptorMovie: { col: '#7a8a5a', belly: '#c9c49a', dark: '#4a5236', body: [0.45, 0.32, 0.26], hip: 1.0, leg: 1.05, legR: 0.08, arm: 0.42, armR: 0.045, neck: [0.42, 0.12, 40], head: [0.28, 0.14, 0.12], teeth: true, tail: [1.5, 0.15, ], tailUp: 0.12, spots: '#3a3f2a' },
-  raptor: { col: '#9a6a44', belly: '#e8d2a8', dark: '#5a3a22', body: [0.2, 0.13, 0.11], hip: 0.38, leg: 0.4, legR: 0.03, arm: 0.2, armR: 0.02, neck: [0.18, 0.05, 45], head: [0.11, 0.055, 0.05], teeth: true, tail: [0.6, 0.06], tailUp: 0.15, feathers: 1, featherCol: '#8a5a38', armFeathers: true },
-  deino: { col: '#8a5a3a', belly: '#e0c8a0', dark: '#4a2e1c', body: [0.5, 0.34, 0.28], hip: 1.0, leg: 1.05, legR: 0.08, arm: 0.5, armR: 0.05, neck: [0.42, 0.13, 40], head: [0.3, 0.15, 0.13], teeth: true, tail: [1.6, 0.16], tailUp: 0.12, feathers: 1, featherCol: '#7a4a2e', armFeathers: true },
-  rex: { col: '#6f7a4a', belly: '#d8cfa2', dark: '#3e4628', body: [1.6, 1.0, 0.9], hip: 2.4, leg: 2.5, legR: 0.3, arm: 0.6, armR: 0.09, neck: [0.9, 0.45, 25], head: [0.85, 0.45, 0.38], teeth: true, eyeR: 0.11, tail: [4.6, 0.6], tailUp: 0.08, spots: '#4a5236' },
-  yuty: { col: '#b0804e', belly: '#ecdcb8', dark: '#6a4a2e', body: [1.4, 0.9, 0.8], hip: 2.1, leg: 2.2, legR: 0.27, arm: 0.8, armR: 0.1, neck: [0.8, 0.42, 28], head: [0.75, 0.38, 0.32], teeth: true, eyeR: 0.1, tail: [4.0, 0.55], tailUp: 0.08, feathers: 1.6, featherCol: '#a8744a' },
+  raptorMovie: { col: '#3f8a5a', belly: '#e8e0b8', dark: '#24563a', body: [0.45, 0.32, 0.26], hip: 1.0, leg: 1.05, legR: 0.08, arm: 0.42, armR: 0.045, neck: [0.42, 0.12, 40], head: [0.28, 0.14, 0.12], teeth: true, tail: [1.5, 0.15], tailUp: 0.12, bands: '#24563a', nb: 8 },
+  raptor: { col: '#e07a2e', belly: '#f6e6c4', dark: '#8a3e1a', body: [0.2, 0.13, 0.11], hip: 0.38, leg: 0.4, legR: 0.03, arm: 0.2, armR: 0.02, neck: [0.18, 0.05, 45], head: [0.11, 0.055, 0.05], teeth: true, tail: [0.6, 0.06], tailUp: 0.15, feathers: 1, featherCol: '#e07a2e', armFeathers: true },
+  deino: { col: '#2f5fd8', belly: '#f2e6c8', dark: '#1a3a8a', body: [0.5, 0.34, 0.28], hip: 1.0, leg: 1.05, legR: 0.08, arm: 0.5, armR: 0.05, neck: [0.42, 0.13, 40], head: [0.3, 0.15, 0.13], teeth: true, tail: [1.6, 0.16], tailUp: 0.12, feathers: 1, featherCol: '#2f5fd8', armFeathers: true },
+  rex: { col: '#2f5fd8', belly: '#f2e6c8', dark: '#1c3a94', body: [1.6, 1.0, 0.9], hip: 2.4, leg: 2.5, legR: 0.3, arm: 0.6, armR: 0.09, neck: [0.9, 0.45, 25], head: [0.85, 0.45, 0.38], teeth: true, eyeR: 0.11, tail: [4.6, 0.6], tailUp: 0.08, bands: '#f2b632', nb: 6 },
+  yuty: { col: '#e8a03a', belly: '#f6e8c8', dark: '#a8601e', body: [1.4, 0.9, 0.8], hip: 2.1, leg: 2.2, legR: 0.27, arm: 0.8, armR: 0.1, neck: [0.8, 0.42, 28], head: [0.75, 0.38, 0.32], teeth: true, eyeR: 0.1, tail: [4.0, 0.55], tailUp: 0.08, feathers: 1.6, featherCol: '#e8a03a' },
   diloFake: { col: '#d8c24a', belly: '#f2ecc2', dark: '#3a6a5a', body: [0.32, 0.22, 0.18], hip: 0.7, leg: 0.75, legR: 0.06, arm: 0.3, armR: 0.035, neck: [0.4, 0.09, 50], head: [0.2, 0.1, 0.09], teeth: false, tail: [1.0, 0.11], tailUp: 0.1, frill: 'fake', spots: '#3a6a5a' },
-  dilo: { col: '#7a6a52', belly: '#ddd0b2', dark: '#c85a2e', body: [1.1, 0.62, 0.55], hip: 1.6, leg: 1.7, legR: 0.2, arm: 0.7, armR: 0.08, neck: [0.95, 0.26, 35], head: [0.55, 0.24, 0.2], teeth: true, eyeR: 0.07, tail: [3.0, 0.4], tailUp: 0.08, crests: true },
-  sino: { col: '#a0683e', belly: '#f2e2c2', dark: '#6a3e22', body: [0.17, 0.11, 0.09], hip: 0.28, leg: 0.3, legR: 0.025, arm: 0.1, armR: 0.018, neck: [0.15, 0.04, 40], head: [0.09, 0.045, 0.04], teeth: true, tail: [0.75, 0.05], tailUp: 0.08, feathers: 1.2, stripes: '#f4ead2' },
-  maia: { col: '#7a8a6a', belly: '#e2dcc2', dark: '#4a5a42', body: [1.5, 1.0, 0.85], hip: 1.8, leg: 1.8, legR: 0.3, arm: 0.9, armR: 0.14, neck: [0.8, 0.4, 30], head: [0.6, 0.26, 0.22], beak: false, eyeR: 0.08, tail: [3.4, 0.55], tailUp: 0.05, spots: '#5a6a4e' },
-  croc: { col: '#5a6a3e', belly: '#c8c49a', dark: '#3a4426', body: [0.9, 0.3, 0.38], hip: 0.32, leg: 0.36, legR: 0.08, quad: true, sprawl: 0.4, neck: [0.2, 0.22, 0], head: [0.75, 0.16, 0.2], teeth: true, eyeR: 0.05, tail: [2.0, 0.28], tailUp: -0.02, spots: '#2e3a1e' },
-  maiaBaby: { col: '#8a9a72', belly: '#eee8d0', dark: '#5a6a4e', body: [0.22, 0.17, 0.15], hip: 0.22, leg: 0.24, legR: 0.05, arm: 0.12, armR: 0.03, neck: [0.12, 0.08, 35], head: [0.13, 0.09, 0.08], eyeR: 0.04, tail: [0.35, 0.08], tailUp: 0.05 },
-  bronto: { col: '#8a8270', belly: '#d8d0b8', dark: '#5a5446', body: [2.2, 1.5, 1.3], hip: 3.0, leg: 3.0, legR: 0.45, quad: true, neck: [6.0, 0.55, 55], head: [0.55, 0.3, 0.26], eyeR: 0.07, tail: [8.0, 0.75], tailUp: 0.04 },
-  stego: { col: '#7e8a4e', belly: '#d8d4a8', dark: '#4e5a32', body: [1.8, 1.1, 0.95], hip: 2.0, leg: 1.8, legR: 0.32, quad: true, neck: [0.6, 0.35, 5], head: [0.45, 0.22, 0.2], eyeR: 0.06, tail: [3.0, 0.5], tailUp: 0.15, plates: true, spikes: true },
-  trike: { col: '#7a6a5a', belly: '#d8ccb4', dark: '#a8562e', body: [1.9, 1.2, 1.05], hip: 1.7, leg: 1.6, legR: 0.36, quad: true, neck: [0.4, 0.5, 0], head: [0.9, 0.55, 0.45], beak: true, eyeR: 0.08, tail: [2.2, 0.55], tailUp: 0.05, horns: true, frill: 'trike' },
-  spino: { col: '#5a6a72', belly: '#d2d0c4', dark: '#3a444a', body: [1.5, 0.85, 0.7], hip: 2.0, leg: 1.9, legR: 0.26, arm: 1.0, armR: 0.13, neck: [1.0, 0.36, 30], head: [1.0, 0.3, 0.25], teeth: true, eyeR: 0.08, tail: [4.5, 0.5], tailUp: 0.06, sail: 1.6 },
-  dimetro: { col: '#7a5a42', belly: '#d8c4a6', dark: '#4a3424', body: [0.8, 0.35, 0.38], hip: 0.45, leg: 0.5, legR: 0.09, quad: true, sprawl: 0.35, neck: [0.15, 0.2, 10], head: [0.35, 0.18, 0.16], teeth: true, eyeR: 0.05, tail: [1.4, 0.2], tailUp: -0.02, sail: 0.9 },
+  dilo: { col: '#3a7ad8', belly: '#f0e6c8', dark: '#ff6a3d', body: [1.1, 0.62, 0.55], hip: 1.6, leg: 1.7, legR: 0.2, arm: 0.7, armR: 0.08, neck: [0.95, 0.26, 35], head: [0.55, 0.24, 0.2], teeth: true, eyeR: 0.07, tail: [3.0, 0.4], tailUp: 0.08, crests: true, bands: '#f2b632', nb: 7 },
+  sino: { col: '#e07a2e', belly: '#f6e6c4', dark: '#8a3e1a', body: [0.17, 0.11, 0.09], hip: 0.28, leg: 0.3, legR: 0.025, arm: 0.1, armR: 0.018, neck: [0.15, 0.04, 40], head: [0.09, 0.045, 0.04], teeth: true, tail: [0.75, 0.05], tailUp: 0.08, feathers: 1.2, stripes: '#f4ead2' },
+  maia: { col: '#2fa88a', belly: '#f0ead0', dark: '#1a6a56', body: [1.5, 1.0, 0.85], hip: 1.8, leg: 1.8, legR: 0.3, arm: 0.9, armR: 0.14, neck: [0.8, 0.4, 30], head: [0.6, 0.26, 0.22], beak: false, eyeR: 0.08, tail: [3.4, 0.55], tailUp: 0.05, bands: '#f2e6a8', nb: 5 },
+  croc: { col: '#3a8a5a', belly: '#e8e4b8', dark: '#1e5a36', body: [0.9, 0.3, 0.38], hip: 0.32, leg: 0.36, legR: 0.08, quad: true, sprawl: 0.4, neck: [0.2, 0.22, 0], head: [0.75, 0.16, 0.2], teeth: true, eyeR: 0.05, tail: [2.0, 0.28], tailUp: -0.02, spots: '#2e3a1e' },
+  maiaBaby: { col: '#5ac8a8', belly: '#f6f0dc', dark: '#2a8a6e', body: [0.22, 0.17, 0.15], hip: 0.22, leg: 0.24, legR: 0.05, arm: 0.12, armR: 0.03, neck: [0.12, 0.08, 35], head: [0.13, 0.09, 0.08], eyeR: 0.04, tail: [0.35, 0.08], tailUp: 0.05 },
+  bronto: { col: '#6a5ad8', belly: '#ece4d4', dark: '#3a2e94', body: [2.2, 1.5, 1.3], hip: 3.0, leg: 3.0, legR: 0.45, quad: true, neck: [6.0, 0.55, 55], head: [0.55, 0.3, 0.26], eyeR: 0.07, tail: [8.0, 0.75], tailUp: 0.04, bands: '#f2b632', nb: 5 },
+  stego: { col: '#3a9a5a', belly: '#ece6c4', dark: '#1e6a3a', body: [1.8, 1.1, 0.95], hip: 2.0, leg: 1.8, legR: 0.32, quad: true, neck: [0.6, 0.35, 5], head: [0.45, 0.22, 0.2], eyeR: 0.06, tail: [3.0, 0.5], tailUp: 0.15, plates: true, spikes: true },
+  trike: { col: '#e8803a', belly: '#f6e6c8', dark: '#2f5fd8', body: [1.9, 1.2, 1.05], hip: 1.7, leg: 1.6, legR: 0.36, quad: true, neck: [0.4, 0.5, 0], head: [0.9, 0.55, 0.45], beak: true, eyeR: 0.08, tail: [2.2, 0.55], tailUp: 0.05, horns: true, frill: 'trike', bands: '#2f5fd8', nb: 5 },
+  spino: { col: '#2f4fb8', belly: '#ece6d4', dark: '#1a2e7a', body: [1.5, 0.85, 0.7], hip: 2.0, leg: 1.9, legR: 0.26, arm: 1.0, armR: 0.13, neck: [1.0, 0.36, 30], head: [1.0, 0.3, 0.25], teeth: true, eyeR: 0.08, tail: [4.5, 0.5], tailUp: 0.06, sail: 1.6, bands: '#f2b632', nb: 6 },
+  dimetro: { col: '#c86a3a', belly: '#f0dcc4', dark: '#7a3a1a', body: [0.8, 0.35, 0.38], hip: 0.45, leg: 0.5, legR: 0.09, quad: true, sprawl: 0.35, neck: [0.15, 0.2, 10], head: [0.35, 0.18, 0.16], teeth: true, eyeR: 0.05, tail: [1.4, 0.2], tailUp: -0.02, sail: 0.9 },
   horse: { col: '#8a5a32', belly: '#a8784a', dark: '#5a3a1e', body: [1.0, 0.55, 0.42], hip: 1.15, leg: 1.2, legR: 0.08, quad: true, neck: [0.85, 0.2, 55], head: [0.42, 0.16, 0.13], eyeR: 0.04, tail: [0.6, 0.12], tailUp: -0.4, mane: '#2b1a12' },
   gray: { col: '#9a9a9a', belly: '#c8c8c8', dark: '#6a6a6a', body: [0.5, 0.34, 0.28], hip: 1.0, leg: 1.05, legR: 0.08, arm: 0.45, armR: 0.05, neck: [0.42, 0.13, 40], head: [0.3, 0.15, 0.13], teeth: true, tail: [1.6, 0.16], tailUp: 0.12 },
 };
@@ -1204,11 +1207,11 @@ const z3Sp = (k: string) => z3Dino(Z3_SP[k]);
 // birds: hen (the grandma's chicken), pigeon, turkey. live(t, o): peck, look, flap (angry), run
 function z3Bird(kind: 'hen' | 'pigeon' | 'turkey') {
   const P = { hen: { body: '#c8783e', belly: '#e8b47a', head: '#c8783e', tail: '#4a3426', s: 0.32 }, pigeon: { body: '#a8acbc', belly: '#c4c8d4', head: '#8a8ea0', tail: '#6a6e80', s: 0.2 }, turkey: { body: '#5a3a2a', belly: '#7a523a', head: '#c8504a', tail: '#6a4a32', s: 0.45 } }[kind];
-  const g = new THREE.Group(), body = new THREE.Group(); g.add(body); const s = P.s;
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body); g.userData.ink = true; const s = P.s;
   const hx = (h: string) => new THREE.Color(h), Cb = hx(P.body), Cl = hx(P.belly);
   const bGeo = p3Blob((x, y, z) => { const f = x < 0 ? 1 + x * 0.45 : 1; return [x * s * 1.15, y * s * 0.85 * f + (x < 0 ? -x * s * 0.35 : 0), z * s * 0.78 * f]; }, (x, y) => { const c = Cb.clone().lerp(Cl, p3Smoothstep(0, -0.6, y / s)); return [c.r, c.g, c.b]; }, 40, 30);
   const bm = new THREE.Mesh(bGeo, new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.8, sheen: 0.6 })); bm.castShadow = true; body.add(bm);
-  body.add(p3Fur(bGeo, { ...P3_HAIR, layers: 6, len: s * 0.06, den: 90, droop: [-0.7, -0.3, 0], shade: [0.9, 1.2] })); body.add(z3Sph(s * 0.45, z3Skin(P.head, 0.75), [s * 0.82, s * 0.62, 0], [0.9, 1.25, 0.85]));
+  (bm.material as THREE.MeshPhysicalMaterial).map = Z3_FEATHERS(); body.add(z3Sph(s * 0.45, z3Skin(P.head, 0.75), [s * 0.82, s * 0.62, 0], [0.9, 1.25, 0.85]));
   if (kind === 'pigeon') { const nk = new THREE.Mesh(new THREE.SphereGeometry(s * 0.55, 24, 16), new THREE.MeshPhysicalMaterial({ color: '#4f8a7a', roughness: 0.4, iridescence: 1, iridescenceIOR: 1.6, sheen: 1, sheenColor: new THREE.Color('#c86ad8') })); nk.position.set(s * 0.8, s * 0.55, 0); nk.scale.set(1, 1.1, 0.9); body.add(nk); }
   const head = new THREE.Group(); head.position.set(s * 1.05, s * 1.12, 0); body.add(head);
   const hm = new THREE.Mesh(new THREE.SphereGeometry(s * 0.48, 28, 20), z3Skin(P.head, 0.7)); hm.castShadow = true; head.add(hm);
@@ -1238,7 +1241,7 @@ function z3Bird(kind: 'hen' | 'pigeon' | 'turkey') {
 }
 // a pterosaur: a slim body, a long head with a crest, membrane wings that flap; live(t, flapPhase)
 function z3Ptero(col = '#b8945e') {
-  const g = new THREE.Group(), body = new THREE.Group(); g.add(body); const sk = z3DSkin(col, 0.6);
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body); g.userData.ink = true; const sk = z3DSkin(col, 0.6);
   body.add(new THREE.Mesh(p3Blob((x, y, z) => [x * 0.45, y * 0.16, z * 0.15]), sk));
   const head = new THREE.Group(); head.position.set(0.5, 0.1, 0); body.add(head); head.add(new THREE.Mesh(p3Blob((x, y, z) => [x * 0.42 + 0.3, y * 0.08 * (1 - x * 0.6), z * 0.07 * (1 - x * 0.6)]), sk));
   const crest = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.5, 3), z3DSkin('#d8572e', 0.5)); crest.scale.z = 0.2; crest.position.set(-0.15, 0.2, 0); crest.rotation.z = 1.2; head.add(crest);
@@ -1249,7 +1252,7 @@ function z3Ptero(col = '#b8945e') {
 }
 // a mosasaur (sea reptile): a long body with flippers and a tail fin, big jaws; and a shark
 function z3Mosa() {
-  const g = new THREE.Group(), sk = z3DSkin('#4a6a7a', 0.5), bel = z3DSkin('#d8dccc', 0.6);
+  const g = new THREE.Group(); g.userData.ink = true; const _g0 = g,  sk = z3DSkin('#4a6a7a', 0.5), bel = z3DSkin('#d8dccc', 0.6);
   const body = new THREE.Mesh(p3Blob((x, y, z) => [x * 2.2, y * 0.42 * (1 - 0.35 * Math.max(0, -x)), z * 0.4 * (1 - 0.35 * Math.max(0, -x))], (x, y) => { const c = new THREE.Color('#4a6a7a').lerp(new THREE.Color('#d8dccc'), p3Smoothstep(0, -0.3, y)); return [c.r, c.g, c.b]; }), new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.45, map: Z3_SCALES(), clearcoat: 0.6 })); body.castShadow = true; g.add(body);
   const tail = z3Tube(sk, 0.32, 0.05, 20); g.add(tail); const fin = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1.0, 3), sk); fin.scale.z = 0.12; g.add(fin);
   const head = new THREE.Group(); head.position.set(2.0, 0.05, 0); g.add(head); head.add(new THREE.Mesh(p3Blob((x, y, z) => [x * 0.8 + 0.55, y * 0.22, z * 0.25 * (1 - x * 0.3)]), sk));
@@ -1262,9 +1265,9 @@ function z3Mosa() {
 function z3Shark() { const g = new THREE.Group(), m = z3DSkin('#8a96a6', 0.5); g.add(new THREE.Mesh(p3Blob((x, y, z) => [x * 0.9, y * 0.22 * (1 - Math.abs(x) * 0.4), z * 0.2 * (1 - Math.abs(x) * 0.4)]), m)); const df = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.4, 3), m); df.scale.z = 0.15; df.position.set(0, 0.28, 0); g.add(df); const tf = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.45, 3), m); tf.scale.z = 0.15; tf.rotation.z = Math.PI / 2; tf.position.set(-0.95, 0.05, 0); g.add(tf); const e = z3Eye(0.03, '#8a96a6'); e.position.set(0.62, 0.05, 0.12); g.add(e); return g; }
 // a raccoon (3D, for comparing tails): grey body, black mask, ringed tail
 function z3Raccoon() {
-  const g = new THREE.Group(), gm = z3Skin('#8a8a8e', 0.8);
+  const g = new THREE.Group(); g.userData.ink = true; const _g1 = g,  gm = z3Skin('#8a8a8e', 0.8);
   const bGeo = p3Blob((x, y, z) => [x * 0.38 + 0.0, y * 0.24, z * 0.22], (x, y) => { const c = new THREE.Color('#8a8a8e').lerp(new THREE.Color('#c8c4bc'), p3Smoothstep(0, -0.2, y)); return [c.r, c.g, c.b]; });
-  const b = new THREE.Mesh(bGeo, new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.85 })); b.position.y = 0.32; b.castShadow = true; g.add(b); const fb = p3Fur(bGeo, { ...P3_HAIR, layers: 7, len: 0.035, den: 120, shade: [0.7, 1.15] }); fb.position.y = 0.32; g.add(fb);
+  const b = new THREE.Mesh(bGeo, new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.85 })); b.position.y = 0.32; b.castShadow = true; g.add(b); 
   const head = new THREE.Group(); head.position.set(0.42, 0.45, 0); g.add(head); head.add(new THREE.Mesh(p3Blob((x, y, z) => [x * 0.17 + 0.03, y * 0.14, z * 0.15]), gm)); head.add(z3Sph(0.05, z3Gloss('#1d1410', 0.3), [0.22, -0.02, 0]));
   for (const s of [-1, 1]) { head.add(z3Sph(0.075, z3Skin('#1d1d22', 0.7), [0.09, 0.03, s * 0.08], [0.6, 0.7, 1])); const e = z3Eye(0.035, '#1d1d22'); e.position.set(0.13, 0.04, s * 0.075); e.rotation.y = s * 0.6; head.add(e); head.add(z3Sph(0.05, gm, [-0.02, 0.14, s * 0.09], [0.6, 1, 0.5])); }
   for (const [x, z] of [[0.25, 0.12], [0.25, -0.12], [-0.22, 0.12], [-0.22, -0.12]]) g.add(p3Rod([x, 0.25, z], [x, 0.0, z], 0.035, z3Skin('#3a3a40', 0.8)));
@@ -1374,3 +1377,37 @@ function z3Spit() { const m = new THREE.MeshPhysicalMaterial({ color: '#9ae84a',
 function z3Vision(L = 6) { const g = new THREE.Group(); for (const s of [-1, 1]) { const c = new THREE.Mesh(new THREE.ConeGeometry(L * 0.35, L, 32, 1, true), new THREE.MeshBasicMaterial({ color: '#d4ff3a', transparent: true, opacity: 0.18, side: THREE.DoubleSide, depthWrite: false, toneMapped: false })); c.rotation.z = Math.PI / 2; c.position.set(L / 2, 0, s * 0.12); c.rotation.y = s * 0.1; g.add(c); } return g; }
 // a timeline bar (left = old, right = today) on the floor
 function z3Timeline(L = 22) { const g = new THREE.Group(); g.add(z3BoxM(L, 0.12, 0.6, z3Mat('#2b2f3a', 0.5), [0, 0.06, 0])); for (let i = 0; i <= 22; i++) g.add(z3BoxM(0.04, 0.14, 0.62, z3Mat('#d4ff3a', 0.4), [-L / 2 + i * L / 22, 0.07, 0])); return g; }
+
+// =====================================================================
+//  ILLUSTRATED LOOK (from the user's reference): every 3D thing gets flat toon shading in three tones, halftone dots in
+//  its shadows, a soft rim of light and a cream outline around its silhouette. z3Ink(root) converts a built scene once.
+// =====================================================================
+const Z3_TONES = (() => { const d = new Uint8Array([90, 90, 90, 255, 175, 175, 175, 255, 255, 255, 255, 255]); const t = new THREE.DataTexture(d, 3, 1); t.minFilter = t.magFilter = THREE.NearestFilter; t.needsUpdate = true; return t; })();
+function z3ToonMat(src: THREE.Material) {
+  const s = src as THREE.MeshStandardMaterial;
+  const m = new THREE.MeshToonMaterial({ color: s.color ? s.color.clone() : new THREE.Color('#ffffff'), map: s.map || null, vertexColors: !!s.vertexColors, gradientMap: Z3_TONES, transparent: s.transparent, opacity: s.opacity, side: s.side, emissive: (s as THREE.MeshStandardMaterial).emissive ? (s as THREE.MeshStandardMaterial).emissive.clone() : new THREE.Color('#000000'), emissiveIntensity: (s as THREE.MeshStandardMaterial).emissiveIntensity ?? 1 });
+  if (m.map) { m.map = m.map.clone(); m.map.needsUpdate = true; m.color.multiplyScalar(1.0); }
+  m.onBeforeCompile = (sh) => {
+    sh.fragmentShader = sh.fragmentShader.replace('#include <opaque_fragment>', `
+      { float base = max(0.02, dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114))), lin = dot(outgoingLight, vec3(0.299, 0.587, 0.114)) / base;
+        vec2 q = mat2(0.7071, -0.7071, 0.7071, 0.7071) * gl_FragCoord.xy / 7.0; float dd = length(fract(q) - 0.5), rad = clamp((0.95 - lin) * 0.75, 0.0, 0.5);
+        outgoingLight = mix(outgoingLight, outgoingLight * 0.62, 1.0 - smoothstep(rad - 0.04, rad + 0.04, dd));
+        float rim = pow(1.0 - clamp(dot(normalize(normal), normalize(vViewPosition)), 0.0, 1.0), 3.0); outgoingLight += diffuseColor.rgb * rim * 0.35; }
+      #include <opaque_fragment>`);
+  };
+  m.customProgramCacheKey = () => 'z3toon'; return m;
+}
+const Z3_OUTLINE = new THREE.MeshBasicMaterial({ color: '#f6efe0', side: THREE.BackSide, toneMapped: false });
+Z3_OUTLINE.onBeforeCompile = (sh) => { sh.uniforms.uW = { value: 0.02 }; sh.vertexShader = 'uniform float uW;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n transformed += normalize(normal) * uW * (1.0 + length((modelViewMatrix * vec4(transformed, 1.0)).xyz) * 0.06);'); };
+// convert every lit material under root; add the outline to meshes of things marked ink (animals, dinosaurs, props)
+function z3Ink(root: THREE.Object3D) {
+  const done = new Map<THREE.Material, THREE.Material>();
+  root.traverse((o) => {
+    const m = o as THREE.Mesh; if (!m.isMesh || m.userData.z3ink) return; m.userData.z3ink = true; const mat = m.material as THREE.Material;
+    if (Array.isArray(m.material) || !mat || Object.prototype.hasOwnProperty.call(mat, 'onBeforeCompile')) return;   // multi-material cards, fur shells: keep
+    if (!(mat as THREE.MeshStandardMaterial).isMeshStandardMaterial) return;
+    let nm = done.get(mat); if (!nm) { nm = z3ToonMat(mat); done.set(mat, nm); } m.material = nm;
+    let p: THREE.Object3D | null = m, ink = false; while (p) { if (p.userData.ink) { ink = true; break; } p = p.parent; }
+    if (ink && !mat.transparent && m.geometry && (m.geometry.attributes.position?.count ?? 0) > 20) { const ol = new THREE.Mesh(m.geometry, Z3_OUTLINE); ol.userData.z3ink = true; ol.castShadow = false; ol.renderOrder = -1; m.add(ol); }
+  });
+}

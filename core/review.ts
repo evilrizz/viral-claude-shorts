@@ -10,7 +10,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { load } from './style.ts';
+import { load, frameOf } from './style.ts';
 
 if (!process.argv[2]) { console.error('usage: node core/review.ts videos/<topic>'); process.exit(2); }
 const { v, E, A } = await load(process.argv[2]);
@@ -22,7 +22,7 @@ const rows: [string, string, string][] = [], check = (n: string, pass: boolean |
 // 1. format and length
 const [w, h] = probe(['-select_streams', 'v:0', '-show_entries', 'stream=width,height'], VID).split(',').map(Number);
 const dur = Number(probe(['-show_entries', 'format=duration'], VID));
-check('format', w === 1080 && h === 1920, `${w}x${h}`);
+const FR = frameOf(E.format); check('format', w === FR.W && h === FR.H, `${w}x${h}`);
 check('length', Math.abs(dur - E.duration) <= 0.15, `${dur.toFixed(2)} s (audio ${E.duration.toFixed(2)} s)`);
 // 2. loudness
 const lo = spawnSync('ffmpeg', ['-hide_banner', '-nostats', '-i', VID, '-af', 'ebur128=peak=true', '-f', 'null', '-'], { maxBuffer: 1 << 26 }).stderr.toString();
@@ -31,7 +31,7 @@ const I = last(/I:\s+(-?[\d.]+) LUFS/g), TP = last(/Peak:\s+(-?[\d.]+) dBFS/g);
 check('loudness', Math.abs(I + 14) <= 1, `${I} LUFS (target -14)`);
 check('true peak', TP <= -0.9, `${TP} dBTP (target <= -1)`);
 // 3 and 4. cuts and dead stretches (small grayscale frames)
-const fps = E.fps, SW = 72, SH = 128, PX = SW * SH;
+const fps = E.fps, SW = FR.W > FR.H ? 128 : 72, SH = FR.W > FR.H ? 72 : 128, PX = SW * SH;
 const raw = spawnSync('ffmpeg', ['-v', 'error', '-i', VID, '-vf', `scale=${SW}:${SH},format=gray`, '-f', 'rawvideo', '-'], { maxBuffer: 1 << 30 }).stdout;
 const n = raw.length / PX, d = [0];
 for (let f = 1; f < n; f++) { let s = 0; for (let i = 0; i < PX; i++) s += Math.abs(raw[f * PX + i] - raw[(f - 1) * PX + i]); d.push(s / PX); }
@@ -50,7 +50,7 @@ if (A.texts) { const r = await A.texts(v); check('text (cut off / overlapping / 
 else check('text (cut off / overlapping / safe zone)', null, 'this style does not measure it yet: check the contact sheet');
 // contact sheet: 1 frame per second
 const cols = 6, sheetRows = Math.ceil(dur / cols);
-spawnSync('ffmpeg', ['-y', '-v', 'error', '-i', VID, '-vf', `fps=1,scale=180:320,tile=${cols}x${sheetRows}`, '-frames:v', '1', '-q:v', '3', path.join(REV, 'sheet.jpg')]);
+spawnSync('ffmpeg', ['-y', '-v', 'error', '-i', VID, '-vf', `fps=1,scale=${FR.W > FR.H ? '320:180' : '180:320'},tile=${cols}x${sheetRows}`, '-frames:v', '1', '-q:v', '3', path.join(REV, 'sheet.jpg')]);
 
 const fails = rows.filter((f) => f[1] === 'FAIL').length;
 const rep = [`# Report: ${path.basename(v)} (${E.style})`, '', `Result: **${fails ? `${fails} failure(s)` : 'PASS'}**`, '',

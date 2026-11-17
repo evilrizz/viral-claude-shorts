@@ -39,14 +39,15 @@ function buildTimeline(): gsap.core.Timeline {
 }
 
 function build3D(tl: gsap.core.Timeline) {
-  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gl') as HTMLCanvasElement, antialias: true, preserveDrawingBuffer: true });
-  renderer.setPixelRatio(1); renderer.setSize(1080, 1920, false);
+  const cv = document.getElementById('gl') as HTMLCanvasElement, FW = cv.width, FH = cv.height;   // 1080x1920 (9:16) or 1920x1080 (16:9)
+  const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(1); renderer.setSize(FW, FH, false);
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   const worlds = SCENES.scenes.map((s) => {
     const V = VISUALS[s.id] || LIBRARY[s.type] || LIBRARY.object;
     const scene = new THREE.Scene(); scene.background = new THREE.Color(V.bg || P3_SKY);
-    const camera = new THREE.PerspectiveCamera(40, 1080 / 1920, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(40, FW / FH, 0.1, 1000);
     const w: World = {
       s, scene, camera, renderer, tl, K: keyOf(s),
       titles: document.querySelector<HTMLElement>('#sc-' + s.id + ' .titles')!,

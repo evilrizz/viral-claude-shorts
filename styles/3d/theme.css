@@ -25,3 +25,9 @@ html, body { margin: 0; background: #000; }
   gap: 34px; padding: 0 40px; box-sizing: border-box; box-shadow: 0 12px 40px rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.12); }
 .card .value { font-size: 92px; font-weight: 800; color: var(--stat); white-space: nowrap; }
 .card .text { font-size: 34px; font-weight: 500; color: var(--card-text); line-height: 1.2; }
+/* 16:9 (horizontal video): the same titles, placed for a wide frame */
+#root.wide, #root.wide #gl { width: 1920px; height: 1080px; }
+#root.wide .label { top: 42px; left: 960px; }
+#root.wide .title { top: 96px; left: 310px; width: 1300px; font-size: 74px; }
+#root.wide .title.long { font-size: 66px; }
+#root.wide .card { left: 560px; width: 800px; top: 870px; }

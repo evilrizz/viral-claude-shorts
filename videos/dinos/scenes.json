@@ -1,0 +1,1684 @@
+{
+ "style": "3d",
+ "fps": 30,
+ "format": "16:9",
+ "music": {
+  "bpm": 104,
+  "key": "C"
+ },
+ "notes": "Horizontal long video (mixed style: 3D world, Tico and Dota drawn in 2D): movie myths about dinosaurs vs what we know. Pop-culture nods are generic genre nods, never lookalikes.",
+ "scenes": [
+  {
+   "id": "hook",
+   "from": 0,
+   "type": "object",
+   "label": "Idio-two",
+   "title": "¡Soy un T. rex!",
+   "highlight": "rex",
+   "visual": "room: Dota in a plush T. rex costume roars, little arms, knocks a lamp over; Tico arms crossed",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "rawr",
+     "at": 1,
+     "sfx": "impact",
+     "t": 1.222
+    },
+    {
+     "id": "lamp",
+     "at": 3,
+     "sfx": "hit",
+     "t": 1.806
+    }
+   ],
+   "transition": "cut",
+   "t0": 0,
+   "t1": 3.362
+  },
+  {
+   "id": "mintieron",
+   "from": 6,
+   "type": "object",
+   "label": "Idio-two",
+   "title": "Las películas te mintieron",
+   "highlight": "películas",
+   "visual": "room: Tico arms crossed, Dota still in costume",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "mint",
+     "at": 9,
+     "sfx": "pop",
+     "t": 4.305
+    }
+   ],
+   "transition": "cut",
+   "t0": 3.362,
+   "t1": 5.567
+  },
+  {
+   "id": "promesa",
+   "from": 12,
+   "type": "object",
+   "label": "La promesa",
+   "title": "Un dinosaurio vivo",
+   "highlight": "dinosaurio",
+   "visual": "room: a frame with a ? (the promise)",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "vivo",
+     "at": 17,
+     "sfx": "shimmer",
+     "t": 8.276
+    }
+   ],
+   "transition": "cut",
+   "t0": 5.567,
+   "t1": 10.281
+  },
+  {
+   "id": "famoso",
+   "from": 19,
+   "type": "object",
+   "label": "El Velociraptor",
+   "title": "El Velociraptor de película",
+   "highlight": "Velociraptor",
+   "visual": "studio: the tall scaly movie raptor opens a door",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "name",
+     "at": 28,
+     "sfx": "pop",
+     "t": 13.666
+    },
+    {
+     "id": "door",
+     "at": 42,
+     "sfx": "hit",
+     "t": 18.314
+    }
+   ],
+   "transition": "cut",
+   "t0": 10.281,
+   "t1": 19.332
+  },
+  {
+   "id": "pavo",
+   "from": 44,
+   "type": "comparison",
+   "label": "El Velociraptor",
+   "title": "Del tamaño de un pavo",
+   "highlight": "pavo",
+   "visual": "studio: the raptor shrinks to a turkey's size next to Dota and a turkey",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "shrink",
+     "at": 46,
+     "sfx": "pop",
+     "t": 19.928
+    },
+    {
+     "id": "pavo",
+     "at": 50,
+     "sfx": "pop",
+     "t": 21.134
+    }
+   ],
+   "transition": "cut",
+   "t0": 19.332,
+   "t1": 21.941
+  },
+  {
+   "id": "hueso",
+   "from": 53,
+   "type": "object",
+   "label": "La prueba",
+   "title": "Tenía plumas: puntitos",
+   "highlight": "plumas",
+   "visual": "studio: feathers grow on the real raptor, then zoom to the forearm bone with the quill knobs",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "plumas",
+     "at": 55,
+     "sfx": "shimmer",
+     "t": 22.798
+    },
+    {
+     "id": "bone",
+     "at": 61,
+     "sfx": "pop",
+     "t": 24.565
+    },
+    {
+     "id": "knobs",
+     "at": 65,
+     "sfx": "shimmer",
+     "t": 25.816
+    }
+   ],
+   "transition": "cut",
+   "t0": 21.941,
+   "t1": 30.358
+  },
+  {
+   "id": "pollo",
+   "from": 78,
+   "type": "object",
+   "label": "Dota",
+   "title": "¿Un pollo asesino?",
+   "highlight": "pollo",
+   "visual": "studio: Dota next to the feathered raptor",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 79,
+     "sfx": "pop",
+     "t": 31.024
+    }
+   ],
+   "transition": "cut",
+   "t0": 30.358,
+   "t1": 32.682
+  },
+  {
+   "id": "deino",
+   "from": 81,
+   "type": "comparison",
+   "label": "El Velociraptor",
+   "title": "Se basaron en el Deinonychus",
+   "highlight": "Deinonychus",
+   "visual": "prehistoric: the big Deinonychus beside the small raptor; a rider crosses far behind and flips into a raptor",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "deino",
+     "at": 95,
+     "sfx": "pop",
+     "t": 37.88
+    },
+    {
+     "id": "name",
+     "at": 102,
+     "sfx": "pop",
+     "t": 40.544
+    }
+   ],
+   "transition": "cut",
+   "t0": 32.682,
+   "t1": 42.765
+  },
+  {
+   "id": "chido",
+   "from": 107,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Quiero un nombre chido!",
+   "highlight": "chido",
+   "visual": "room: Dota begging",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 108,
+     "sfx": "pop",
+     "t": 43.281
+    }
+   ],
+   "transition": "cut",
+   "t0": 42.765,
+   "t1": 46.167
+  },
+  {
+   "id": "mereces",
+   "from": 114,
+   "type": "object",
+   "label": "Tico",
+   "title": "El que te mereces",
+   "highlight": "mereces",
+   "visual": "room: Tico palm, Dota crazy eyes",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "palm",
+     "at": 120,
+     "sfx": "hit",
+     "t": 47.797
+    }
+   ],
+   "transition": "cut",
+   "t0": 46.167,
+   "t1": 48.647
+  },
+  {
+   "id": "peor",
+   "from": 121,
+   "type": "object",
+   "label": "El T. rex",
+   "title": "Lo del T. rex es peor",
+   "highlight": "peor",
+   "visual": "prehistoric: a T. rex silhouette stomps in",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "rex",
+     "at": 127,
+     "sfx": "impact",
+     "t": 51.151
+    }
+   ],
+   "transition": "cut",
+   "t0": 48.647,
+   "t1": 53.156
+  },
+  {
+   "id": "dilofake",
+   "from": 131,
+   "type": "object",
+   "label": "El dilofosaurio",
+   "title": "El que escupe veneno",
+   "highlight": "veneno",
+   "visual": "studio: the small movie-style frilled spitter opens its frill and spits",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "spit",
+     "at": 135,
+     "sfx": "hit",
+     "t": 54.368
+    },
+    {
+     "id": "frill",
+     "at": 140,
+     "sfx": "pop",
+     "t": 56.026
+    }
+   ],
+   "transition": "cut",
+   "t0": 53.156,
+   "t1": 57.742
+  },
+  {
+   "id": "inventado",
+   "from": 144,
+   "type": "object",
+   "label": "El dilofosaurio",
+   "title": "Ningún fósil lo dice",
+   "highlight": "fósil",
+   "visual": "studio: red stamp INVENTADO on the fake",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "stamp",
+     "at": 147,
+     "sfx": "hit",
+     "t": 58.65
+    }
+   ],
+   "transition": "cut",
+   "t0": 57.742,
+   "t1": 62.015
+  },
+  {
+   "id": "dilo",
+   "from": 158,
+   "type": "comparison",
+   "label": "El dilofosaurio",
+   "title": "Medía unos 7 metros",
+   "highlight": "metros",
+   "visual": "prehistoric: the real Dilophosaurus, big, two crests, next to a truck",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "big",
+     "at": 162,
+     "sfx": "pop",
+     "t": 63.066
+    },
+    {
+     "id": "truck",
+     "at": 168,
+     "sfx": "pop",
+     "t": 65.348
+    }
+   ],
+   "transition": "cut",
+   "t0": 62.015,
+   "t1": 67.045
+  },
+  {
+   "id": "disfraz",
+   "from": 172,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡La gorguera es un disfraz!",
+   "highlight": "disfraz",
+   "visual": "room: Dota wears a cardboard frill",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "frill",
+     "at": 174,
+     "sfx": "pop",
+     "t": 68.228
+    }
+   ],
+   "transition": "cut",
+   "t0": 67.045,
+   "t1": 71.326
+  },
+  {
+   "id": "rey",
+   "from": 181,
+   "type": "object",
+   "label": "El T. rex",
+   "title": "Parado derechito: así no",
+   "highlight": "derechito",
+   "visual": "toy city: a giant upright T. rex dragging its tail",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "rey",
+     "at": 184,
+     "sfx": "impact",
+     "t": 72.691
+    },
+    {
+     "id": "cola",
+     "at": 193,
+     "sfx": "pop",
+     "t": 76.612
+    }
+   ],
+   "transition": "cut",
+   "t0": 71.326,
+   "t1": 77.956
+  },
+  {
+   "id": "huellas",
+   "from": 196,
+   "type": "object",
+   "label": "El T. rex",
+   "title": "Sin marcas de cola",
+   "highlight": "cola",
+   "visual": "prehistoric: footprints without tail drag; a red X over the upright pose",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "x",
+     "at": 199,
+     "sfx": "fail",
+     "t": 79
+    }
+   ],
+   "transition": "cut",
+   "t0": 77.956,
+   "t1": 81.111
+  },
+  {
+   "id": "subibaja",
+   "from": 205,
+   "type": "process",
+   "label": "El T. rex",
+   "title": "Horizontal, como un subibaja",
+   "highlight": "horizontal",
+   "visual": "prehistoric: the T. rex tips into the right pose, tail up; a seesaw",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "horiz",
+     "at": 207,
+     "sfx": "whoosh",
+     "t": 82.037
+    },
+    {
+     "id": "sube",
+     "at": 217,
+     "sfx": "pop",
+     "t": 85.193
+    }
+   ],
+   "transition": "cut",
+   "t0": 81.111,
+   "t1": 87.569
+  },
+  {
+   "id": "quieto",
+   "from": 221,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Si no te mueves no te ve!",
+   "highlight": "mueves",
+   "visual": "prehistoric: Dota freezes like a statue in front of the T. rex",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "freeze",
+     "at": 224,
+     "sfx": "tick",
+     "t": 88.709
+    }
+   ],
+   "transition": "cut",
+   "t0": 87.569,
+   "t1": 90.359
+  },
+  {
+   "id": "ojos",
+   "from": 229,
+   "type": "object",
+   "label": "El T. rex",
+   "title": "Veía muy bien",
+   "highlight": "bien",
+   "visual": "prehistoric: close on the T. rex eyes looking forward",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "ojos",
+     "at": 234,
+     "sfx": "pop",
+     "t": 92.186
+    },
+    {
+     "id": "bien",
+     "at": 251,
+     "sfx": "shimmer",
+     "t": 97.687
+    }
+   ],
+   "transition": "cut",
+   "t0": 90.359,
+   "t1": 99.457
+  },
+  {
+   "id": "mejor",
+   "from": 256,
+   "type": "object",
+   "label": "El T. rex",
+   "title": "Si te quedas quieto…",
+   "highlight": "quieto",
+   "visual": "prehistoric: the T. rex sniffs Dota, Dota sweats",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "sniff",
+     "at": 262,
+     "sfx": "hit",
+     "t": 101.241
+    }
+   ],
+   "transition": "cut",
+   "t0": 99.457,
+   "t1": 104.36
+  },
+  {
+   "id": "rugido",
+   "from": 274,
+   "type": "question",
+   "label": "El rugido",
+   "title": "¿Y el rugido?",
+   "highlight": "rugido",
+   "visual": "prehistoric: the T. rex opens its mouth; bird and crocodile cards",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "roar",
+     "at": 276,
+     "sfx": "pop",
+     "t": 104.937
+    },
+    {
+     "id": "aves",
+     "at": 287,
+     "sfx": "pop",
+     "t": 108.906
+    }
+   ],
+   "transition": "cut",
+   "t0": 104.36,
+   "t1": 111.149
+  },
+  {
+   "id": "retumbo",
+   "from": 293,
+   "type": "object",
+   "label": "El rugido",
+   "title": "Un retumbo grave",
+   "highlight": "retumbo",
+   "visual": "prehistoric: mouth closed boom, the puddle ripples; SE CREE",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "cree",
+     "at": 295,
+     "sfx": "pop",
+     "t": 113.074
+    },
+    {
+     "id": "boom",
+     "at": 299,
+     "sfx": "impact",
+     "t": 114.504
+    },
+    {
+     "id": "agua",
+     "at": 312,
+     "sfx": "pop",
+     "t": 117.973
+    }
+   ],
+   "transition": "cut",
+   "t0": 111.149,
+   "t1": 120.265
+  },
+  {
+   "id": "plumasrex",
+   "from": 317,
+   "type": "question",
+   "label": "Dota",
+   "title": "¿También tenía plumas?",
+   "highlight": "plumas",
+   "visual": "prehistoric: Dota asks",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 318,
+     "sfx": "pop",
+     "t": 120.817
+    }
+   ],
+   "transition": "cut",
+   "t0": 120.265,
+   "t1": 122.855
+  },
+  {
+   "id": "yuty",
+   "from": 321,
+   "type": "comparison",
+   "label": "Las plumas",
+   "title": "Yutyrannus: con plumas",
+   "highlight": "Yutyrannus",
+   "visual": "prehistoric: the feathered Yutyrannus next to the T. rex",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "name",
+     "at": 332,
+     "sfx": "pop",
+     "t": 126.774
+    }
+   ],
+   "transition": "cut",
+   "t0": 122.855,
+   "t1": 128.878
+  },
+  {
+   "id": "escamas",
+   "from": 336,
+   "type": "object",
+   "label": "Las plumas",
+   "title": "El T. rex: escamitas",
+   "highlight": "escamitas",
+   "visual": "prehistoric: Dota tapes feathers on the T. rex, it shakes them off; SE DISCUTE",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "esc",
+     "at": 348,
+     "sfx": "pop",
+     "t": 131.798
+    },
+    {
+     "id": "tape",
+     "at": 352,
+     "sfx": "pop",
+     "t": 133.29
+    },
+    {
+     "id": "shake",
+     "at": 358,
+     "sfx": "hit",
+     "t": 135.79
+    }
+   ],
+   "transition": "cut",
+   "t0": 128.878,
+   "t1": 138.384
+  },
+  {
+   "id": "colores",
+   "from": 363,
+   "type": "question",
+   "label": "Los colores",
+   "title": "¿Y los colores?",
+   "highlight": "colores",
+   "visual": "studio: Tico paints a grey dinosaur green and brown",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "paint",
+     "at": 374,
+     "sfx": "pop",
+     "t": 143.366
+    }
+   ],
+   "transition": "cut",
+   "t0": 138.384,
+   "t1": 145.901
+  },
+  {
+   "id": "bolsitas",
+   "from": 380,
+   "type": "object",
+   "label": "Los colores",
+   "title": "Bolsitas de color",
+   "highlight": "bolsitas",
+   "visual": "studio: microscope view of the colour capsules",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "micro",
+     "at": 389,
+     "sfx": "shimmer",
+     "t": 148.93
+    }
+   ],
+   "transition": "cut",
+   "t0": 145.901,
+   "t1": 151.253
+  },
+  {
+   "id": "sino",
+   "from": 395,
+   "type": "comparison",
+   "label": "Los colores",
+   "title": "Cola rayada, como mapache",
+   "highlight": "mapache",
+   "visual": "studio: Sinosauropteryx with its striped tail next to a raccoon",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "name",
+     "at": 404,
+     "sfx": "pop",
+     "t": 154.965
+    },
+    {
+     "id": "mapache",
+     "at": 413,
+     "sfx": "pop",
+     "t": 158.711
+    }
+   ],
+   "transition": "cut",
+   "t0": 151.253,
+   "t1": 159.902
+  },
+  {
+   "id": "dientes",
+   "from": 416,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Un mapache con dientes!",
+   "highlight": "dientes",
+   "visual": "studio: Dota laughs",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 417,
+     "sfx": "pop",
+     "t": 160.602
+    }
+   ],
+   "transition": "cut",
+   "t0": 159.902,
+   "t1": 163.425
+  },
+  {
+   "id": "monstruos",
+   "from": 420,
+   "type": "object",
+   "label": "Las mamás",
+   "title": "Monstruos que destruyen",
+   "highlight": "monstruos",
+   "visual": "toy city: the monster smashes",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "smash",
+     "at": 429,
+     "sfx": "impact",
+     "t": 166.513
+    }
+   ],
+   "transition": "cut",
+   "t0": 163.425,
+   "t1": 167.47
+  },
+  {
+   "id": "nidos",
+   "from": 431,
+   "type": "process",
+   "label": "Las mamás",
+   "title": "Nidos en Montana",
+   "highlight": "nidos",
+   "visual": "prehistoric: a colony of nests with eggs and babies",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "montana",
+     "at": 433,
+     "sfx": "pop",
+     "t": 168.248
+    },
+    {
+     "id": "nidos",
+     "at": 438,
+     "sfx": "pop",
+     "t": 170.066
+    },
+    {
+     "id": "crias",
+     "at": 445,
+     "sfx": "pop",
+     "t": 172.817
+    }
+   ],
+   "transition": "cut",
+   "t0": 167.47,
+   "t1": 178.339
+  },
+  {
+   "id": "madre",
+   "from": 459,
+   "type": "process",
+   "label": "Las mamás",
+   "title": "Maiasaura: buena madre",
+   "highlight": "Maiasaura",
+   "visual": "prehistoric: the Maiasaura mum brings leaves to the babies",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "comer",
+     "at": 470,
+     "sfx": "pop",
+     "t": 181.912
+    },
+    {
+     "id": "name",
+     "at": 476,
+     "sfx": "shimmer",
+     "t": 184.133
+    }
+   ],
+   "transition": "cut",
+   "t0": 178.339,
+   "t1": 186.92
+  },
+  {
+   "id": "enfermo",
+   "from": 480,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Como mi mamá!",
+   "highlight": "mamá",
+   "visual": "room: Dota in bed with a thermometer; the Maiasaura brings soup",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 481,
+     "sfx": "pop",
+     "t": 187.547
+    }
+   ],
+   "transition": "cut",
+   "t0": 186.92,
+   "t1": 189.723
+  },
+  {
+   "id": "toneladas",
+   "from": 486,
+   "type": "object",
+   "label": "Tico",
+   "title": "Varias toneladas",
+   "highlight": "toneladas",
+   "visual": "room: the bed creaks under the Maiasaura",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "ton",
+     "at": 495,
+     "sfx": "thump",
+     "t": 194.205
+    }
+   ],
+   "transition": "cut",
+   "t0": 189.723,
+   "t1": 195.282
+  },
+  {
+   "id": "shh",
+   "from": 496,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Shhh, que te oye!",
+   "highlight": "Shhh",
+   "visual": "room: Dota shushes",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "shh",
+     "at": 496,
+     "sfx": "tick",
+     "t": 195.532
+    }
+   ],
+   "transition": "cut",
+   "t0": 195.282,
+   "t1": 198.532
+  },
+  {
+   "id": "lago",
+   "from": 500,
+   "type": "object",
+   "label": "El Brontosaurio",
+   "title": "El Brontosaurio en el lago",
+   "highlight": "Brontosaurio",
+   "visual": "paper/old: a Brontosaurus in a lake up to its neck",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "name",
+     "at": 508,
+     "sfx": "pop",
+     "t": 201.076
+    },
+    {
+     "id": "lago",
+     "at": 516,
+     "sfx": "pop",
+     "t": 204.291
+    }
+   ],
+   "transition": "cut",
+   "t0": 198.532,
+   "t1": 208.732
+  },
+  {
+   "id": "tierra",
+   "from": 530,
+   "type": "process",
+   "label": "El Brontosaurio",
+   "title": "Vivían en tierra firme",
+   "highlight": "tierra",
+   "visual": "prehistoric: it walks out; a herd on land",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "sale",
+     "at": 533,
+     "sfx": "whoosh",
+     "t": 208.996
+    },
+    {
+     "id": "manada",
+     "at": 538,
+     "sfx": "pop",
+     "t": 209.293
+    }
+   ],
+   "transition": "cut",
+   "t0": 208.732,
+   "t1": 212.743
+  },
+  {
+   "id": "borrado",
+   "from": 541,
+   "type": "object",
+   "label": "El Brontosaurio",
+   "title": "Borrado casi cien años",
+   "highlight": "borrado",
+   "visual": "studio: an ID card crossed out, then stamped REGRESÓ 2015",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "x",
+     "at": 549,
+     "sfx": "fail",
+     "t": 215.586
+    },
+    {
+     "id": "stamp",
+     "at": 556,
+     "sfx": "impact",
+     "t": 217.441
+    }
+   ],
+   "transition": "cut",
+   "t0": 212.743,
+   "t1": 223.012
+  },
+  {
+   "id": "contratar",
+   "from": 569,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Lo volvieron a contratar!",
+   "highlight": "contratar",
+   "visual": "studio: Dota cheers next to the card",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 570,
+     "sfx": "pop",
+     "t": 223.589
+    }
+   ],
+   "transition": "cut",
+   "t0": 223.012,
+   "t1": 227.558
+  },
+  {
+   "id": "cuando",
+   "from": 576,
+   "type": "question",
+   "label": "El tiempo",
+   "title": "¿Cuándo vivieron?",
+   "highlight": "cuándo",
+   "visual": "studio: a big clock spins",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "cuando",
+     "at": 589,
+     "sfx": "hit",
+     "t": 232.081
+    }
+   ],
+   "transition": "cut",
+   "t0": 227.558,
+   "t1": 233.651
+  },
+  {
+   "id": "vecinos",
+   "from": 591,
+   "type": "object",
+   "label": "El tiempo",
+   "title": "Todos juntos, como vecinos",
+   "highlight": "vecinos",
+   "visual": "prehistoric: every famous dinosaur crowded together",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "vec",
+     "at": 599,
+     "sfx": "pop",
+     "t": 236.616
+    }
+   ],
+   "transition": "cut",
+   "t0": 233.651,
+   "t1": 238.542
+  },
+  {
+   "id": "tres",
+   "from": 604,
+   "type": "process",
+   "label": "El tiempo",
+   "title": "160 millones de años",
+   "highlight": "millones",
+   "visual": "studio: the giant tape with three stretches",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "n160",
+     "at": 613,
+     "sfx": "tick",
+     "t": 241.703
+    },
+    {
+     "id": "tri",
+     "at": 623,
+     "sfx": "pop",
+     "t": 245.503
+    },
+    {
+     "id": "jur",
+     "at": 626,
+     "sfx": "pop",
+     "t": 246.471
+    },
+    {
+     "id": "cre",
+     "at": 629,
+     "sfx": "pop",
+     "t": 247.598
+    }
+   ],
+   "transition": "cut",
+   "t0": 238.542,
+   "t1": 248.314
+  },
+  {
+   "id": "cretacico",
+   "from": 630,
+   "type": "process",
+   "label": "El tiempo",
+   "title": "Casi todos, del Cretácico",
+   "highlight": "Cretácico",
+   "visual": "studio: T. rex, raptor and Triceratops go stand on the Cretaceous",
+   "mood": "energetic",
+   "keys": [
+    {
+     "id": "rex",
+     "at": 639,
+     "sfx": "pop",
+     "t": 251.597
+    },
+    {
+     "id": "raptor",
+     "at": 641,
+     "sfx": "pop",
+     "t": 252.036
+    },
+    {
+     "id": "trike",
+     "at": 645,
+     "sfx": "pop",
+     "t": 253.567
+    }
+   ],
+   "transition": "cut",
+   "t0": 248.314,
+   "t1": 257.019
+  },
+  {
+   "id": "escupe",
+   "from": 652,
+   "type": "question",
+   "label": "Dota",
+   "title": "¿Y el que escupe veneno?",
+   "highlight": "veneno",
+   "visual": "studio: Dota holds the Dilophosaurus",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 653,
+     "sfx": "pop",
+     "t": 257.467
+    }
+   ],
+   "transition": "cut",
+   "t0": 257.019,
+   "t1": 259.32
+  },
+  {
+   "id": "jurasico",
+   "from": 657,
+   "type": "process",
+   "label": "El tiempo",
+   "title": "Del Jurásico",
+   "highlight": "Jurásico",
+   "visual": "studio: Dota drags the Dilophosaurus next to the T. rex; the tape pulls it back",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "jur",
+     "at": 660,
+     "sfx": "pop",
+     "t": 260.266
+    },
+    {
+     "id": "tug",
+     "at": 669,
+     "sfx": "whoosh",
+     "t": 263.619
+    }
+   ],
+   "transition": "cut",
+   "t0": 259.32,
+   "t1": 266.86
+  },
+  {
+   "id": "pelea",
+   "from": 679,
+   "type": "comparison",
+   "label": "El tiempo",
+   "title": "Estegosaurio contra T. rex",
+   "highlight": "Estegosaurio",
+   "visual": "prehistoric: the movie fight",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "fight",
+     "at": 685,
+     "sfx": "impact",
+     "t": 268.932
+    }
+   ],
+   "transition": "cut",
+   "t0": 266.86,
+   "t1": 270.215
+  },
+  {
+   "id": "linea",
+   "from": 688,
+   "type": "process",
+   "label": "El tiempo",
+   "title": "Nunca se conocieron",
+   "highlight": "conocieron",
+   "visual": "studio: a long timeline, Stegosaurus far, T. rex, and you nearer the T. rex",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "stego",
+     "at": 691,
+     "sfx": "pop",
+     "t": 271.894
+    },
+    {
+     "id": "ti",
+     "at": 702,
+     "sfx": "pop",
+     "t": 275
+    }
+   ],
+   "transition": "cut",
+   "t0": 270.215,
+   "t1": 276.37
+  },
+  {
+   "id": "mas",
+   "from": 705,
+   "type": "question",
+   "label": "Dota",
+   "title": "¿Más?",
+   "highlight": "Más",
+   "visual": "studio: Dota surprised",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 705,
+     "sfx": "pop",
+     "t": 276.62
+    }
+   ],
+   "transition": "cut",
+   "t0": 276.37,
+   "t1": 278.697
+  },
+  {
+   "id": "espino",
+   "from": 707,
+   "type": "comparison",
+   "label": "El tiempo",
+   "title": "Espinosaurio: otro continente",
+   "highlight": "Espinosaurio",
+   "visual": "map: Spinosaurus in Africa, T. rex in North America",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "spino",
+     "at": 708,
+     "sfx": "pop",
+     "t": 279.117
+    },
+    {
+     "id": "cont",
+     "at": 716,
+     "sfx": "pop",
+     "t": 282.068
+    }
+   ],
+   "transition": "cut",
+   "t0": 278.697,
+   "t1": 284.846
+  },
+  {
+   "id": "trike",
+   "from": 723,
+   "type": "comparison",
+   "label": "El tiempo",
+   "title": "T. rex y Triceratops: ¡sí!",
+   "highlight": "Triceratops",
+   "visual": "prehistoric: T. rex and Triceratops face to face, a green check",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "face",
+     "at": 729,
+     "sfx": "impact",
+     "t": 286.419
+    },
+    {
+     "id": "check",
+     "at": 731,
+     "sfx": "pop",
+     "t": 287.473
+    }
+   ],
+   "transition": "cut",
+   "t0": 284.846,
+   "t1": 290.852
+  },
+  {
+   "id": "humanos",
+   "from": 738,
+   "type": "process",
+   "label": "El tiempo",
+   "title": "Los humanos llegaron después",
+   "highlight": "humanos",
+   "visual": "prehistoric: a caveman rides a long-neck at the back; Tico pauses; the timeline gap",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "pausa",
+     "at": 744,
+     "sfx": "tick",
+     "t": 293.975
+    },
+    {
+     "id": "gap",
+     "at": 756,
+     "sfx": "pop",
+     "t": 298.679
+    }
+   ],
+   "transition": "cut",
+   "t0": 290.852,
+   "t1": 301.104
+  },
+  {
+   "id": "nadie",
+   "from": 761,
+   "type": "question",
+   "label": "Dota",
+   "title": "¿Nadie se subió a uno?",
+   "highlight": "Nadie",
+   "visual": "studio: Dota disappointed",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "nadie",
+     "at": 767,
+     "sfx": "fail",
+     "t": 304.706
+    }
+   ],
+   "transition": "cut",
+   "t0": 301.104,
+   "t1": 306.512
+  },
+  {
+   "id": "ptero",
+   "from": 769,
+   "type": "object",
+   "label": "No dinosaurios",
+   "title": "Pterosaurios: no dinosaurios",
+   "highlight": "pterosaurios",
+   "visual": "sky: pterosaurs flying",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "ptero",
+     "at": 777,
+     "sfx": "pop",
+     "t": 310.254
+    },
+    {
+     "id": "no",
+     "at": 781,
+     "sfx": "fail",
+     "t": 311.604
+    }
+   ],
+   "transition": "cut",
+   "t0": 306.512,
+   "t1": 313.728
+  },
+  {
+   "id": "mosa",
+   "from": 785,
+   "type": "object",
+   "label": "No dinosaurios",
+   "title": "El mosasaurio, tampoco",
+   "highlight": "mosasaurio",
+   "visual": "sea: the mosasaur leaps and eats a shark",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "jump",
+     "at": 786,
+     "sfx": "whoosh",
+     "t": 314.185
+    },
+    {
+     "id": "eat",
+     "at": 789,
+     "sfx": "impact",
+     "t": 315.42
+    }
+   ],
+   "transition": "cut",
+   "t0": 313.728,
+   "t1": 318.76
+  },
+  {
+   "id": "dimetro",
+   "from": 797,
+   "type": "object",
+   "label": "No dinosaurios",
+   "title": "Dimetrodon: pariente tuyo",
+   "highlight": "Dimetrodon",
+   "visual": "prehistoric: Dimetrodon shakes Tico's hand",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "name",
+     "at": 805,
+     "sfx": "pop",
+     "t": 320.592
+    },
+    {
+     "id": "mano",
+     "at": 815,
+     "sfx": "pop",
+     "t": 323.9
+    }
+   ],
+   "transition": "cut",
+   "t0": 318.76,
+   "t1": 325.764
+  },
+  {
+   "id": "primo",
+   "from": 820,
+   "type": "object",
+   "label": "Dota",
+   "title": "¡Ese es mi primo!",
+   "highlight": "primo",
+   "visual": "prehistoric: Dota hugs the Dimetrodon",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "dota",
+     "at": 821,
+     "sfx": "pop",
+     "t": 326.453
+    }
+   ],
+   "transition": "cut",
+   "t0": 325.764,
+   "t1": 327.806
+  },
+  {
+   "id": "acabaron",
+   "from": 824,
+   "type": "question",
+   "label": "El final",
+   "title": "¿Por qué se acabaron?",
+   "highlight": "acabaron",
+   "visual": "prehistoric: a dark shadow peeks behind Dota and is gone",
+   "mood": "tense",
+   "keys": [
+    {
+     "id": "shadow",
+     "at": 825,
+     "sfx": "tick",
+     "t": 328.249
+    },
+    {
+     "id": "n66",
+     "at": 831,
+     "sfx": "tick",
+     "t": 330.715
+    }
+   ],
+   "transition": "cut",
+   "t0": 327.806,
+   "t1": 332.444
+  },
+  {
+   "id": "asteroide",
+   "from": 835,
+   "type": "process",
+   "label": "El final",
+   "title": "Cayó en Yucatán",
+   "highlight": "Yucatán",
+   "visual": "sky then map: the asteroid; Mexico with a glowing point in Yucatán",
+   "mood": "epic",
+   "keys": [
+    {
+     "id": "ast",
+     "at": 837,
+     "sfx": "impact",
+     "t": 332.829
+    },
+    {
+     "id": "yuc",
+     "at": 843,
+     "sfx": "pop",
+     "t": 335.558
+    },
+    {
+     "id": "chic",
+     "at": 850,
+     "sfx": "pop",
+     "t": 339.064
+    }
+   ],
+   "transition": "cut",
+   "t0": 332.444,
+   "t1": 341.699
+  },
+  {
+   "id": "polvo",
+   "from": 854,
+   "type": "process",
+   "label": "El final",
+   "title": "El polvo tapó el sol",
+   "highlight": "polvo",
+   "visual": "prehistoric: dust darkens everything; dinosaurs vanish but a small feathered one",
+   "mood": "epic",
+   "keys": [
+    {
+     "id": "polvo",
+     "at": 855,
+     "sfx": "whoosh",
+     "t": 342.132
+    },
+    {
+     "id": "plantas",
+     "at": 859,
+     "sfx": "pop",
+     "t": 343.301
+    },
+    {
+     "id": "dinos",
+     "at": 869,
+     "sfx": "impact",
+     "t": 346.112
+    }
+   ],
+   "transition": "cut",
+   "t0": 341.699,
+   "t1": 347.155
+  },
+  {
+   "id": "casi",
+   "from": 871,
+   "type": "question",
+   "label": "El final",
+   "title": "¿Casi todos?",
+   "highlight": "Casi",
+   "visual": "prehistoric dark: the small feathered silhouette",
+   "mood": "curious",
+   "keys": [
+    {
+     "id": "casi",
+     "at": 873,
+     "sfx": "pop",
+     "t": 349.309
+    }
+   ],
+   "transition": "cut",
+   "t0": 347.155,
+   "t1": 353.166
+  },
+  {
+   "id": "aves",
+   "from": 882,
+   "type": "process",
+   "label": "La respuesta",
+   "title": "Las aves son dinosaurios",
+   "highlight": "aves",
+   "visual": "studio: the silhouette turns into a bird step by step",
+   "mood": "wonder",
+   "keys": [
+    {
+     "id": "vivo",
+     "at": 889,
+     "sfx": "shimmer",
+     "t": 355.805
+    },
+    {
+     "id": "aves",
+     "at": 891,
+     "sfx": "pop",
+     "t": 357.842
+    },
+    {
+     "id": "son",
+     "at": 899,
+     "sfx": "pop",
+     "t": 360.432
+    }
+   ],
+   "transition": "cut",
+   "t0": 353.166,
+   "t1": 363.948
+  },
+  {
+   "id": "rama",
+   "from": 908,
+   "type": "object",
+   "label": "La respuesta",
+   "title": "Esa rama sobrevivió",
+   "highlight": "rama",
+   "visual": "studio: the family branch that survived",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "rama",
+     "at": 909,
+     "sfx": "pop",
+     "t": 364.245
+    }
+   ],
+   "transition": "cut",
+   "t0": 363.948,
+   "t1": 367.308
+  },
+  {
+   "id": "gallina",
+   "from": 916,
+   "type": "object",
+   "label": "La respuesta",
+   "title": "La gallina es un dinosaurio",
+   "highlight": "gallina",
+   "visual": "yard: a hen turns to the camera; T. rex rumble",
+   "mood": "triumphant",
+   "keys": [
+    {
+     "id": "gallina",
+     "at": 922,
+     "sfx": "pop",
+     "t": 370.408
+    },
+    {
+     "id": "voltea",
+     "at": 926,
+     "sfx": "impact",
+     "t": 371.569
+    }
+   ],
+   "transition": "cut",
+   "t0": 367.308,
+   "t1": 373.876
+  },
+  {
+   "id": "consejo",
+   "from": 930,
+   "type": "object",
+   "label": "El consejo",
+   "title": "Disfrútala, pero no le creas",
+   "highlight": "creas",
+   "visual": "park: Tico and Dota",
+   "mood": "calm",
+   "keys": [
+    {
+     "id": "creas",
+     "at": 940,
+     "sfx": "pop",
+     "t": 376.924
+    }
+   ],
+   "transition": "cut",
+   "t0": 373.876,
+   "t1": 379.698
+  },
+  {
+   "id": "palomas",
+   "from": 947,
+   "type": "object",
+   "label": "El consejo",
+   "title": "Mira las palomas",
+   "highlight": "palomas",
+   "visual": "park: Dota looks at a pigeon with respect; the pigeon glares",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "paloma",
+     "at": 955,
+     "sfx": "pop",
+     "t": 381.902
+    }
+   ],
+   "transition": "cut",
+   "t0": 379.698,
+   "t1": 384.114
+  },
+  {
+   "id": "sub",
+   "from": 961,
+   "type": "closing",
+   "label": "Idio-two",
+   "title": "¡Suscríbanse!",
+   "highlight": "Suscríbanse",
+   "visual": "banner; Dota runs from an angry hen; Tico covers his face",
+   "mood": "playful",
+   "keys": [
+    {
+     "id": "pollo",
+     "at": 969,
+     "sfx": "impact",
+     "t": 387.654
+    }
+   ],
+   "transition": "cut",
+   "t0": 384.114,
+   "t1": 389.329
+  }
+ ],
+ "duration": 389.329
+}
